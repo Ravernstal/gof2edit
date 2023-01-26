@@ -1,7 +1,4 @@
 use crate::arguments::{Action, Arguments};
-use crate::data::faction::Faction;
-use crate::data::security_level::SecurityLevel;
-use crate::data::system::System;
 use clap::Parser;
 use std::ffi::OsStr;
 use std::io;
@@ -9,6 +6,7 @@ use std::path::{Path, PathBuf};
 
 mod arguments;
 mod data;
+mod patch;
 mod stations;
 mod systems;
 
@@ -46,11 +44,19 @@ fn parse_action(action: &Action) -> io::Result<()> {
         Action::RepackSystems { input_filepath } => {
             systems::repack(input_filepath, output_filepath(input_filepath, "bin"))
         }
+        Action::PatchSystems {
+            json_filepath,
+            so_filepath,
+        } => systems::patch(json_filepath, so_filepath),
         Action::UnpackStations { input_filepath } => {
             stations::unpack(input_filepath, output_filepath(input_filepath, "json"))
         }
         Action::RepackStations { input_filepath } => {
             stations::repack(input_filepath, output_filepath(input_filepath, "bin"))
         }
+        Action::PatchStations {
+            json_filepath,
+            so_filepath,
+        } => stations::patch(json_filepath, so_filepath),
     }
 }
