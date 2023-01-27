@@ -1,12 +1,12 @@
 [package]
 name = "gof2edit"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Ravernstal"]
 edition = "2021"
 license = "AGPL-3.0-only"
 repository = "https://github.com/Ravernstal/gof2edit"
 readme = "README.md"
-description = "Galaxy on Fire 2 CLI tool to unpack and repack bin files"
+description = "Galaxy on Fire 2 tool to unpack and repack BIN files"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
