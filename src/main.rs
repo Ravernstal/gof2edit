@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 
 mod arguments;
 mod data;
+mod lang;
 mod patch;
 mod stations;
 mod systems;
@@ -58,5 +59,11 @@ fn parse_action(action: &Action) -> io::Result<()> {
             json_filepath,
             so_filepath,
         } => stations::patch(json_filepath, so_filepath),
+        Action::UnpackLang { input_filepath } => {
+            lang::unpack(input_filepath, output_filepath(input_filepath, "json"))
+        }
+        Action::RepackLang { input_filepath } => {
+            lang::repack(input_filepath, output_filepath(input_filepath, "lang"))
+        }
     }
 }
