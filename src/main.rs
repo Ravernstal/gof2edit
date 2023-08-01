@@ -8,6 +8,7 @@ mod arguments;
 mod data;
 mod lang;
 mod patch;
+mod ships;
 mod stations;
 mod systems;
 
@@ -64,6 +65,13 @@ fn parse_action(action: &Action) -> io::Result<()> {
         }
         Action::RepackLang { input_filepath } => {
             lang::repack(input_filepath, output_filepath(input_filepath, "lang"))
+        }
+
+        Action::UnpackShips { input_filepath } => {
+            ships::unpack(input_filepath, output_filepath(input_filepath, "json"))
+        }
+        Action::RepackShips { input_filepath } => {
+            ships::repack(input_filepath, output_filepath(input_filepath, "bin"))
         }
     }
 }

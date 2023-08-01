@@ -25,6 +25,10 @@ pub enum Action {
     UnpackLang { input_filepath: PathBuf },
     /// Repack JSON file into LANG format
     RepackLang { input_filepath: PathBuf },
+    /// Unpack ships.bin into JSON format
+    UnpackShips { input_filepath: PathBuf },
+    /// Repack ships.json into BIN format
+    RepackShips { input_filepath: PathBuf },
 }
 
 #[derive(Debug, Parser)]
