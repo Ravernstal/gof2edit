@@ -25,19 +25,6 @@ fn main() {
     }
 }
 
-fn output_filepath(filepath: impl AsRef<Path>, extension: impl AsRef<str>) -> PathBuf {
-    let filepath = filepath.as_ref();
-    let extension = extension.as_ref();
-
-    PathBuf::from(
-        filepath
-            .file_stem()
-            .and_then(OsStr::to_str)
-            .map(|filepath| format!("{}.{}", filepath, extension))
-            .unwrap_or_else(|| format!("output.{}", extension)),
-    )
-}
-
 fn parse_action(action: &Action) -> io::Result<()> {
     match action {
         Action::UnpackSystems { input_filepath } => {
@@ -74,4 +61,11 @@ fn parse_action(action: &Action) -> io::Result<()> {
             ships::repack(input_filepath, output_filepath(input_filepath, "bin"))
         }
     }
+}
+
+fn output_filepath(filepath: impl AsRef<Path>, extension: impl AsRef<OsStr>) -> PathBuf {
+    let mut filepath = filepath.as_ref().to_owned();
+    filepath.set_extension(extension);
+
+    filepath
 }
