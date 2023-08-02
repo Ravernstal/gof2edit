@@ -1,71 +1,30 @@
-use crate::arguments::{Action, Arguments};
+use crate::arguments::Arguments;
+use crate::commands::Command;
 use clap::Parser;
-use std::ffi::OsStr;
 use std::io;
-use std::path::{Path, PathBuf};
 
 mod arguments;
+mod commands;
 mod data;
-mod lang;
 mod patch;
-mod ships;
-mod stations;
-mod systems;
+mod patchers;
+mod repackers;
+mod targets;
+mod unpackers;
 
 fn main() {
     let arguments = Arguments::parse();
 
-    let action = arguments.action;
-
-    match parse_action(&action) {
+    match execute_command(&arguments.command) {
         Ok(_) => {}
-        Err(error) => {
-            eprintln!("Error: {}", error)
-        }
+        Err(error) => eprintln!("Error: {error}"),
     }
 }
 
-fn parse_action(action: &Action) -> io::Result<()> {
-    match action {
-        Action::UnpackSystems { input_filepath } => {
-            systems::unpack(input_filepath, output_filepath(input_filepath, "json"))
-        }
-        Action::RepackSystems { input_filepath } => {
-            systems::repack(input_filepath, output_filepath(input_filepath, "bin"))
-        }
-        Action::PatchSystems {
-            json_filepath,
-            so_filepath,
-        } => systems::patch(json_filepath, so_filepath),
-        Action::UnpackStations { input_filepath } => {
-            stations::unpack(input_filepath, output_filepath(input_filepath, "json"))
-        }
-        Action::RepackStations { input_filepath } => {
-            stations::repack(input_filepath, output_filepath(input_filepath, "bin"))
-        }
-        Action::PatchStations {
-            json_filepath,
-            so_filepath,
-        } => stations::patch(json_filepath, so_filepath),
-        Action::UnpackLang { input_filepath } => {
-            lang::unpack(input_filepath, output_filepath(input_filepath, "json"))
-        }
-        Action::RepackLang { input_filepath } => {
-            lang::repack(input_filepath, output_filepath(input_filepath, "lang"))
-        }
-
-        Action::UnpackShips { input_filepath } => {
-            ships::unpack(input_filepath, output_filepath(input_filepath, "json"))
-        }
-        Action::RepackShips { input_filepath } => {
-            ships::repack(input_filepath, output_filepath(input_filepath, "bin"))
-        }
+fn execute_command(command: &Command) -> io::Result<()> {
+    match command {
+        Command::Unpack(command) => command.execute(),
+        Command::Repack(command) => command.execute(),
+        Command::Patch(command) => command.execute(),
     }
-}
-
-fn output_filepath(filepath: impl AsRef<Path>, extension: impl AsRef<OsStr>) -> PathBuf {
-    let mut filepath = filepath.as_ref().to_owned();
-    filepath.set_extension(extension);
-
-    filepath
 }
