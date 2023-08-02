@@ -7,7 +7,9 @@ use std::path::{Path, PathBuf};
 
 #[derive(Args, Debug)]
 pub struct UnpackCommand {
+    /// Type of BIN file
     pub target: UnpackTarget,
+    /// BIN file to unpack
     pub filepath: PathBuf,
 }
 

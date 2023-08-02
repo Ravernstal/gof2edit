@@ -6,8 +6,11 @@ use std::path::PathBuf;
 
 #[derive(Args, Debug)]
 pub struct PatchCommand {
+    /// Type of JSON file
     pub target: PatchTarget,
+    /// JSON file used to patch
     pub json_filepath: PathBuf,
+    /// SO file to patch
     pub so_filepath: PathBuf,
 }
 
