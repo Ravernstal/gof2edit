@@ -55,7 +55,7 @@ pub fn repack(
 
     stations
         .iter()
-        .try_for_each(|system| write_one(&mut file, system))?;
+        .try_for_each(|station| write_one(&mut file, station))?;
 
     println!(
         "Repacked {} stations into {}",
