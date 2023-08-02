@@ -51,7 +51,7 @@ pub fn repack(
 
     ships
         .iter()
-        .try_for_each(|system| write_one(&mut file, system))?;
+        .try_for_each(|ship| write_one(&mut file, ship))?;
 
     println!(
         "Repacked {} ships into {}",
