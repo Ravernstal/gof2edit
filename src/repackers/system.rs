@@ -1,4 +1,5 @@
 use crate::data::system::System;
+use crate::utilities;
 use byteorder::{BigEndian, WriteBytesExt};
 use std::fs::File;
 use std::path::Path;
@@ -48,19 +49,10 @@ fn write_one(destination: &mut impl WriteBytesExt, system: &System) -> io::Resul
     destination.write_u32::<BigEndian>(system.jumpgate_station_id.unwrap_or(0xffffffff))?;
     destination.write_u32::<BigEndian>(system.texture_index)?;
 
-    write_u32_list(destination, &system.unknown_bytes)?;
-    write_u32_list(destination, &system.station_ids)?;
-    write_u32_list(destination, &system.linked_system_ids)?;
-    write_u32_list(destination, &system.footer_bytes)?;
-
-    Ok(())
-}
-
-fn write_u32_list(destination: &mut impl WriteBytesExt, list: &[u32]) -> io::Result<()> {
-    destination.write_u32::<BigEndian>(list.len() as u32)?;
-
-    list.iter()
-        .try_for_each(|x| destination.write_u32::<BigEndian>(*x))?;
+    utilities::write_u32_list(destination, &system.unknown_bytes)?;
+    utilities::write_u32_list(destination, &system.station_ids)?;
+    utilities::write_u32_list(destination, &system.linked_system_ids)?;
+    utilities::write_u32_list(destination, &system.footer_bytes)?;
 
     Ok(())
 }

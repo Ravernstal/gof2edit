@@ -11,6 +11,7 @@ mod patchers;
 mod repackers;
 mod targets;
 mod unpackers;
+mod utilities;
 
 fn main() {
     let arguments = Arguments::parse();
