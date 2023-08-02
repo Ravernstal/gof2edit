@@ -1,6 +1,7 @@
 use crate::data::faction::Faction;
 use crate::data::security_level::SecurityLevel;
 use crate::data::system::System;
+use crate::utilities;
 use byteorder::{BigEndian, ReadBytesExt};
 use std::fs::File;
 use std::io::ErrorKind;
@@ -55,10 +56,10 @@ fn read_one(source: &mut impl ReadBytesExt, index: u32) -> io::Result<System> {
     let jumpgate_station_id = source.read_u32::<BigEndian>()?;
     let texture_index = source.read_u32::<BigEndian>()?;
 
-    let unknown_bytes = read_u32_list(source)?;
-    let station_ids = read_u32_list(source)?;
-    let linked_system_ids = read_u32_list(source)?;
-    let footer_bytes = read_u32_list(source)?;
+    let unknown_bytes = utilities::read_u32_list(source)?;
+    let station_ids = utilities::read_u32_list(source)?;
+    let linked_system_ids = utilities::read_u32_list(source)?;
+    let footer_bytes = utilities::read_u32_list(source)?;
 
     Ok(System {
         index,
@@ -77,15 +78,4 @@ fn read_one(source: &mut impl ReadBytesExt, index: u32) -> io::Result<System> {
         linked_system_ids,
         footer_bytes,
     })
-}
-
-fn read_u32_list(source: &mut impl ReadBytesExt) -> io::Result<Vec<u32>> {
-    let count = source.read_u32::<BigEndian>()?;
-    let mut list = Vec::with_capacity(count as usize);
-
-    for _ in 0..count {
-        list.push(source.read_u32::<BigEndian>()?);
-    }
-
-    Ok(list)
 }

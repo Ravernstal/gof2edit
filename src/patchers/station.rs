@@ -1,5 +1,5 @@
 use crate::data::station::Station;
-use crate::patch;
+use crate::utilities;
 use std::fs::OpenOptions;
 use std::path::Path;
 use std::{fs, io};
@@ -19,7 +19,7 @@ pub fn patch(json_filepath: impl AsRef<Path>, so_filepath: impl AsRef<Path>) -> 
 
     STATION_COUNT_ADDRESSES
         .iter()
-        .try_for_each(|address| patch::set_byte(&mut file, *address, station_count))?;
+        .try_for_each(|address| utilities::set_byte(&mut file, *address, station_count))?;
 
     println!(
         "Patched {} stations into {}",
