@@ -6,7 +6,7 @@ edition = "2021"
 license = "AGPL-3.0-only"
 repository = "https://github.com/Ravernstal/gof2edit"
 readme = "README.md"
-description = "Galaxy on Fire 2 tool to unpack and repack BIN files"
+description = "Galaxy on Fire 2 tool to unpack and repack BIN files, as well as patch binaries"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
