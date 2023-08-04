@@ -1,5 +1,4 @@
-use crate::data::faction::Faction;
-use crate::data::security_level::SecurityLevel;
+use crate::bin_io::read::BinReader;
 use crate::data::system::System;
 use crate::utilities;
 use byteorder::{BigEndian, ReadBytesExt};
@@ -43,9 +42,9 @@ fn read_one(source: &mut impl ReadBytesExt, index: u32) -> io::Result<System> {
     let mut name = vec![0u8; name_length as usize];
     source.read_exact(&mut name)?;
 
-    let security_level = source.read_u32::<BigEndian>()?;
+    let security_level = source.read_bin::<BigEndian>()?;
     let starts_unlocked = source.read_u32::<BigEndian>()?;
-    let faction = source.read_u32::<BigEndian>()?;
+    let faction = source.read_bin::<BigEndian>()?;
 
     let map_coords = [
         source.read_u32::<BigEndian>()?,
@@ -64,8 +63,8 @@ fn read_one(source: &mut impl ReadBytesExt, index: u32) -> io::Result<System> {
     Ok(System {
         index,
         name: String::from_utf8(name).map_err(|_| ErrorKind::InvalidData)?,
-        security_level: SecurityLevel::from_u32(security_level).ok_or(ErrorKind::InvalidData)?,
-        faction: Faction::from_u32(faction).ok_or(ErrorKind::InvalidData)?,
+        security_level,
+        faction,
         starts_unlocked: matches!(starts_unlocked, 0).not(),
         map_coords,
         jumpgate_station_id: match jumpgate_station_id {
