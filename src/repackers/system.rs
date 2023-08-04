@@ -1,3 +1,4 @@
+use crate::bin_io::write::BinWriter;
 use crate::data::system::System;
 use crate::utilities;
 use byteorder::{BigEndian, WriteBytesExt};
@@ -38,9 +39,9 @@ fn write_one(destination: &mut impl WriteBytesExt, system: &System) -> io::Resul
     destination.write_u16::<BigEndian>(system.name.as_bytes().len() as u16)?;
     destination.write_all(system.name.as_bytes())?;
 
-    destination.write_u32::<BigEndian>(system.security_level.code())?;
+    destination.write_bin::<BigEndian>(&system.security_level)?;
     destination.write_u32::<BigEndian>(system.starts_unlocked.into())?;
-    destination.write_u32::<BigEndian>(system.faction.code())?;
+    destination.write_bin::<BigEndian>(&system.faction)?;
 
     destination.write_u32::<BigEndian>(system.map_coords[0])?;
     destination.write_u32::<BigEndian>(system.map_coords[1])?;

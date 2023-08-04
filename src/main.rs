@@ -4,6 +4,7 @@ use clap::Parser;
 use std::io;
 
 mod arguments;
+mod bin_io;
 mod commands;
 mod data;
 mod patch;

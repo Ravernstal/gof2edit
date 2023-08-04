@@ -1,6 +1,16 @@
+use crate::bin_io::read::BinRead;
+use crate::bin_io::write::BinWrite;
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
+use std::io;
+use std::io::{Error, ErrorKind, Read, Write};
 
-#[derive(Debug, Deserialize, Serialize)]
+const TERRAN_CODE: u32 = 0;
+const VOSSK_CODE: u32 = 1;
+const NIVELIAN_CODE: u32 = 2;
+const MIDORIAN_CODE: u32 = 3;
+
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 pub enum Faction {
     Terran,
     Vossk,
@@ -8,23 +18,25 @@ pub enum Faction {
     Midorian,
 }
 
-impl Faction {
-    pub fn from_u32(x: u32) -> Option<Self> {
-        match x {
-            0 => Some(Self::Terran),
-            1 => Some(Self::Vossk),
-            2 => Some(Self::Nivelian),
-            3 => Some(Self::Midorian),
-            _ => None,
+impl BinRead for Faction {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+        match source.read_u32::<O>()? {
+            TERRAN_CODE => Ok(Self::Terran),
+            VOSSK_CODE => Ok(Self::Vossk),
+            NIVELIAN_CODE => Ok(Self::Nivelian),
+            MIDORIAN_CODE => Ok(Self::Midorian),
+            _ => Err(Error::new(ErrorKind::InvalidData, "invalid faction code")),
         }
     }
+}
 
-    pub fn code(&self) -> u32 {
-        match self {
-            Self::Terran => 0,
-            Self::Vossk => 1,
-            Self::Nivelian => 2,
-            Self::Midorian => 3,
-        }
+impl BinWrite for Faction {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+        destination.write_u32::<O>(match self {
+            Self::Terran => TERRAN_CODE,
+            Self::Vossk => VOSSK_CODE,
+            Self::Nivelian => NIVELIAN_CODE,
+            Self::Midorian => MIDORIAN_CODE,
+        })
     }
 }
