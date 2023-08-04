@@ -1,5 +1,6 @@
+use crate::bin_io::write::BinWriter;
 use crate::data::station::Station;
-use byteorder::{BigEndian, WriteBytesExt};
+use byteorder::BigEndian;
 use std::fs::File;
 use std::path::Path;
 use std::{fs, io};
@@ -22,25 +23,13 @@ pub fn repack(
 
     stations
         .iter()
-        .try_for_each(|station| write_one(&mut file, station))?;
+        .try_for_each(|station| file.write_bin::<BigEndian>(station))?;
 
     println!(
         "Repacked {} stations into {}",
         stations.len(),
         output_filepath.display()
     );
-
-    Ok(())
-}
-
-fn write_one(destination: &mut impl WriteBytesExt, station: &Station) -> io::Result<()> {
-    destination.write_u16::<BigEndian>(station.name.as_bytes().len() as u16)?;
-    destination.write_all(station.name.as_bytes())?;
-
-    destination.write_u32::<BigEndian>(station.index)?;
-    destination.write_u32::<BigEndian>(station.system_index)?;
-    destination.write_u32::<BigEndian>(station.tech_level)?;
-    destination.write_u32::<BigEndian>(station.texture_index)?;
 
     Ok(())
 }

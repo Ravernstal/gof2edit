@@ -1,7 +1,7 @@
+use crate::bin_io::read::BinReader;
 use crate::data::station::Station;
-use byteorder::{BigEndian, ReadBytesExt};
+use byteorder::BigEndian;
 use std::fs::File;
-use std::io::ErrorKind;
 use std::path::Path;
 use std::{fs, io};
 
@@ -15,10 +15,10 @@ pub fn unpack(
     println!("Unpacking stations from {} ...", input_filepath.display());
 
     let mut file = File::open(input_filepath)?;
-    let mut stations = vec![];
+    let mut stations: Vec<Station> = vec![];
     let mut count = 0;
 
-    while let Ok(station) = read_one(&mut file) {
+    while let Ok(station) = file.read_bin::<BigEndian>() {
         stations.push(station);
         count += 1
     }
@@ -32,23 +32,4 @@ pub fn unpack(
     );
 
     Ok(())
-}
-
-fn read_one(source: &mut impl ReadBytesExt) -> io::Result<Station> {
-    let name_length = source.read_u16::<BigEndian>()?;
-    let mut name = vec![0u8; name_length as usize];
-    source.read_exact(&mut name)?;
-
-    let index = source.read_u32::<BigEndian>()?;
-    let system_index = source.read_u32::<BigEndian>()?;
-    let tech_level = source.read_u32::<BigEndian>()?;
-    let texture_index = source.read_u32::<BigEndian>()?;
-
-    Ok(Station {
-        index,
-        name: String::from_utf8(name).map_err(|_| ErrorKind::InvalidData)?,
-        system_index,
-        tech_level,
-        texture_index,
-    })
 }
