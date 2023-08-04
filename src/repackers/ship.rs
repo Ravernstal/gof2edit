@@ -1,5 +1,6 @@
+use crate::bin_io::write::BinWriter;
 use crate::data::ship::Ship;
-use byteorder::{BigEndian, WriteBytesExt};
+use byteorder::BigEndian;
 use std::fs::File;
 use std::path::Path;
 use std::{fs, io};
@@ -22,27 +23,13 @@ pub fn repack(
 
     ships
         .iter()
-        .try_for_each(|ship| write_one(&mut file, ship))?;
+        .try_for_each(|ship| file.write_bin::<BigEndian>(ship))?;
 
     println!(
         "Repacked {} ships into {}",
         ships.len(),
         output_filepath.display()
     );
-
-    Ok(())
-}
-
-fn write_one(destination: &mut impl WriteBytesExt, ship: &Ship) -> io::Result<()> {
-    destination.write_u32::<BigEndian>(ship.index)?;
-    destination.write_u32::<BigEndian>(ship.armour)?;
-    destination.write_u32::<BigEndian>(ship.cargo_capacity)?;
-    destination.write_u32::<BigEndian>(ship.price)?;
-    destination.write_u32::<BigEndian>(ship.primary_weapon_count)?;
-    destination.write_u32::<BigEndian>(ship.secondary_weapon_count)?;
-    destination.write_u32::<BigEndian>(ship.turret_count)?;
-    destination.write_u32::<BigEndian>(ship.equipment_slot_count)?;
-    destination.write_u32::<BigEndian>(ship.handling)?;
 
     Ok(())
 }
