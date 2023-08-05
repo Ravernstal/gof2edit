@@ -1,7 +1,6 @@
 use crate::bin_io::write::BinWriter;
 use crate::data::system::System;
-use crate::utilities;
-use byteorder::{BigEndian, WriteBytesExt};
+use byteorder::BigEndian;
 use std::fs::File;
 use std::path::Path;
 use std::{fs, io};
@@ -24,36 +23,13 @@ pub fn repack(
 
     systems
         .iter()
-        .try_for_each(|system| write_one(&mut file, system))?;
+        .try_for_each(|system| file.write_bin::<BigEndian>(system))?;
 
     println!(
         "Repacked {} systems into {}",
         systems.len(),
         output_filepath.display()
     );
-
-    Ok(())
-}
-
-fn write_one(destination: &mut impl WriteBytesExt, system: &System) -> io::Result<()> {
-    destination.write_u16::<BigEndian>(system.name.as_bytes().len() as u16)?;
-    destination.write_all(system.name.as_bytes())?;
-
-    destination.write_bin::<BigEndian>(&system.security_level)?;
-    destination.write_u32::<BigEndian>(system.starts_unlocked.into())?;
-    destination.write_bin::<BigEndian>(&system.faction)?;
-
-    destination.write_u32::<BigEndian>(system.map_coords[0])?;
-    destination.write_u32::<BigEndian>(system.map_coords[1])?;
-    destination.write_u32::<BigEndian>(system.map_coords[2])?;
-
-    destination.write_u32::<BigEndian>(system.jumpgate_station_id.unwrap_or(0xffffffff))?;
-    destination.write_u32::<BigEndian>(system.texture_index)?;
-
-    utilities::write_u32_list(destination, &system.unknown_bytes)?;
-    utilities::write_u32_list(destination, &system.station_ids)?;
-    utilities::write_u32_list(destination, &system.linked_system_ids)?;
-    utilities::write_u32_list(destination, &system.footer_bytes)?;
 
     Ok(())
 }
