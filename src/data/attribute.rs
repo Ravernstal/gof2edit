@@ -17,7 +17,7 @@ const MAXIMUM_PRICE_CODE: u32 = 8;
 const WEAPON_DAMAGE_CODE: u32 = 9;
 const WEAPON_EMP_DAMAGE_CODE: u32 = 10;
 const WEAPON_LOADING_SPEED_CODE: u32 = 11;
-const WEAPON_SECONDARY_LOADING_SPEED_CODE: u32 = 12;
+const WEAPON_SHOT_LIFETIME_CODE: u32 = 12;
 const WEAPON_SPEED_FACTOR_CODE: u32 = 13;
 const WEAPON_SECONDARY_MAGNITUDE_CODE: u32 = 14;
 const WEAPON_SECONDARY_STEERABLE_CODE: u32 = 15;
@@ -64,7 +64,7 @@ pub enum Attribute {
     WeaponDamage,
     WeaponEmpDamage,
     WeaponLoadingSpeed,
-    WeaponSecondaryLoadingSpeed,
+    WeaponShotLifetime,
     WeaponSpeedFactor,
     WeaponSecondaryMagnitude,
     WeaponSecondarySteerable,
@@ -114,7 +114,7 @@ impl TryFrom<u32> for Attribute {
             WEAPON_DAMAGE_CODE => Ok(Self::WeaponDamage),
             WEAPON_EMP_DAMAGE_CODE => Ok(Self::WeaponEmpDamage),
             WEAPON_LOADING_SPEED_CODE => Ok(Self::WeaponLoadingSpeed),
-            WEAPON_SECONDARY_LOADING_SPEED_CODE => Ok(Self::WeaponSecondaryLoadingSpeed),
+            WEAPON_SHOT_LIFETIME_CODE => Ok(Self::WeaponShotLifetime),
             WEAPON_SPEED_FACTOR_CODE => Ok(Self::WeaponSpeedFactor),
             WEAPON_SECONDARY_MAGNITUDE_CODE => Ok(Self::WeaponSecondaryMagnitude),
             WEAPON_SECONDARY_STEERABLE_CODE => Ok(Self::WeaponSecondarySteerable),
@@ -165,7 +165,7 @@ impl From<Attribute> for u32 {
             Attribute::WeaponDamage => WEAPON_DAMAGE_CODE,
             Attribute::WeaponEmpDamage => WEAPON_EMP_DAMAGE_CODE,
             Attribute::WeaponLoadingSpeed => WEAPON_LOADING_SPEED_CODE,
-            Attribute::WeaponSecondaryLoadingSpeed => WEAPON_SECONDARY_LOADING_SPEED_CODE,
+            Attribute::WeaponShotLifetime => WEAPON_SHOT_LIFETIME_CODE,
             Attribute::WeaponSpeedFactor => WEAPON_SPEED_FACTOR_CODE,
             Attribute::WeaponSecondaryMagnitude => WEAPON_SECONDARY_MAGNITUDE_CODE,
             Attribute::WeaponSecondarySteerable => WEAPON_SECONDARY_STEERABLE_CODE,
