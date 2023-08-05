@@ -7,7 +7,6 @@ mod arguments;
 mod bin_io;
 mod commands;
 mod data;
-mod patch;
 mod patchers;
 mod repackers;
 mod targets;
