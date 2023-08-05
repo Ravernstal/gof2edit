@@ -1,5 +1,5 @@
 use crate::targets::unpack::UnpackTarget;
-use crate::unpackers::{lang, ship, station, system};
+use crate::unpackers::{item, lang, ship, station, system};
 use clap::Args;
 use std::ffi::OsStr;
 use std::io;
@@ -19,6 +19,7 @@ impl UnpackCommand {
         let output_filepath = output_filepath(input_filepath, "json");
 
         match self.target {
+            UnpackTarget::Items => item::unpack(input_filepath, output_filepath),
             UnpackTarget::Lang => lang::unpack(input_filepath, output_filepath),
             UnpackTarget::Ships => ship::unpack(input_filepath, output_filepath),
             UnpackTarget::Stations => station::unpack(input_filepath, output_filepath),
