@@ -9,9 +9,9 @@ use std::io::{Error, ErrorKind, Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Item {
-    pub index: u32,
-    pub attributes: BTreeMap<Attribute, u32>,
-    pub unknown_attributes: BTreeMap<u32, u32>,
+    pub index: i32,
+    pub attributes: BTreeMap<Attribute, i32>,
+    pub unknown_attributes: BTreeMap<u32, i32>,
     pub blueprint_ingredients: BTreeMap<u32, u32>,
 }
 
@@ -46,7 +46,7 @@ impl BinRead for Item {
 
         for _ in 0..attribute_pair_count {
             let attribute_code = source.read_u32::<O>()?;
-            let attribute_value = source.read_u32::<O>()?;
+            let attribute_value = source.read_i32::<O>()?;
 
             match Attribute::try_from(attribute_code) {
                 Ok(Attribute::Index) => index = attribute_value,
