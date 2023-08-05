@@ -14,13 +14,18 @@ const MAXIMUM_PRICE_SYSTEM_CODE: u32 = 5;
 const OCCURRENCE_CODE: u32 = 6;
 const MINIMUM_PRICE_CODE: u32 = 7;
 const MAXIMUM_PRICE_CODE: u32 = 8;
-const DAMAGE_CODE: u32 = 9;
-const EMP_DAMAGE_CODE: u32 = 10;
-const LOADING_SPEED_CODE: u32 = 11;
-const SPEED_FACTOR_CODE: u32 = 13;
+const WEAPON_DAMAGE_CODE: u32 = 9;
+const WEAPON_EMP_DAMAGE_CODE: u32 = 10;
+const WEAPON_LOADING_SPEED_CODE: u32 = 11;
+const WEAPON_SECONDARY_LOADING_SPEED_CODE: u32 = 12;
+const WEAPON_SPEED_FACTOR_CODE: u32 = 13;
+const WEAPON_SECONDARY_MAGNITUDE_CODE: u32 = 14;
+const WEAPON_SECONDARY_STEERABLE_CODE: u32 = 15;
+const TURRET_AUTOMATIC_CODE: u32 = 16;
+const TURRET_HANDLING_CODE: u32 = 17;
 const SHIELD_CAPACITY_CODE: u32 = 18;
 const SHIELD_LOADING_SPEED_CODE: u32 = 19;
-const ARMOUR_CODE: u32 = 20;
+const ARMOUR_RATING_CODE: u32 = 20;
 const COMPRESSOR_EFFECT_CODE: u32 = 22;
 const TRACTOR_BEAM_AUTOMATIC_CODE: u32 = 23;
 const TRACTOR_BEAM_LOCK_TIME_CODE: u32 = 24;
@@ -36,7 +41,11 @@ const MINING_YIELD_CODE: u32 = 33;
 const CABIN_SIZE_CODE: u32 = 34;
 const CLOAK_EFFECT_CODE: u32 = 35;
 const CLOAK_LOADING_SPEED_CODE: u32 = 36;
-const CLOAK_ENERGY_CONSUMPTION_CODE: u32 = 38;
+const KHADOR_DRIVE_LOADING_SPEED_CODE: u32 = 37;
+const ENERGY_CONSUMPTION_CODE: u32 = 38;
+const WEAPON_MOD_FIRE_RATE_EFFECT_CODE: u32 = 39;
+const WEAPON_MOD_DAMAGE_EFFECT_CODE: u32 = 40;
+const EMERGENCY_SYSTEM_EFFECT_CODE: u32 = 41;
 const TIME_EXTENDER_EFFECT_CODE: u32 = 42;
 const TIME_EXTENDER_LOADING_SPEED_CODE: u32 = 43;
 
@@ -52,13 +61,18 @@ pub enum Attribute {
     Occurrence,
     MinimumPrice,
     MaximumPrice,
-    Damage,
-    EmpDamage,
-    LoadingSpeed,
-    SpeedFactor,
+    WeaponDamage,
+    WeaponEmpDamage,
+    WeaponLoadingSpeed,
+    WeaponSecondaryLoadingSpeed,
+    WeaponSpeedFactor,
+    WeaponSecondaryMagnitude,
+    WeaponSecondarySteerable,
+    TurretAutomatic,
+    TurretHandling,
     ShieldCapacity,
     ShieldLoadingSpeed,
-    Armour,
+    ArmourRating,
     CompressorEffect,
     TractorBeamAutomatic,
     TractorBeamLockTime,
@@ -74,7 +88,11 @@ pub enum Attribute {
     CabinSize,
     CloakEffect,
     CloakLoadingSpeed,
-    CloakEnergyConsumption,
+    KhadorDriveLoadingSpeed,
+    EnergyConsumption,
+    WeaponModFireRateEffect,
+    WeaponModDamageEffect,
+    EmergencySystemEffect,
     TimeExtenderEffect,
     TimeExtenderLoadingSpeed,
 }
@@ -93,13 +111,18 @@ impl TryFrom<u32> for Attribute {
             OCCURRENCE_CODE => Ok(Self::Occurrence),
             MINIMUM_PRICE_CODE => Ok(Self::MinimumPrice),
             MAXIMUM_PRICE_CODE => Ok(Self::MaximumPrice),
-            DAMAGE_CODE => Ok(Self::Damage),
-            EMP_DAMAGE_CODE => Ok(Self::EmpDamage),
-            LOADING_SPEED_CODE => Ok(Self::LoadingSpeed),
-            SPEED_FACTOR_CODE => Ok(Self::SpeedFactor),
+            WEAPON_DAMAGE_CODE => Ok(Self::WeaponDamage),
+            WEAPON_EMP_DAMAGE_CODE => Ok(Self::WeaponEmpDamage),
+            WEAPON_LOADING_SPEED_CODE => Ok(Self::WeaponLoadingSpeed),
+            WEAPON_SECONDARY_LOADING_SPEED_CODE => Ok(Self::WeaponSecondaryLoadingSpeed),
+            WEAPON_SPEED_FACTOR_CODE => Ok(Self::WeaponSpeedFactor),
+            WEAPON_SECONDARY_MAGNITUDE_CODE => Ok(Self::WeaponSecondaryMagnitude),
+            WEAPON_SECONDARY_STEERABLE_CODE => Ok(Self::WeaponSecondarySteerable),
+            TURRET_AUTOMATIC_CODE => Ok(Self::TurretAutomatic),
+            TURRET_HANDLING_CODE => Ok(Self::TurretHandling),
             SHIELD_CAPACITY_CODE => Ok(Self::ShieldCapacity),
             SHIELD_LOADING_SPEED_CODE => Ok(Self::ShieldLoadingSpeed),
-            ARMOUR_CODE => Ok(Self::Armour),
+            ARMOUR_RATING_CODE => Ok(Self::ArmourRating),
             COMPRESSOR_EFFECT_CODE => Ok(Self::CompressorEffect),
             TRACTOR_BEAM_AUTOMATIC_CODE => Ok(Self::TractorBeamAutomatic),
             TRACTOR_BEAM_LOCK_TIME_CODE => Ok(Self::TractorBeamLockTime),
@@ -115,7 +138,11 @@ impl TryFrom<u32> for Attribute {
             CABIN_SIZE_CODE => Ok(Self::CabinSize),
             CLOAK_EFFECT_CODE => Ok(Self::CloakEffect),
             CLOAK_LOADING_SPEED_CODE => Ok(Self::CloakLoadingSpeed),
-            CLOAK_ENERGY_CONSUMPTION_CODE => Ok(Self::CloakEnergyConsumption),
+            KHADOR_DRIVE_LOADING_SPEED_CODE => Ok(Self::KhadorDriveLoadingSpeed),
+            ENERGY_CONSUMPTION_CODE => Ok(Self::EnergyConsumption),
+            WEAPON_MOD_FIRE_RATE_EFFECT_CODE => Ok(Self::WeaponModFireRateEffect),
+            WEAPON_MOD_DAMAGE_EFFECT_CODE => Ok(Self::WeaponModDamageEffect),
+            EMERGENCY_SYSTEM_EFFECT_CODE => Ok(Self::EmergencySystemEffect),
             TIME_EXTENDER_EFFECT_CODE => Ok(Self::TimeExtenderEffect),
             TIME_EXTENDER_LOADING_SPEED_CODE => Ok(Self::TimeExtenderLoadingSpeed),
             _ => Err(Error::new(ErrorKind::InvalidData, "invalid attribute")),
@@ -135,13 +162,18 @@ impl From<Attribute> for u32 {
             Attribute::Occurrence => OCCURRENCE_CODE,
             Attribute::MinimumPrice => MINIMUM_PRICE_CODE,
             Attribute::MaximumPrice => MAXIMUM_PRICE_CODE,
-            Attribute::Damage => DAMAGE_CODE,
-            Attribute::EmpDamage => EMP_DAMAGE_CODE,
-            Attribute::LoadingSpeed => LOADING_SPEED_CODE,
-            Attribute::SpeedFactor => SPEED_FACTOR_CODE,
+            Attribute::WeaponDamage => WEAPON_DAMAGE_CODE,
+            Attribute::WeaponEmpDamage => WEAPON_EMP_DAMAGE_CODE,
+            Attribute::WeaponLoadingSpeed => WEAPON_LOADING_SPEED_CODE,
+            Attribute::WeaponSecondaryLoadingSpeed => WEAPON_SECONDARY_LOADING_SPEED_CODE,
+            Attribute::WeaponSpeedFactor => WEAPON_SPEED_FACTOR_CODE,
+            Attribute::WeaponSecondaryMagnitude => WEAPON_SECONDARY_MAGNITUDE_CODE,
+            Attribute::WeaponSecondarySteerable => WEAPON_SECONDARY_STEERABLE_CODE,
+            Attribute::TurretAutomatic => TURRET_AUTOMATIC_CODE,
+            Attribute::TurretHandling => TURRET_HANDLING_CODE,
             Attribute::ShieldCapacity => SHIELD_CAPACITY_CODE,
             Attribute::ShieldLoadingSpeed => SHIELD_LOADING_SPEED_CODE,
-            Attribute::Armour => ARMOUR_CODE,
+            Attribute::ArmourRating => ARMOUR_RATING_CODE,
             Attribute::CompressorEffect => COMPRESSOR_EFFECT_CODE,
             Attribute::TractorBeamAutomatic => TRACTOR_BEAM_AUTOMATIC_CODE,
             Attribute::TractorBeamLockTime => TRACTOR_BEAM_LOCK_TIME_CODE,
@@ -157,7 +189,11 @@ impl From<Attribute> for u32 {
             Attribute::CabinSize => CABIN_SIZE_CODE,
             Attribute::CloakEffect => CLOAK_EFFECT_CODE,
             Attribute::CloakLoadingSpeed => CLOAK_LOADING_SPEED_CODE,
-            Attribute::CloakEnergyConsumption => CLOAK_ENERGY_CONSUMPTION_CODE,
+            Attribute::KhadorDriveLoadingSpeed => KHADOR_DRIVE_LOADING_SPEED_CODE,
+            Attribute::EnergyConsumption => ENERGY_CONSUMPTION_CODE,
+            Attribute::WeaponModFireRateEffect => WEAPON_MOD_FIRE_RATE_EFFECT_CODE,
+            Attribute::WeaponModDamageEffect => WEAPON_MOD_DAMAGE_EFFECT_CODE,
+            Attribute::EmergencySystemEffect => EMERGENCY_SYSTEM_EFFECT_CODE,
             Attribute::TimeExtenderEffect => TIME_EXTENDER_EFFECT_CODE,
             Attribute::TimeExtenderLoadingSpeed => TIME_EXTENDER_LOADING_SPEED_CODE,
         }
