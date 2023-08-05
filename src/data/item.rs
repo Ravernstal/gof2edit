@@ -1,5 +1,5 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::attribute::Attribute;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
@@ -70,6 +70,40 @@ impl BinRead for Item {
 
 impl BinWrite for Item {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
-        todo!()
+        let blueprint_item_ids = self
+            .blueprint_ingredients
+            .keys()
+            .copied()
+            .collect::<Vec<_>>();
+        destination.write_bin::<O>(&blueprint_item_ids)?;
+
+        let blueprint_counts = self
+            .blueprint_ingredients
+            .values()
+            .copied()
+            .collect::<Vec<_>>();
+        destination.write_bin::<O>(&blueprint_counts)?;
+
+        let attribute_data_size =
+            (self.attributes.len() * 2) + (self.unknown_attributes.len() * 2) + 2;
+        let attribute_data_size = attribute_data_size
+            .try_into()
+            .map_err(|_| ErrorKind::InvalidData)?;
+        destination.write_u32::<O>(attribute_data_size)?;
+
+        destination.write_u32::<O>(0)?;
+        destination.write_i32::<O>(self.index)?;
+
+        for (attribute, value) in self.attributes.iter() {
+            destination.write_bin::<O>(attribute)?;
+            destination.write_i32::<O>(*value)?;
+        }
+
+        for (attribute, value) in self.unknown_attributes.iter() {
+            destination.write_u32::<O>(*attribute)?;
+            destination.write_i32::<O>(*value)?;
+        }
+
+        Ok(())
     }
 }

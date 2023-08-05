@@ -1,4 +1,4 @@
-use crate::repackers::{lang, ship, station, system};
+use crate::repackers::{item, lang, ship, station, system};
 use crate::targets::repack::RepackTarget;
 use clap::Args;
 use std::ffi::OsStr;
@@ -19,6 +19,7 @@ impl RepackCommand {
         let output_filepath = output_filepath(input_filepath, "bin");
 
         match self.target {
+            RepackTarget::Items => item::repack(input_filepath, output_filepath),
             RepackTarget::Lang => lang::repack(input_filepath, output_filepath),
             RepackTarget::Ships => ship::repack(input_filepath, output_filepath),
             RepackTarget::Stations => station::repack(input_filepath, output_filepath),
