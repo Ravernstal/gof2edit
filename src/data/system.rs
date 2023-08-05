@@ -35,7 +35,7 @@ impl BinRead for System {
             source.read_u32::<O>()?,
         ];
         let jumpgate_station_id = match source.read_u32::<O>()? {
-            0xFFFFFFFF => None,
+            u32::MAX => None,
             jumpgate_station_id => Some(jumpgate_station_id),
         };
         let texture_index = source.read_u32::<O>()?;
