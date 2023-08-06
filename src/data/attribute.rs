@@ -48,6 +48,15 @@ const WEAPON_MOD_DAMAGE_EFFECT_CODE: u32 = 40;
 const EMERGENCY_SYSTEM_EFFECT_CODE: u32 = 41;
 const TIME_EXTENDER_EFFECT_CODE: u32 = 42;
 const TIME_EXTENDER_LOADING_SPEED_CODE: u32 = 43;
+const PLASMA_COLLECTOR_MAGNITUDE_CODE: u32 = 50;
+const GAMMA_SHIELD_CAPACITY_CODE: u32 = 52;
+const REPAIR_BEAM_RANGE_CODE: u32 = 53;
+const REPAIR_BEAM_EFFECT_CODE: u32 = 54;
+const REPAIR_BEAM_COUNT_CODE: u32 = 55;
+const ION_MISSILE_EFFECT_CODE: u32 = 56;
+const SPECTRAL_FILTER_SHOW_INFO_CODE: u32 = 57;
+const SPECTRAL_FILTER_SHOW_ON_RADAR_CODE: u32 = 58;
+const SHIELD_INJECTOR_CONSUMPTION_CODE: u32 = 59;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -95,6 +104,15 @@ pub enum Attribute {
     EmergencySystemEffect,
     TimeExtenderEffect,
     TimeExtenderLoadingSpeed,
+    PlasmaCollectorMagnitude,
+    GammaShieldCapacity,
+    RepairBeamRange,
+    RepairBeamEffect,
+    RepairBeamCount,
+    IonMissileEffect,
+    SpectralFilterShowInfo,
+    SpectralFilterShowOnRadar,
+    ShieldInjectorConsumption,
 }
 
 impl TryFrom<u32> for Attribute {
@@ -145,6 +163,15 @@ impl TryFrom<u32> for Attribute {
             EMERGENCY_SYSTEM_EFFECT_CODE => Ok(Self::EmergencySystemEffect),
             TIME_EXTENDER_EFFECT_CODE => Ok(Self::TimeExtenderEffect),
             TIME_EXTENDER_LOADING_SPEED_CODE => Ok(Self::TimeExtenderLoadingSpeed),
+            PLASMA_COLLECTOR_MAGNITUDE_CODE => Ok(Self::PlasmaCollectorMagnitude),
+            GAMMA_SHIELD_CAPACITY_CODE => Ok(Self::GammaShieldCapacity),
+            REPAIR_BEAM_RANGE_CODE => Ok(Self::RepairBeamRange),
+            REPAIR_BEAM_EFFECT_CODE => Ok(Self::RepairBeamEffect),
+            REPAIR_BEAM_COUNT_CODE => Ok(Self::RepairBeamCount),
+            ION_MISSILE_EFFECT_CODE => Ok(Self::IonMissileEffect),
+            SPECTRAL_FILTER_SHOW_INFO_CODE => Ok(Self::SpectralFilterShowInfo),
+            SPECTRAL_FILTER_SHOW_ON_RADAR_CODE => Ok(Self::SpectralFilterShowOnRadar),
+            SHIELD_INJECTOR_CONSUMPTION_CODE => Ok(Self::ShieldInjectorConsumption),
             _ => Err(Error::new(ErrorKind::InvalidData, "invalid attribute")),
         }
     }
@@ -196,6 +223,15 @@ impl From<Attribute> for u32 {
             Attribute::EmergencySystemEffect => EMERGENCY_SYSTEM_EFFECT_CODE,
             Attribute::TimeExtenderEffect => TIME_EXTENDER_EFFECT_CODE,
             Attribute::TimeExtenderLoadingSpeed => TIME_EXTENDER_LOADING_SPEED_CODE,
+            Attribute::PlasmaCollectorMagnitude => PLASMA_COLLECTOR_MAGNITUDE_CODE,
+            Attribute::GammaShieldCapacity => GAMMA_SHIELD_CAPACITY_CODE,
+            Attribute::RepairBeamRange => REPAIR_BEAM_RANGE_CODE,
+            Attribute::RepairBeamEffect => REPAIR_BEAM_EFFECT_CODE,
+            Attribute::RepairBeamCount => REPAIR_BEAM_COUNT_CODE,
+            Attribute::IonMissileEffect => ION_MISSILE_EFFECT_CODE,
+            Attribute::SpectralFilterShowInfo => SPECTRAL_FILTER_SHOW_INFO_CODE,
+            Attribute::SpectralFilterShowOnRadar => SPECTRAL_FILTER_SHOW_ON_RADAR_CODE,
+            Attribute::ShieldInjectorConsumption => SHIELD_INJECTOR_CONSUMPTION_CODE,
         }
     }
 }
