@@ -57,6 +57,7 @@ const ION_MISSILE_EFFECT_CODE: u32 = 56;
 const SPECTRAL_FILTER_SHOW_INFO_CODE: u32 = 57;
 const SPECTRAL_FILTER_SHOW_ON_RADAR_CODE: u32 = 58;
 const SHIELD_INJECTOR_CONSUMPTION_CODE: u32 = 59;
+const VOSSK_ITEM_CODE: u32 = 60;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -113,6 +114,7 @@ pub enum Attribute {
     SpectralFilterShowInfo,
     SpectralFilterShowOnRadar,
     ShieldInjectorConsumption,
+    VosskItem,
 }
 
 impl TryFrom<u32> for Attribute {
@@ -172,6 +174,7 @@ impl TryFrom<u32> for Attribute {
             SPECTRAL_FILTER_SHOW_INFO_CODE => Ok(Self::SpectralFilterShowInfo),
             SPECTRAL_FILTER_SHOW_ON_RADAR_CODE => Ok(Self::SpectralFilterShowOnRadar),
             SHIELD_INJECTOR_CONSUMPTION_CODE => Ok(Self::ShieldInjectorConsumption),
+            VOSSK_ITEM_CODE => Ok(Self::VosskItem),
             _ => Err(Error::new(ErrorKind::InvalidData, "invalid attribute")),
         }
     }
@@ -232,6 +235,7 @@ impl From<Attribute> for u32 {
             Attribute::SpectralFilterShowInfo => SPECTRAL_FILTER_SHOW_INFO_CODE,
             Attribute::SpectralFilterShowOnRadar => SPECTRAL_FILTER_SHOW_ON_RADAR_CODE,
             Attribute::ShieldInjectorConsumption => SHIELD_INJECTOR_CONSUMPTION_CODE,
+            Attribute::VosskItem => VOSSK_ITEM_CODE,
         }
     }
 }
