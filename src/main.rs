@@ -12,6 +12,7 @@ mod patch_addresses;
 mod patchers;
 mod repackers;
 mod targets;
+mod unpack;
 mod unpackers;
 
 fn main() {
