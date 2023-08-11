@@ -1,10 +1,10 @@
 use crate::data::system::System;
-use crate::utilities;
+use crate::patch;
+use crate::patch_addresses::system;
 use std::fs::OpenOptions;
+use std::io::ErrorKind;
 use std::path::Path;
 use std::{fs, io};
-
-const SYSTEM_COUNT_ADDRESSES: &[u64] = &[0x000C69A8, 0x000C69BA, 0x00135C66, 0x00135E80];
 
 pub fn patch(json_filepath: impl AsRef<Path>, so_filepath: impl AsRef<Path>) -> io::Result<()> {
     let json_filepath = json_filepath.as_ref();
@@ -13,13 +13,14 @@ pub fn patch(json_filepath: impl AsRef<Path>, so_filepath: impl AsRef<Path>) -> 
     println!("Reading systems from {} ...", json_filepath.display());
 
     let json_string = fs::read_to_string(json_filepath)?;
-    let system_count = serde_json::from_str::<Vec<System>>(&json_string)?.len() as u8;
+    let system_count = serde_json::from_str::<Vec<System>>(&json_string)?.len();
+    let system_count = system_count
+        .try_into()
+        .map_err(|_| ErrorKind::InvalidData)?;
 
     let mut file = OpenOptions::new().write(true).open(so_filepath)?;
 
-    SYSTEM_COUNT_ADDRESSES
-        .iter()
-        .try_for_each(|address| utilities::set_byte(&mut file, *address, system_count))?;
+    patch::address_list_modifiers(&mut file, system::ADDRESSES, system_count)?;
 
     println!(
         "Patched {} systems into {}",
