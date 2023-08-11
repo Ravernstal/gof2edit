@@ -7,11 +7,12 @@ mod arguments;
 mod bin_io;
 mod commands;
 mod data;
+mod patch;
+mod patch_addresses;
 mod patchers;
 mod repackers;
 mod targets;
 mod unpackers;
-mod utilities;
 
 fn main() {
     let arguments = Arguments::parse();
