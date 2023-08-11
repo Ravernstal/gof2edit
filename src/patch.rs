@@ -1,7 +1,25 @@
 use byteorder::WriteBytesExt;
-use std::fs::File;
-use std::io;
+use serde::Deserialize;
+use std::fs::{File, OpenOptions};
 use std::io::{ErrorKind, Seek, SeekFrom};
+use std::path::Path;
+use std::{fs, io};
+
+pub fn file_with_counts<T: for<'de> Deserialize<'de>>(
+    json_filepath: impl AsRef<Path>,
+    binary_filepath: impl AsRef<Path>,
+    address_modifiers: &[(u64, i8)],
+) -> io::Result<usize> {
+    let json = fs::read_to_string(json_filepath)?;
+    let data = serde_json::from_str::<Vec<T>>(&json)?;
+    let count = data.len().try_into().map_err(|_| ErrorKind::InvalidData)?;
+
+    let mut file = OpenOptions::new().write(true).open(binary_filepath)?;
+
+    address_list_modifiers(&mut file, address_modifiers, count)?;
+
+    Ok(data.len())
+}
 
 pub fn address_list_modifiers(
     file: &mut File,
