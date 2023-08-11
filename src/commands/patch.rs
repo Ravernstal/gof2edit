@@ -15,10 +15,10 @@ pub struct PatchCommand {
 }
 
 impl PatchCommand {
-    pub fn execute(&self) -> io::Result<()> {
+    pub fn execute(&self, silent: bool) -> io::Result<()> {
         match self.target {
-            PatchTarget::Stations => station::patch(&self.json_filepath, &self.so_filepath),
-            PatchTarget::Systems => system::patch(&self.json_filepath, &self.so_filepath),
+            PatchTarget::Stations => station::patch(&self.json_filepath, &self.so_filepath, silent),
+            PatchTarget::Systems => system::patch(&self.json_filepath, &self.so_filepath, silent),
         }
     }
 }

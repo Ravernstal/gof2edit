@@ -17,16 +17,16 @@ mod unpackers;
 fn main() {
     let arguments = Arguments::parse();
 
-    match execute_command(&arguments.command) {
+    match execute_command(&arguments.command, arguments.silent) {
         Ok(_) => {}
         Err(error) => eprintln!("Error: {error}"),
     }
 }
 
-fn execute_command(command: &Command) -> io::Result<()> {
+fn execute_command(command: &Command, silent: bool) -> io::Result<()> {
     match command {
-        Command::Unpack(command) => command.execute(),
-        Command::Repack(command) => command.execute(),
-        Command::Patch(command) => command.execute(),
+        Command::Unpack(command) => command.execute(silent),
+        Command::Repack(command) => command.execute(silent),
+        Command::Patch(command) => command.execute(silent),
     }
 }

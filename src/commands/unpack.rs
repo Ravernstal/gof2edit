@@ -14,16 +14,16 @@ pub struct UnpackCommand {
 }
 
 impl UnpackCommand {
-    pub fn execute(&self) -> io::Result<()> {
+    pub fn execute(&self, silent: bool) -> io::Result<()> {
         let input_filepath = &self.filepath;
         let output_filepath = output_filepath(input_filepath, "json");
 
         match self.target {
-            UnpackTarget::Items => item::unpack(input_filepath, output_filepath),
-            UnpackTarget::Lang => lang::unpack(input_filepath, output_filepath),
-            UnpackTarget::Ships => ship::unpack(input_filepath, output_filepath),
-            UnpackTarget::Stations => station::unpack(input_filepath, output_filepath),
-            UnpackTarget::Systems => system::unpack(input_filepath, output_filepath),
+            UnpackTarget::Items => item::unpack(input_filepath, output_filepath, silent),
+            UnpackTarget::Lang => lang::unpack(input_filepath, output_filepath, silent),
+            UnpackTarget::Ships => ship::unpack(input_filepath, output_filepath, silent),
+            UnpackTarget::Stations => station::unpack(input_filepath, output_filepath, silent),
+            UnpackTarget::Systems => system::unpack(input_filepath, output_filepath, silent),
         }
     }
 }
