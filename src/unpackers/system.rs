@@ -1,8 +1,10 @@
+use crate::bin_io::read::BinReader;
 use crate::data::system::System;
-use crate::unpack;
-use std::io;
+use byteorder::BigEndian;
+use std::fs::File;
 use std::ops::Not;
 use std::path::Path;
+use std::{fs, io};
 
 pub fn unpack(
     input_filepath: impl AsRef<Path>,
@@ -16,7 +18,19 @@ pub fn unpack(
         println!("Unpacking systems from {} ...", input_filepath.display());
     }
 
-    let count = unpack::file::<System>(input_filepath, output_filepath)?;
+    let mut file = File::open(input_filepath)?;
+
+    let mut systems = Vec::<System>::new();
+    let mut count = 0;
+
+    while let Ok(system) = file.read_bin::<BigEndian>() {
+        let mut system: System = system;
+        system.index = count;
+        systems.push(system);
+        count += 1;
+    }
+
+    serde_json::to_string_pretty(&systems).map(|json| fs::write(output_filepath, json))??;
 
     if silent.not() {
         println!(
