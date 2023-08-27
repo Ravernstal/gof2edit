@@ -7,13 +7,12 @@ mod arguments;
 mod bin_io;
 mod commands;
 mod data;
+mod index;
 mod patch;
 mod patch_addresses;
-mod patchers;
-mod repackers;
+mod repack;
 mod targets;
 mod unpack;
-mod unpackers;
 
 fn main() {
     let arguments = Arguments::parse();
@@ -26,8 +25,14 @@ fn main() {
 
 fn execute_command(command: &Command, silent: bool) -> io::Result<()> {
     match command {
-        Command::Unpack(command) => command.execute(silent),
-        Command::Repack(command) => command.execute(silent),
-        Command::Patch(command) => command.execute(silent),
+        Command::Unpack(command) => unpack::unpack(command.target, &command.filepath, silent),
+        Command::Repack(command) => repack::repack(command.target, &command.filepath, silent),
+        Command::Patch(command) => patch::patch(
+            command.target,
+            &command.json_filepath,
+            &command.binary_filepath,
+            command.binary,
+            silent,
+        ),
     }
 }

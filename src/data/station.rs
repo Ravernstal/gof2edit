@@ -1,5 +1,6 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
+use crate::index::Index;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io;
@@ -12,6 +13,16 @@ pub struct Station {
     pub system_index: u32,
     pub tech_level: u32,
     pub texture_index: u32,
+}
+
+impl Index for Station {
+    fn index(&self) -> u32 {
+        self.index
+    }
+
+    fn set_index(&mut self, index: u32) {
+        self.index = index;
+    }
 }
 
 impl BinRead for Station {

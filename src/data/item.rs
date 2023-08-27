@@ -1,6 +1,7 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::attribute::Attribute;
+use crate::index::Index;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -9,10 +10,20 @@ use std::io::{Error, ErrorKind, Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Item {
-    pub index: i32,
+    pub index: u32,
     pub attributes: BTreeMap<Attribute, i32>,
     pub unknown_attributes: BTreeMap<u32, i32>,
     pub blueprint_ingredients: BTreeMap<u32, u32>,
+}
+
+impl Index for Item {
+    fn index(&self) -> u32 {
+        self.index
+    }
+
+    fn set_index(&mut self, index: u32) {
+        self.index = index;
+    }
 }
 
 impl BinRead for Item {
@@ -59,6 +70,8 @@ impl BinRead for Item {
             };
         }
 
+        let index = index.try_into().map_err(|_| ErrorKind::InvalidData)?;
+
         Ok(Self {
             index,
             attributes,
@@ -91,8 +104,9 @@ impl BinWrite for Item {
             .map_err(|_| ErrorKind::InvalidData)?;
         destination.write_u32::<O>(attribute_data_size)?;
 
+        let index = self.index.try_into().map_err(|_| ErrorKind::InvalidData)?;
         destination.write_u32::<O>(0)?;
-        destination.write_i32::<O>(self.index)?;
+        destination.write_i32::<O>(index)?;
 
         for (attribute, value) in self.attributes.iter() {
             destination.write_bin::<O>(attribute)?;
