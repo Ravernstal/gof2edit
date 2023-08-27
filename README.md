@@ -1,3 +1,5 @@
+[![Tests](https://github.com/Ravernstal/gof2edit/actions/workflows/ci.yml/badge.svg)](https://github.com/Ravernstal/gof2edit/actions/workflows/ci.yml)
+
 # gof2edit
 Galaxy on Fire 2 tool to unpack and repack BIN files, as well as patch binaries.
 
