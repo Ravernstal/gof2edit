@@ -1,43 +1,48 @@
-use crate::bin_io::read::{BinRead, BinReader};
-use crate::data::item::Item;
-use crate::data::lang_string::LangString;
-use crate::data::ship::Ship;
-use crate::data::station::Station;
-use crate::data::system::System;
-use crate::index::Index;
 use crate::targets::unpack::UnpackTarget;
-use byteorder::BigEndian;
+use gof2edit::bin_io::read::BinRead;
+use gof2edit::data::{Item, LangString, Ship, Station, System};
+use gof2edit::index::Index;
 use serde::Serialize;
-use std::ffi::OsStr;
 use std::fs::File;
-use std::io::Read;
+use std::io;
+use std::io::{Read, Write};
 use std::ops::Not;
-use std::path::{Path, PathBuf};
-use std::{fs, io};
+use std::path::Path;
 
-pub fn unpack(
-    target: UnpackTarget,
+pub fn bin_to_json(
     input_filepath: impl AsRef<Path>,
+    output_filepath: impl AsRef<Path>,
+    target: UnpackTarget,
     silent: bool,
 ) -> io::Result<()> {
     let input_filepath = input_filepath.as_ref();
-    let output_filepath = &output_filepath(input_filepath, "json");
+    let output_filepath = output_filepath.as_ref();
 
-    if silent.not() {
-        println!("Unpacking {target} from {} ...", input_filepath.display());
-    }
-
-    let count = match target {
-        UnpackTarget::Items => unpack_file::<Item>(input_filepath, output_filepath, target),
-        UnpackTarget::Lang => unpack_file::<LangString>(input_filepath, output_filepath, target),
-        UnpackTarget::Ships => unpack_file::<Ship>(input_filepath, output_filepath, target),
-        UnpackTarget::Stations => unpack_file::<Station>(input_filepath, output_filepath, target),
-        UnpackTarget::Systems => unpack_file::<System>(input_filepath, output_filepath, target),
-    }?;
+    let mut source = File::open(input_filepath)?;
+    let mut destination = File::create(output_filepath)?;
 
     if silent.not() {
         println!(
-            "Unpacked {count} {target} into {}",
+            "Unpacking {target} from \"{}\" ...",
+            input_filepath.display()
+        );
+    }
+
+    let count = match target {
+        UnpackTarget::Items => deserialise_objects::<Item>(&mut source, &mut destination)?,
+        UnpackTarget::Lang => {
+            deserialise_objects_indexed::<LangString>(&mut source, &mut destination)?
+        }
+        UnpackTarget::Ships => deserialise_objects::<Ship>(&mut source, &mut destination)?,
+        UnpackTarget::Stations => deserialise_objects::<Station>(&mut source, &mut destination)?,
+        UnpackTarget::Systems => {
+            deserialise_objects_indexed::<System>(&mut source, &mut destination)?
+        }
+    };
+
+    if silent.not() {
+        println!(
+            "Unpacked {count} {target} into \"{}\"",
             output_filepath.display()
         );
     }
@@ -45,48 +50,24 @@ pub fn unpack(
     Ok(())
 }
 
-fn unpack_file<T: Index + BinRead + Serialize>(
-    input_filepath: impl AsRef<Path>,
-    output_filepath: impl AsRef<Path>,
-    target: UnpackTarget,
+fn deserialise_objects<T: BinRead + Serialize>(
+    source: &mut impl Read,
+    destination: &mut impl Write,
 ) -> io::Result<usize> {
-    let mut file = File::open(input_filepath)?;
+    let objects = gof2edit::read_object_list::<T>(source)?;
 
-    let objects = bin_to_json::<T>(&mut file, target)?;
-
-    let json = serde_json::to_string_pretty(&objects)?;
-
-    fs::write(output_filepath, json)?;
+    serde_json::to_writer_pretty(destination, &objects)?;
 
     Ok(objects.len())
 }
 
-fn bin_to_json<T: Index + BinRead>(
+fn deserialise_objects_indexed<T: BinRead + Serialize + Index>(
     source: &mut impl Read,
-    target: UnpackTarget,
-) -> io::Result<Vec<T>> {
-    let mut objects = vec![];
-    let mut count = 0;
+    destination: &mut impl Write,
+) -> io::Result<usize> {
+    let objects = gof2edit::read_object_list_indexed::<T>(source)?;
 
-    while let Ok(object) = source.read_bin::<BigEndian>() {
-        let mut object: T = object;
+    serde_json::to_writer_pretty(destination, &objects)?;
 
-        match target {
-            UnpackTarget::Systems | UnpackTarget::Lang => object.set_index(count),
-            _ => {}
-        }
-
-        objects.push(object);
-        count += 1;
-    }
-
-    Ok(objects)
-}
-
-// TODO: Move to dedicated module
-fn output_filepath(filepath: impl AsRef<Path>, extension: impl AsRef<OsStr>) -> PathBuf {
-    let mut filepath = filepath.as_ref().to_owned();
-    filepath.set_extension(extension);
-
-    filepath
+    Ok(objects.len())
 }

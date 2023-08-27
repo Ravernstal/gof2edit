@@ -1,13 +1,12 @@
 use crate::arguments::Arguments;
-use crate::commands::Command;
+use crate::command::Command;
 use clap::Parser;
+use std::ffi::OsStr;
 use std::io;
+use std::path::{Path, PathBuf};
 
 mod arguments;
-mod bin_io;
-mod commands;
-mod data;
-mod index;
+mod command;
 mod patch;
 mod patch_addresses;
 mod repack;
@@ -25,14 +24,34 @@ fn main() {
 
 fn execute_command(command: &Command, silent: bool) -> io::Result<()> {
     match command {
-        Command::Unpack(command) => unpack::unpack(command.target, &command.filepath, silent),
-        Command::Repack(command) => repack::repack(command.target, &command.filepath, silent),
-        Command::Patch(command) => patch::patch(
-            command.target,
-            &command.json_filepath,
-            &command.binary_filepath,
-            command.binary,
-            silent,
-        ),
+        Command::Unpack {
+            target,
+            input_filepath,
+        } => {
+            let output_filepath = output_filepath(input_filepath, "json");
+            unpack::bin_to_json(input_filepath, output_filepath, *target, silent)
+        }
+        Command::Repack {
+            target,
+            input_filepath,
+        } => {
+            let output_filepath = output_filepath(input_filepath, "bin");
+            repack::json_to_bin(input_filepath, output_filepath, *target, silent)
+        }
+
+        Command::Patch {
+            target,
+            json_filepath,
+            binary_filepath,
+            binary,
+        } => patch::patch(json_filepath, binary_filepath, *target, *binary, silent),
     }
+}
+
+// TODO: Move to dedicated module
+fn output_filepath(filepath: impl AsRef<Path>, extension: impl AsRef<OsStr>) -> PathBuf {
+    let mut filepath = filepath.as_ref().to_owned();
+    filepath.set_extension(extension);
+
+    filepath
 }
