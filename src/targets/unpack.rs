@@ -6,7 +6,7 @@ use std::fmt::{Display, Formatter};
 pub enum UnpackTarget {
     /// items.bin
     Items,
-    /// names_*.bin
+    /// *.lang
     Lang,
     /// ships.bin
     Ships,

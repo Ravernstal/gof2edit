@@ -1,0 +1,35 @@
+[
+  {
+    "index": 0,
+    "armour": 95,
+    "cargo_capacity": 25,
+    "price": 16200,
+    "primary_weapon_count": 1,
+    "secondary_weapon_count": 1,
+    "turret_count": 0,
+    "equipment_slot_count": 3,
+    "handling": 120
+  },
+  {
+    "index": 1,
+    "armour": 192,
+    "cargo_capacity": 65,
+    "price": 100320,
+    "primary_weapon_count": 2,
+    "secondary_weapon_count": 4,
+    "turret_count": 1,
+    "equipment_slot_count": 7,
+    "handling": 106
+  },
+  {
+    "index": 2,
+    "armour": 160,
+    "cargo_capacity": 52,
+    "price": 32600,
+    "primary_weapon_count": 1,
+    "secondary_weapon_count": 2,
+    "turret_count": 0,
+    "equipment_slot_count": 4,
+    "handling": 150
+  }
+]
