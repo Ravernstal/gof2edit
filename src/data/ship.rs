@@ -1,5 +1,6 @@
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::BinWrite;
+use crate::index::Index;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io;
@@ -16,6 +17,16 @@ pub struct Ship {
     pub turret_count: u32,
     pub equipment_slot_count: u32,
     pub handling: u32,
+}
+
+impl Index for Ship {
+    fn index(&self) -> u32 {
+        self.index
+    }
+
+    fn set_index(&mut self, index: u32) {
+        self.index = index;
+    }
 }
 
 impl BinRead for Ship {

@@ -2,6 +2,7 @@ use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::faction::Faction;
 use crate::data::security_level::SecurityLevel;
+use crate::index::Index;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io;
@@ -21,6 +22,16 @@ pub struct System {
     pub station_ids: Vec<u32>,
     pub linked_system_ids: Vec<u32>,
     pub footer_bytes: Vec<u32>,
+}
+
+impl Index for System {
+    fn index(&self) -> u32 {
+        self.index
+    }
+
+    fn set_index(&mut self, index: u32) {
+        self.index = index;
+    }
 }
 
 impl BinRead for System {
