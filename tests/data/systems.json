@@ -1,0 +1,108 @@
+[
+  {
+    "index": 0,
+    "name": "Test System",
+    "security_level": "Risky",
+    "faction": "Nivelian",
+    "starts_unlocked": false,
+    "map_coords": [
+      22,
+      55,
+      55
+    ],
+    "jumpgate_station_id": 0,
+    "texture_index": 4,
+    "unknown_bytes": [
+      18,
+      21,
+      10
+    ],
+    "station_ids": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "linked_system_ids": [
+      2,
+      8
+    ],
+    "footer_bytes": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "index": 1,
+    "name": "Gato",
+    "security_level": "Risky",
+    "faction": "Terran",
+    "starts_unlocked": false,
+    "map_coords": [
+      22,
+      81,
+      62
+    ],
+    "jumpgate_station_id": 5,
+    "texture_index": 2,
+    "unknown_bytes": [
+      21,
+      18,
+      10
+    ],
+    "station_ids": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "linked_system_ids": [
+      8,
+      18
+    ],
+    "footer_bytes": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "index": 2,
+    "name": "System 3",
+    "security_level": "Risky",
+    "faction": "Nivelian",
+    "starts_unlocked": true,
+    "map_coords": [
+      24,
+      40,
+      73
+    ],
+    "jumpgate_station_id": 30,
+    "texture_index": 9,
+    "unknown_bytes": [
+      8,
+      11,
+      21
+    ],
+    "station_ids": [
+      30,
+      31,
+      32,
+      33
+    ],
+    "linked_system_ids": [
+      0,
+      8,
+      9,
+      17
+    ],
+    "footer_bytes": [
+      0,
+      1,
+      2
+    ]
+  }
+]

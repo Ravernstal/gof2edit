@@ -1,0 +1,90 @@
+[
+  {
+    "index": 0,
+    "attributes": {
+      "type": 0,
+      "sort": 0,
+      "tech_level": 1,
+      "minimum_price_system": 8,
+      "maximum_price_system": 7,
+      "occurrence": 90,
+      "minimum_price": 400,
+      "maximum_price": 440,
+      "weapon_damage": 3,
+      "weapon_loading_speed": 400,
+      "weapon_shot_lifetime": 2000,
+      "weapon_speed_factor": 20,
+      "vossk_item": 0
+    },
+    "unknown_attributes": {
+      "61": 52
+    },
+    "blueprint_ingredients": {}
+  },
+  {
+    "index": 1,
+    "attributes": {
+      "type": 0,
+      "sort": 0,
+      "tech_level": 2,
+      "minimum_price_system": 8,
+      "maximum_price_system": 7,
+      "occurrence": 70,
+      "minimum_price": 6230,
+      "maximum_price": 6481,
+      "weapon_damage": 5,
+      "weapon_loading_speed": 400,
+      "weapon_shot_lifetime": 2000,
+      "weapon_speed_factor": 22,
+      "vossk_item": 0
+    },
+    "unknown_attributes": {
+      "61": 52
+    },
+    "blueprint_ingredients": {}
+  },
+  {
+    "index": 2,
+    "attributes": {
+      "type": 0,
+      "sort": 0,
+      "tech_level": 3,
+      "minimum_price_system": 8,
+      "maximum_price_system": 7,
+      "occurrence": 60,
+      "minimum_price": 9510,
+      "maximum_price": 10461,
+      "weapon_damage": 6,
+      "weapon_loading_speed": 380,
+      "weapon_shot_lifetime": 2000,
+      "weapon_speed_factor": 20,
+      "vossk_item": 0
+    },
+    "unknown_attributes": {
+      "61": 52
+    },
+    "blueprint_ingredients": {}
+  },
+  {
+    "index": 3,
+    "attributes": {
+      "type": 0,
+      "sort": 0,
+      "tech_level": 6,
+      "minimum_price_system": 8,
+      "maximum_price_system": 7,
+      "occurrence": 50,
+      "minimum_price": 8000,
+      "maximum_price": 8800,
+      "weapon_damage": 7,
+      "weapon_loading_speed": 500,
+      "weapon_shot_lifetime": 2000,
+      "weapon_speed_factor": 20,
+      "vossk_item": 1
+    },
+    "unknown_attributes": {
+      "61": 52
+    },
+    "blueprint_ingredients": {}
+  }
+]

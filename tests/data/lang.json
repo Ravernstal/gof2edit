@@ -1,0 +1,14 @@
+[
+  {
+    "index": 0,
+    "string": "Test String 1"
+  },
+  {
+    "index": 1,
+    "string": "String No. 2"
+  },
+  {
+    "index": 2,
+    "string": "Number three"
+  }
+]
