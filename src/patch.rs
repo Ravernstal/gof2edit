@@ -1,7 +1,6 @@
 use crate::patch_addresses::binary_version::BinaryVersion;
-use crate::patch_addresses::{station, system};
+use crate::patch_addresses::{station, system, WriteValueFn};
 use crate::targets::patch::PatchTarget;
-use byteorder::WriteBytesExt;
 use gof2edit::data::{Station, System};
 use serde::de::DeserializeOwned;
 use std::fs::{File, OpenOptions};
@@ -51,7 +50,7 @@ pub fn patch(
 fn patch_objects<T: DeserializeOwned, D: Write + Seek>(
     source: &mut impl Read,
     destination: &mut D,
-    address_list_modifiers: &[(u64, i8)],
+    address_list_modifiers: &[(u64, &WriteValueFn)],
 ) -> io::Result<usize> {
     let objects: Vec<T> = serde_json::from_reader(source)?;
     let count = objects
@@ -66,20 +65,13 @@ fn patch_objects<T: DeserializeOwned, D: Write + Seek>(
 
 fn patch_address_list_modifiers<T: Write + Seek>(
     destination: &mut T,
-    address_modifiers: &[(u64, i8)],
+    address_modifiers: &[(u64, &WriteValueFn)],
     byte: u8,
 ) -> io::Result<()> {
     address_modifiers
         .iter()
-        .try_for_each(|&(address, modifier)| {
-            let byte = i16::from(byte) + i16::from(modifier);
-            let byte = byte.try_into().map_err(|_| ErrorKind::InvalidData)?;
-
-            set_byte(destination, address, byte)
+        .try_for_each(|&(address, function)| {
+            destination.seek(SeekFrom::Start(address))?;
+            function(destination, byte)
         })
-}
-
-fn set_byte<T: Write + Seek>(destination: &mut T, address: u64, byte: u8) -> io::Result<()> {
-    destination.seek(SeekFrom::Start(address))?;
-    destination.write_u8(byte)
 }

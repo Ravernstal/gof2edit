@@ -1,16 +1,19 @@
 use crate::patch_addresses::binary_version::BinaryVersion;
+use crate::patch_addresses::{write_value, WriteValueFn};
 
-const ANDROID_KIRITO_JPK_ADDRESSES: &[(u64, i8)] = &[
-    (0xA5DB2, 0),
-    (0xA5DDA, 0),
-    (0xC69A8, 0),
-    (0xC69BA, 0),
-    (0x135C66, 0),
-    (0x135E80, 0),
-];
-
-pub fn addresses(binary: BinaryVersion) -> &'static [(u64, i8)] {
+pub fn addresses(binary: BinaryVersion) -> &'static [(u64, &'static WriteValueFn)] {
     match binary {
-        BinaryVersion::AndroidKiritoJpk => ANDROID_KIRITO_JPK_ADDRESSES,
+        BinaryVersion::AndroidKiritoJpk => android_kirito_jpk_addresses(),
     }
+}
+
+fn android_kirito_jpk_addresses() -> &'static [(u64, &'static WriteValueFn)] {
+    &[
+        (0xA5DB2, &write_value::default),
+        (0xA5DDA, &write_value::default),
+        (0xC69A8, &write_value::default),
+        (0xC69BA, &write_value::default),
+        (0x135C66, &write_value::default),
+        (0x135E80, &write_value::default),
+    ]
 }
