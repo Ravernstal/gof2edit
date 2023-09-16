@@ -142,7 +142,7 @@ dependencies = [
 
 [[package]]
 name = "gof2edit"
-version = "0.4.3"
+version = "0.4.4"
 dependencies = [
  "byteorder",
  "clap",
