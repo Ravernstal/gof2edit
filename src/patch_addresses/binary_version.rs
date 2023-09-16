@@ -4,4 +4,6 @@ use clap::ValueEnum;
 pub enum BinaryVersion {
     /// KiritoJPK's full HD Android mod
     AndroidKiritoJpk,
+    /// The stock iOS binary
+    Ios,
 }
