@@ -1,11 +1,12 @@
-use byteorder::BigEndian;
-use gof2edit::data::{Item, LangString, Ship, Station, System};
+use byteorder::{BigEndian, LittleEndian};
+use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System};
 use std::io::Cursor;
 use std::ops::Not;
 
 const ITEMS_JSON: &str = include_str!("data/items.json");
 const LANG_JSON: &str = include_str!("data/lang.json");
 const SHIPS_JSON: &str = include_str!("data/ships.json");
+const SHIP_POSITIONS_JSON: &str = include_str!("data/ship_positions.json");
 const STATIONS_JSON: &str = include_str!("data/stations.json");
 const SYSTEMS_JSON: &str = include_str!("data/systems.json");
 
@@ -58,6 +59,23 @@ fn convert_ships_bin_to_json() {
         .expect("failed to unpack ships from BIN");
 
     assert!(ships.is_empty().not())
+}
+
+#[test]
+fn convert_ship_positions_bin_to_json() {
+    let ship_positions = serde_json::from_str::<Vec<ShipPosition>>(SHIP_POSITIONS_JSON)
+        .expect("failed to parse ship positions test JSON");
+
+    let mut buffer = Cursor::new(vec![0u8]);
+
+    gof2edit::write_object_list::<ShipPosition, LittleEndian>(&mut buffer, ship_positions)
+        .expect("failed to repack ship positions to BIN");
+    buffer.set_position(0);
+
+    let ship_positions = gof2edit::read_object_list::<ShipPosition, LittleEndian>(&mut buffer)
+        .expect("failed to unpack ship positions from BIN");
+
+    assert!(ship_positions.is_empty().not())
 }
 
 #[test]
