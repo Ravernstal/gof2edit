@@ -1,6 +1,7 @@
 use crate::targets::repack::RepackTarget;
+use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::write::BinWrite;
-use gof2edit::data::{Item, LangString, Ship, Station, System};
+use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System};
 use gof2edit::index::Index;
 use serde::de::DeserializeOwned;
 use std::fs::File;
@@ -29,11 +30,20 @@ pub fn json_to_bin(
     }
 
     let count = match target {
-        RepackTarget::Items => serialise_objects::<Item>(&mut source, &mut destination)?,
-        RepackTarget::Lang => serialise_objects::<LangString>(&mut source, &mut destination)?,
-        RepackTarget::Ships => serialise_objects::<Ship>(&mut source, &mut destination)?,
-        RepackTarget::Stations => serialise_objects::<Station>(&mut source, &mut destination)?,
-        RepackTarget::Systems => serialise_objects::<System>(&mut source, &mut destination)?,
+        RepackTarget::Items => serialise_objects::<Item, BigEndian>(&mut source, &mut destination)?,
+        RepackTarget::Lang => {
+            serialise_objects::<LangString, BigEndian>(&mut source, &mut destination)?
+        }
+        RepackTarget::Ships => serialise_objects::<Ship, BigEndian>(&mut source, &mut destination)?,
+        RepackTarget::ShipPositions => {
+            serialise_objects::<ShipPosition, LittleEndian>(&mut source, &mut destination)?
+        }
+        RepackTarget::Stations => {
+            serialise_objects::<Station, BigEndian>(&mut source, &mut destination)?
+        }
+        RepackTarget::Systems => {
+            serialise_objects::<System, BigEndian>(&mut source, &mut destination)?
+        }
     };
 
     if silent.not() {
@@ -46,13 +56,13 @@ pub fn json_to_bin(
     Ok(())
 }
 
-fn serialise_objects<T: BinWrite + DeserializeOwned + Index>(
+fn serialise_objects<T: BinWrite + DeserializeOwned + Index, O: ByteOrder>(
     source: &mut impl Read,
     destination: &mut impl Write,
 ) -> io::Result<usize> {
     let objects: Vec<T> = serde_json::from_reader(source)?;
 
-    let count = gof2edit::write_object_list(destination, objects)?;
+    let count = gof2edit::write_object_list::<T, O>(destination, objects)?;
 
     Ok(count)
 }

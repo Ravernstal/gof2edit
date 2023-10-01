@@ -10,6 +10,8 @@ pub enum UnpackTarget {
     Lang,
     /// ships.bin
     Ships,
+    /// weapons_*.bin
+    ShipPositions,
     /// stations.bin
     Stations,
     /// systems.bin
@@ -22,6 +24,7 @@ impl Display for UnpackTarget {
             Self::Items => write!(f, "items"),
             Self::Lang => write!(f, "lang strings"),
             Self::Ships => write!(f, "ships"),
+            Self::ShipPositions => write!(f, "ship positions"),
             Self::Stations => write!(f, "stations"),
             Self::Systems => write!(f, "systems"),
         }

@@ -49,8 +49,6 @@ impl BinWrite for Station {
         destination.write_u32::<O>(self.index)?;
         destination.write_u32::<O>(self.system_index)?;
         destination.write_u32::<O>(self.tech_level)?;
-        destination.write_u32::<O>(self.texture_index)?;
-
-        Ok(())
+        destination.write_u32::<O>(self.texture_index)
     }
 }

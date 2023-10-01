@@ -1,3 +1,4 @@
+use byteorder::BigEndian;
 use gof2edit::data::{Item, LangString, Ship, Station, System};
 use std::io::Cursor;
 use std::ops::Not;
@@ -15,11 +16,12 @@ fn convert_items_bin_to_json() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    gof2edit::write_object_list(&mut buffer, items).expect("failed to repack items to BIN");
+    gof2edit::write_object_list::<Item, BigEndian>(&mut buffer, items)
+        .expect("failed to repack items to BIN");
     buffer.set_position(0);
 
-    let items =
-        gof2edit::read_object_list::<Item>(&mut buffer).expect("failed to unpack items from BIN");
+    let items = gof2edit::read_object_list::<Item, BigEndian>(&mut buffer)
+        .expect("failed to unpack items from BIN");
 
     assert!(items.is_empty().not())
 }
@@ -31,11 +33,11 @@ fn convert_lang_bin_to_json() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    gof2edit::write_object_list(&mut buffer, lang_strings)
+    gof2edit::write_object_list::<LangString, BigEndian>(&mut buffer, lang_strings)
         .expect("failed to repack lang strings to BIN");
     buffer.set_position(0);
 
-    let lang_strings = gof2edit::read_object_list::<LangString>(&mut buffer)
+    let lang_strings = gof2edit::read_object_list::<LangString, BigEndian>(&mut buffer)
         .expect("failed to unpack lang strings from BIN");
 
     assert!(lang_strings.is_empty().not())
@@ -48,11 +50,12 @@ fn convert_ships_bin_to_json() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    gof2edit::write_object_list(&mut buffer, ships).expect("failed to repack ships to BIN");
+    gof2edit::write_object_list::<Ship, BigEndian>(&mut buffer, ships)
+        .expect("failed to repack ships to BIN");
     buffer.set_position(0);
 
-    let ships =
-        gof2edit::read_object_list::<Ship>(&mut buffer).expect("failed to unpack ships from BIN");
+    let ships = gof2edit::read_object_list::<Ship, BigEndian>(&mut buffer)
+        .expect("failed to unpack ships from BIN");
 
     assert!(ships.is_empty().not())
 }
@@ -64,10 +67,11 @@ fn convert_stations_bin_to_json() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    gof2edit::write_object_list(&mut buffer, stations).expect("failed to repack stations to BIN");
+    gof2edit::write_object_list::<Station, BigEndian>(&mut buffer, stations)
+        .expect("failed to repack stations to BIN");
     buffer.set_position(0);
 
-    let stations = gof2edit::read_object_list::<Station>(&mut buffer)
+    let stations = gof2edit::read_object_list::<Station, BigEndian>(&mut buffer)
         .expect("failed to unpack stations from BIN");
 
     assert!(stations.is_empty().not())
@@ -80,10 +84,11 @@ fn convert_systems_bin_to_json() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    gof2edit::write_object_list(&mut buffer, systems).expect("failed to repack systems to BIN");
+    gof2edit::write_object_list::<System, BigEndian>(&mut buffer, systems)
+        .expect("failed to repack systems to BIN");
     buffer.set_position(0);
 
-    let systems = gof2edit::read_object_list::<System>(&mut buffer)
+    let systems = gof2edit::read_object_list::<System, BigEndian>(&mut buffer)
         .expect("failed to unpack systems from BIN");
 
     assert!(systems.is_empty().not())
