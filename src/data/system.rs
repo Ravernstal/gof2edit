@@ -81,7 +81,7 @@ impl BinWrite for System {
         destination.write_u32::<O>(self.map_coords[0])?;
         destination.write_u32::<O>(self.map_coords[1])?;
         destination.write_u32::<O>(self.map_coords[2])?;
-        destination.write_u32::<O>(self.jumpgate_station_id.unwrap_or(0xffffffff))?;
+        destination.write_u32::<O>(self.jumpgate_station_id.unwrap_or(0xFFFFFFFF))?;
         destination.write_u32::<O>(self.texture_index)?;
         destination.write_bin::<O>(&self.unknown_bytes)?;
         destination.write_bin::<O>(&self.station_ids)?;

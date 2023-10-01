@@ -55,8 +55,6 @@ impl BinWrite for Ship {
         destination.write_u32::<O>(self.secondary_weapon_count)?;
         destination.write_u32::<O>(self.turret_count)?;
         destination.write_u32::<O>(self.equipment_slot_count)?;
-        destination.write_u32::<O>(self.handling)?;
-
-        Ok(())
+        destination.write_u32::<O>(self.handling)
     }
 }

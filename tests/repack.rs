@@ -1,3 +1,4 @@
+use byteorder::BigEndian;
 use gof2edit::data::{Item, LangString, Ship, Station, System};
 use std::io::Cursor;
 use std::ops::Not;
@@ -15,7 +16,7 @@ fn convert_items_json_to_bin() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    assert!(gof2edit::write_object_list(&mut buffer, items).is_ok());
+    assert!(gof2edit::write_object_list::<Item, BigEndian>(&mut buffer, items).is_ok());
 
     let bin = buffer.into_inner();
 
@@ -29,7 +30,9 @@ fn convert_lang_json_to_bin() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    assert!(gof2edit::write_object_list(&mut buffer, lang_strings).is_ok());
+    assert!(
+        gof2edit::write_object_list::<LangString, BigEndian>(&mut buffer, lang_strings).is_ok()
+    );
 
     let bin = buffer.into_inner();
 
@@ -43,7 +46,7 @@ fn convert_ships_json_to_bin() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    assert!(gof2edit::write_object_list(&mut buffer, ships).is_ok());
+    assert!(gof2edit::write_object_list::<Ship, BigEndian>(&mut buffer, ships).is_ok());
 
     let bin = buffer.into_inner();
 
@@ -57,7 +60,7 @@ fn convert_stations_json_to_bin() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    assert!(gof2edit::write_object_list(&mut buffer, stations).is_ok());
+    assert!(gof2edit::write_object_list::<Station, BigEndian>(&mut buffer, stations).is_ok());
 
     let bin = buffer.into_inner();
 
@@ -71,7 +74,7 @@ fn convert_systems_json_to_bin() {
 
     let mut buffer = Cursor::new(vec![0u8]);
 
-    assert!(gof2edit::write_object_list(&mut buffer, systems).is_ok());
+    assert!(gof2edit::write_object_list::<System, BigEndian>(&mut buffer, systems).is_ok());
 
     let bin = buffer.into_inner();
 
