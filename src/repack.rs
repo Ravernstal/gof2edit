@@ -1,7 +1,7 @@
 use crate::targets::repack::RepackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::write::BinWrite;
-use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System};
+use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System, Wanted};
 use gof2edit::index::Index;
 use serde::de::DeserializeOwned;
 use std::fs::File;
@@ -43,6 +43,9 @@ pub fn json_to_bin(
         }
         RepackTarget::Systems => {
             serialise_objects::<System, BigEndian>(&mut source, &mut destination)?
+        }
+        RepackTarget::Wanted => {
+            serialise_objects::<Wanted, BigEndian>(&mut source, &mut destination)?
         }
     };
 

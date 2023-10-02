@@ -9,6 +9,8 @@ const TERRAN_CODE: u32 = 0;
 const VOSSK_CODE: u32 = 1;
 const NIVELIAN_CODE: u32 = 2;
 const MIDORIAN_CODE: u32 = 3;
+const OCTOPOD_CODE: u32 = 4;
+const GREY_CODE: u32 = 8;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 pub enum Faction {
@@ -16,6 +18,8 @@ pub enum Faction {
     Vossk,
     Nivelian,
     Midorian,
+    Octopod,
+    Grey,
 }
 
 impl BinRead for Faction {
@@ -25,6 +29,8 @@ impl BinRead for Faction {
             VOSSK_CODE => Ok(Self::Vossk),
             NIVELIAN_CODE => Ok(Self::Nivelian),
             MIDORIAN_CODE => Ok(Self::Midorian),
+            OCTOPOD_CODE => Ok(Self::Octopod),
+            GREY_CODE => Ok(Self::Grey),
             _ => Err(Error::new(ErrorKind::InvalidData, "invalid faction code")),
         }
     }
@@ -37,6 +43,8 @@ impl BinWrite for Faction {
             Self::Vossk => VOSSK_CODE,
             Self::Nivelian => NIVELIAN_CODE,
             Self::Midorian => MIDORIAN_CODE,
+            Self::Octopod => OCTOPOD_CODE,
+            Self::Grey => GREY_CODE,
         })
     }
 }

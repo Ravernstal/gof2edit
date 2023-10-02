@@ -16,6 +16,8 @@ pub enum UnpackTarget {
     Stations,
     /// systems.bin
     Systems,
+    /// wanted.bin
+    Wanted,
 }
 
 impl Display for UnpackTarget {
@@ -27,6 +29,7 @@ impl Display for UnpackTarget {
             Self::ShipPositions => write!(f, "ship positions"),
             Self::Stations => write!(f, "stations"),
             Self::Systems => write!(f, "systems"),
+            Self::Wanted => write!(f, "most wanted"),
         }
     }
 }

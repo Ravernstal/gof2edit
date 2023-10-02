@@ -16,6 +16,8 @@ pub enum RepackTarget {
     Stations,
     /// systems.bin
     Systems,
+    /// wanted.bin
+    Wanted,
 }
 
 impl Display for RepackTarget {
@@ -27,6 +29,7 @@ impl Display for RepackTarget {
             Self::ShipPositions => write!(f, "ship positions"),
             Self::Stations => write!(f, "stations"),
             Self::Systems => write!(f, "systems"),
+            Self::Wanted => write!(f, "most wanted"),
         }
     }
 }
