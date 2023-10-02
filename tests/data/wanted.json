@@ -1,0 +1,71 @@
+[
+  {
+    "index": 0,
+    "name": "Test Pilot",
+    "board": "Terran",
+    "race": "Terran",
+    "unknown": true,
+    "ship_id": 9,
+    "weapon": 0,
+    "hitpoints": 5000,
+    "loot_item_id": 103,
+    "loot_amount": 4,
+    "reward": 60000,
+    "required_bounties": 0,
+    "required_mission": 128,
+    "num_wingmen": 0,
+    "image_parts": [
+      1,
+      0,
+      1,
+      1,
+      3
+    ]
+  },
+  {
+    "index": 1,
+    "name": "Khadnor",
+    "board": "Terran",
+    "race": "Grey",
+    "unknown": true,
+    "ship_id": 42,
+    "weapon": 19,
+    "hitpoints": 6500,
+    "loot_item_id": 119,
+    "loot_amount": 10,
+    "reward": 75000,
+    "required_bounties": 0,
+    "required_mission": 130,
+    "num_wingmen": 0,
+    "image_parts": [
+      7,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "index": 2,
+    "name": "Gilgamesh",
+    "board": "Terran",
+    "race": "Nivelian",
+    "unknown": true,
+    "ship_id": 21,
+    "weapon": 1,
+    "hitpoints": 6500,
+    "loot_item_id": 137,
+    "loot_amount": 2,
+    "reward": 99000,
+    "required_bounties": 0,
+    "required_mission": 131,
+    "num_wingmen": 1,
+    "image_parts": [
+      2,
+      2,
+      0,
+      3,
+      3
+    ]
+  }
+]
