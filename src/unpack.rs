@@ -1,7 +1,7 @@
 use crate::targets::unpack::UnpackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::read::BinRead;
-use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System};
+use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System, Wanted};
 use gof2edit::index::Index;
 use serde::Serialize;
 use std::fs::File;
@@ -47,6 +47,9 @@ pub fn bin_to_json(
         }
         UnpackTarget::Systems => {
             deserialise_objects_indexed::<System, BigEndian>(&mut source, &mut destination)?
+        }
+        UnpackTarget::Wanted => {
+            deserialise_objects_indexed::<Wanted, BigEndian>(&mut source, &mut destination)?
         }
     };
 

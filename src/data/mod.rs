@@ -9,6 +9,7 @@ pub use ship::Ship;
 pub use ship_position::ShipPosition;
 pub use station::Station;
 pub use system::System;
+pub use wanted::Wanted;
 
 mod attribute;
 mod engine;
@@ -21,3 +22,4 @@ mod ship;
 mod ship_position;
 mod station;
 mod system;
+mod wanted;

@@ -28,6 +28,26 @@ impl BinWrite for String {
     }
 }
 
+impl BinRead for Vec<u8> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+        let length = source.read_u32::<O>()?;
+        let length = length.try_into().map_err(|_| ErrorKind::InvalidData)?;
+
+        (0..length)
+            .map(|_| source.read_u8())
+            .collect::<io::Result<Vec<_>>>()
+    }
+}
+
+impl BinWrite for Vec<u8> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+        let length = self.len().try_into().map_err(|_| ErrorKind::InvalidData)?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter().try_for_each(|x| destination.write_u8(*x))
+    }
+}
+
 impl BinRead for Vec<u32> {
     fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
         let length = source.read_u32::<O>()?;
