@@ -1,5 +1,5 @@
 use byteorder::{BigEndian, LittleEndian};
-use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System};
+use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System, Wanted};
 use std::io::Cursor;
 use std::ops::Not;
 
@@ -9,6 +9,7 @@ const SHIPS_JSON: &str = include_str!("data/ships.json");
 const SHIP_POSITIONS_JSON: &str = include_str!("data/ship_positions.json");
 const STATIONS_JSON: &str = include_str!("data/stations.json");
 const SYSTEMS_JSON: &str = include_str!("data/systems.json");
+const WANTED_JSON: &str = include_str!("data/wanted.json");
 
 #[test]
 fn convert_items_bin_to_json() {
@@ -110,4 +111,21 @@ fn convert_systems_bin_to_json() {
         .expect("failed to unpack systems from BIN");
 
     assert!(systems.is_empty().not())
+}
+
+#[test]
+fn convert_most_wanted_bin_to_json() {
+    let most_wanted = serde_json::from_str::<Vec<Wanted>>(WANTED_JSON)
+        .expect("failed to parse most wanted test JSON");
+
+    let mut buffer = Cursor::new(vec![0u8]);
+
+    gof2edit::write_object_list::<Wanted, BigEndian>(&mut buffer, most_wanted)
+        .expect("failed to repack most wanted to BIN");
+    buffer.set_position(0);
+
+    let most_wanted = gof2edit::read_object_list::<Wanted, BigEndian>(&mut buffer)
+        .expect("failed to unpack most wanted from BIN");
+
+    assert!(most_wanted.is_empty().not())
 }
