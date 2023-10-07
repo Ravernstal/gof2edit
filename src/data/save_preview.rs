@@ -1,6 +1,5 @@
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::{BinWrite, BinWriter};
-use crate::index::Index;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
@@ -17,16 +16,6 @@ pub struct SavePreview {
     system_name: String,
     station_name: String,
     play_time_ms: u64,
-}
-
-impl Index for SavePreview {
-    fn index(&self) -> u32 {
-        self.index
-    }
-
-    fn set_index(&mut self, index: u32) {
-        self.index = index
-    }
 }
 
 impl BinRead for SavePreview {
