@@ -8,6 +8,11 @@ use std::io::{Read, Write};
 pub mod bin_io;
 pub mod data;
 pub mod index;
+pub mod wide_string;
+
+pub fn read_object<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> io::Result<T> {
+    T::read_bin::<O>(source)
+}
 
 pub fn read_object_list<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> io::Result<Vec<T>> {
     let mut objects = vec![];
@@ -32,6 +37,13 @@ pub fn read_object_list_indexed<T: BinRead + Index, O: ByteOrder>(
     }
 
     Ok(objects)
+}
+
+pub fn write_object<T: BinWrite + Index, O: ByteOrder>(
+    destination: &mut impl Write,
+    object: &T,
+) -> io::Result<()> {
+    destination.write_bin::<O>(object)
 }
 
 pub fn write_object_list<T: BinWrite + Index, O: ByteOrder>(
