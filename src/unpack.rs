@@ -1,7 +1,7 @@
 use crate::targets::unpack::UnpackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::read::BinRead;
-use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System, Wanted};
+use gof2edit::data::{Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted};
 use gof2edit::index::Index;
 use serde::Serialize;
 use std::fs::File;
@@ -36,6 +36,9 @@ pub fn bin_to_json(
         UnpackTarget::Lang => {
             deserialise_objects_indexed::<LangString, BigEndian>(&mut source, &mut destination)?
         }
+        UnpackTarget::SavePreview => {
+            deserialise_object::<SavePreview, LittleEndian>(&mut source, &mut destination)?
+        }
         UnpackTarget::Ships => {
             deserialise_objects::<Ship, BigEndian>(&mut source, &mut destination)?
         }
@@ -61,6 +64,17 @@ pub fn bin_to_json(
     }
 
     Ok(())
+}
+
+fn deserialise_object<T: BinRead + Serialize, O: ByteOrder>(
+    source: &mut impl Read,
+    destination: &mut impl Write,
+) -> io::Result<usize> {
+    let object = gof2edit::read_object::<T, O>(source)?;
+
+    serde_json::to_writer_pretty(destination, &object)?;
+
+    Ok(1)
 }
 
 fn deserialise_objects<T: BinRead + Serialize, O: ByteOrder>(

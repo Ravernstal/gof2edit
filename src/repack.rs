@@ -1,7 +1,7 @@
 use crate::targets::repack::RepackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::write::BinWrite;
-use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System, Wanted};
+use gof2edit::data::{Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted};
 use gof2edit::index::Index;
 use serde::de::DeserializeOwned;
 use std::fs::File;
@@ -34,6 +34,9 @@ pub fn json_to_bin(
         RepackTarget::Lang => {
             serialise_objects::<LangString, BigEndian>(&mut source, &mut destination)?
         }
+        RepackTarget::SavePreview => {
+            serialise_object::<SavePreview, LittleEndian>(&mut source, &mut destination)?
+        }
         RepackTarget::Ships => serialise_objects::<Ship, BigEndian>(&mut source, &mut destination)?,
         RepackTarget::ShipPositions => {
             serialise_objects::<ShipPosition, LittleEndian>(&mut source, &mut destination)?
@@ -59,11 +62,22 @@ pub fn json_to_bin(
     Ok(())
 }
 
+fn serialise_object<T: BinWrite + DeserializeOwned + Index, O: ByteOrder>(
+    source: &mut impl Read,
+    destination: &mut impl Write,
+) -> io::Result<usize> {
+    let object = serde_json::from_reader(source)?;
+
+    gof2edit::write_object::<T, O>(destination, &object)?;
+
+    Ok(1)
+}
+
 fn serialise_objects<T: BinWrite + DeserializeOwned + Index, O: ByteOrder>(
     source: &mut impl Read,
     destination: &mut impl Write,
 ) -> io::Result<usize> {
-    let objects: Vec<T> = serde_json::from_reader(source)?;
+    let objects = serde_json::from_reader(source)?;
 
     let count = gof2edit::write_object_list::<T, O>(destination, objects)?;
 

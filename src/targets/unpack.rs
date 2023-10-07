@@ -8,6 +8,8 @@ pub enum UnpackTarget {
     Items,
     /// *.lang
     Lang,
+    /// gof2_save_game_preview_*
+    SavePreview,
     /// ships.bin
     Ships,
     /// weapons_*.bin
@@ -25,6 +27,7 @@ impl Display for UnpackTarget {
         match self {
             Self::Items => write!(f, "items"),
             Self::Lang => write!(f, "lang strings"),
+            Self::SavePreview => write!(f, "save preview"),
             Self::Ships => write!(f, "ships"),
             Self::ShipPositions => write!(f, "ship positions"),
             Self::Stations => write!(f, "stations"),
