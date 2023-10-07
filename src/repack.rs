@@ -62,7 +62,7 @@ pub fn json_to_bin(
     Ok(())
 }
 
-fn serialise_object<T: BinWrite + DeserializeOwned + Index, O: ByteOrder>(
+fn serialise_object<T: BinWrite + DeserializeOwned, O: ByteOrder>(
     source: &mut impl Read,
     destination: &mut impl Write,
 ) -> io::Result<usize> {

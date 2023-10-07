@@ -39,7 +39,7 @@ pub fn read_object_list_indexed<T: BinRead + Index, O: ByteOrder>(
     Ok(objects)
 }
 
-pub fn write_object<T: BinWrite + Index, O: ByteOrder>(
+pub fn write_object<T: BinWrite, O: ByteOrder>(
     destination: &mut impl Write,
     object: &T,
 ) -> io::Result<()> {
