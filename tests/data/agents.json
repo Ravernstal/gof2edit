@@ -1,0 +1,59 @@
+[
+  {
+    "index": 0,
+    "name": "Evil Guy",
+    "station_id": 3,
+    "system_id": 0,
+    "race": "Terran",
+    "is_male": true,
+    "sell_system_id": -1,
+    "sell_blueprint_id": 11,
+    "sell_mod_id": -1,
+    "sell_price": 49999,
+    "image_parts": [
+      2,
+      2,
+      0,
+      3,
+      3
+    ]
+  },
+  {
+    "index": 1,
+    "name": "Nemesis",
+    "station_id": 32,
+    "system_id": 2,
+    "race": "Vossk",
+    "is_male": true,
+    "sell_system_id": -1,
+    "sell_blueprint_id": 15,
+    "sell_mod_id": -1,
+    "sell_price": 36998,
+    "image_parts": [
+      2,
+      4,
+      4,
+      0,
+      0
+    ]
+  },
+  {
+    "index": 2,
+    "name": "Antagonist",
+    "station_id": 20,
+    "system_id": 4,
+    "race": "Midorian",
+    "is_male": true,
+    "sell_system_id": -1,
+    "sell_blueprint_id": 25,
+    "sell_mod_id": -1,
+    "sell_price": 19999,
+    "image_parts": [
+      2,
+      3,
+      1,
+      0,
+      0
+    ]
+  }
+]
