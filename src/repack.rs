@@ -1,7 +1,9 @@
 use crate::targets::repack::RepackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::write::BinWrite;
-use gof2edit::data::{Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted};
+use gof2edit::data::{
+    Agent, Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted,
+};
 use gof2edit::index::Index;
 use serde::de::DeserializeOwned;
 use std::fs::File;
@@ -30,6 +32,9 @@ pub fn json_to_bin(
     }
 
     let count = match target {
+        RepackTarget::Agents => {
+            serialise_objects::<Agent, BigEndian>(&mut source, &mut destination)?
+        }
         RepackTarget::Items => serialise_objects::<Item, BigEndian>(&mut source, &mut destination)?,
         RepackTarget::Lang => {
             serialise_objects::<LangString, BigEndian>(&mut source, &mut destination)?

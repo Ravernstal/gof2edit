@@ -4,6 +4,8 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Clone, Copy, Debug, ValueEnum)]
 pub enum UnpackTarget {
+    /// agents.bin
+    Agents,
     /// items.bin
     Items,
     /// *.lang
@@ -25,6 +27,7 @@ pub enum UnpackTarget {
 impl Display for UnpackTarget {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
+            Self::Agents => write!(f, "agents"),
             Self::Items => write!(f, "items"),
             Self::Lang => write!(f, "lang strings"),
             Self::SavePreview => write!(f, "save preview"),
