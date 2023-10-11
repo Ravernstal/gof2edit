@@ -1,7 +1,9 @@
 use crate::targets::unpack::UnpackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::read::BinRead;
-use gof2edit::data::{Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted};
+use gof2edit::data::{
+    Agent, Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted,
+};
 use gof2edit::index::Index;
 use serde::Serialize;
 use std::fs::File;
@@ -30,6 +32,9 @@ pub fn bin_to_json(
     }
 
     let count = match target {
+        UnpackTarget::Agents => {
+            deserialise_objects::<Agent, BigEndian>(&mut source, &mut destination)?
+        }
         UnpackTarget::Items => {
             deserialise_objects::<Item, BigEndian>(&mut source, &mut destination)?
         }

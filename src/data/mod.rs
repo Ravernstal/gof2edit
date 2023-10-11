@@ -1,3 +1,4 @@
+pub use agent::Agent;
 pub use attribute::Attribute;
 pub use engine::Engine;
 pub use faction::Faction;
@@ -12,6 +13,7 @@ pub use station::Station;
 pub use system::System;
 pub use wanted::Wanted;
 
+mod agent;
 mod attribute;
 mod engine;
 mod faction;
