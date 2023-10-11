@@ -1,8 +1,11 @@
 use byteorder::{BigEndian, LittleEndian};
-use gof2edit::data::{Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted};
+use gof2edit::data::{
+    Agent, Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted,
+};
 use std::io::Cursor;
 use std::ops::Not;
 
+const AGENTS_JSON: &str = include_str!("data/agents.json");
 const ITEMS_JSON: &str = include_str!("data/items.json");
 const LANG_JSON: &str = include_str!("data/lang.json");
 const SAVE_PREVIEW_JSON: &str = include_str!("data/gof2_save_game_preview_0.json");
@@ -11,6 +14,20 @@ const SHIP_POSITIONS_JSON: &str = include_str!("data/ship_positions.json");
 const STATIONS_JSON: &str = include_str!("data/stations.json");
 const SYSTEMS_JSON: &str = include_str!("data/systems.json");
 const WANTED_JSON: &str = include_str!("data/wanted.json");
+
+#[test]
+fn convert_agents_json_to_bin() {
+    let agents =
+        serde_json::from_str::<Vec<Agent>>(AGENTS_JSON).expect("failed to parse agent test JSON");
+
+    let mut buffer = Cursor::new(vec![0u8]);
+
+    assert!(gof2edit::write_object_list::<Agent, BigEndian>(&mut buffer, agents).is_ok());
+
+    let bin = buffer.into_inner();
+
+    assert!(bin.is_empty().not());
+}
 
 #[test]
 fn convert_items_json_to_bin() {
