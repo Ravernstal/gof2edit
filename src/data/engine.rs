@@ -7,8 +7,8 @@ use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Engine {
-    position: Position,
-    intensity: (f32, f32, f32),
+    pub position: Position,
+    pub intensity: (f32, f32, f32),
 }
 
 impl BinRead for Engine {

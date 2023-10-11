@@ -14,11 +14,11 @@ const ENGINE_CODE: u16 = 3;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ShipPosition {
-    ship_index: u16,
-    primary_weapons: Vec<Position>,
-    secondary_weapons: Vec<Position>,
-    turrets: Vec<Position>,
-    engines: Vec<Engine>,
+    pub ship_index: u16,
+    pub primary_weapons: Vec<Position>,
+    pub secondary_weapons: Vec<Position>,
+    pub turrets: Vec<Position>,
+    pub engines: Vec<Engine>,
 }
 
 impl Index for ShipPosition {

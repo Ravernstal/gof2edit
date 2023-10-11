@@ -8,21 +8,21 @@ use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Wanted {
-    index: u32,
-    name: String,
-    board: Faction,
-    race: Faction,
-    unknown: bool,
-    ship_id: u32,
-    weapon: u32,
-    hitpoints: u32,
-    loot_item_id: u32,
-    loot_amount: u32,
-    reward: u32,
-    required_bounties: u32,
-    required_mission: u32,
-    num_wingmen: u32,
-    image_parts: Vec<u8>,
+    pub index: u32,
+    pub name: String,
+    pub board: Faction,
+    pub race: Faction,
+    pub unknown: bool,
+    pub ship_id: u32,
+    pub weapon: u32,
+    pub hitpoints: u32,
+    pub loot_item_id: u32,
+    pub loot_amount: u32,
+    pub reward: u32,
+    pub required_bounties: u32,
+    pub required_mission: u32,
+    pub num_wingmen: u32,
+    pub image_parts: Vec<u8>,
 }
 
 impl Index for Wanted {

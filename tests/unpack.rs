@@ -1,10 +1,11 @@
 use byteorder::{BigEndian, LittleEndian};
-use gof2edit::data::{Item, LangString, Ship, ShipPosition, Station, System, Wanted};
+use gof2edit::data::{Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted};
 use std::io::Cursor;
 use std::ops::Not;
 
 const ITEMS_JSON: &str = include_str!("data/items.json");
 const LANG_JSON: &str = include_str!("data/lang.json");
+const SAVE_PREVIEW_JSON: &str = include_str!("data/gof2_save_game_preview_0.json");
 const SHIPS_JSON: &str = include_str!("data/ships.json");
 const SHIP_POSITIONS_JSON: &str = include_str!("data/ship_positions.json");
 const STATIONS_JSON: &str = include_str!("data/stations.json");
@@ -43,6 +44,23 @@ fn convert_lang_bin_to_json() {
         .expect("failed to unpack lang strings from BIN");
 
     assert!(lang_strings.is_empty().not())
+}
+
+#[test]
+fn convert_save_preview_bin_to_json() {
+    let save_preview = serde_json::from_str::<SavePreview>(SAVE_PREVIEW_JSON)
+        .expect("failed to parse save preview test JSON");
+
+    let mut buffer = Cursor::new(vec![0u8]);
+
+    gof2edit::write_object::<SavePreview, LittleEndian>(&mut buffer, &save_preview)
+        .expect("failed to repack save preview to BIN");
+    buffer.set_position(0);
+
+    let save_preview = gof2edit::read_object::<SavePreview, LittleEndian>(&mut buffer)
+        .expect("failed to unpack save preview from BIN");
+
+    assert_eq!(save_preview.credits, 256)
 }
 
 #[test]
