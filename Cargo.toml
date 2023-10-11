@@ -1,6 +1,6 @@
 [package]
 name = "gof2edit"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["Ravernstal"]
 edition = "2021"
 license = "AGPL-3.0-only"
@@ -9,7 +9,7 @@ readme = "README.md"
 description = "Galaxy on Fire 2 tool to unpack and repack BIN files, as well as patch binaries"
 
 [dependencies]
-byteorder = "1.4"
+byteorder = "1.5"
 clap = { version = "4.4", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
