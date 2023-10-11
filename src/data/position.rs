@@ -6,9 +6,9 @@ use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Position {
-    x: i16,
-    y: i16,
-    z: i16,
+    pub x: i16,
+    pub y: i16,
+    pub z: i16,
 }
 
 impl BinRead for Position {

@@ -1,0 +1,10 @@
+{
+  "credits": 256,
+  "ship_index": 3,
+  "campaign_mission": 5,
+  "level": 7,
+  "difficulty": 1.5,
+  "system_name": "Test System",
+  "station_name": "Station Name Here",
+  "play_time_ms": 250000
+}

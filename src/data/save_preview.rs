@@ -7,21 +7,19 @@ use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SavePreview {
-    index: u32,
-    credits: u32,
-    ship_index: u32,
-    campaign_mission: u32,
-    level: u32,
-    difficulty: f32,
-    system_name: String,
-    station_name: String,
-    play_time_ms: u64,
+    pub credits: u32,
+    pub ship_index: u32,
+    pub campaign_mission: u32,
+    pub level: u32,
+    pub difficulty: f32,
+    pub system_name: String,
+    pub station_name: String,
+    pub play_time_ms: u64,
 }
 
 impl BinRead for SavePreview {
     fn read_bin<O: ByteOrder>(source: &mut impl Read) -> std::io::Result<Self> {
         Ok(Self {
-            index: 0,
             play_time_ms: source.read_u64::<O>()?,
             credits: source.read_u32::<O>()?,
             station_name: WideString::read_bin::<O>(source)?.get(),
