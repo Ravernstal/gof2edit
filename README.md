@@ -30,7 +30,7 @@ In order to add new entries into these files, sometimes binary modification is n
 * [Stations (stations.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/stations.md)
 * [Systems (systems.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/systems.md)
 
-This functioanlity is currently only available for the iOS binary as well as [KiritoJPK's Full HD Android mod](https://github.com/KiritoJPK/Galaxy-on-Fire-2-FULL-HD-Android).
+This functionality is currently only available for the iOS binary as well as [KiritoJPK's Full HD Android mod](https://github.com/KiritoJPK/Galaxy-on-Fire-2-FULL-HD-Android).
 
 ## Example Commands
 * `gof2edit unpack systems systems.bin` - Unpacks the systems in JSON format into `systems.json`
