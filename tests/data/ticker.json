@@ -1,0 +1,32 @@
+[
+  {
+    "index": 0,
+    "unknown": false,
+    "terran_systems": true,
+    "vossk_systems": true,
+    "nivelian_systems": true,
+    "midorian_systems": true,
+    "start_mission_id": 1,
+    "end_mission_id": 9
+  },
+  {
+    "index": 1,
+    "unknown": false,
+    "terran_systems": true,
+    "vossk_systems": false,
+    "nivelian_systems": true,
+    "midorian_systems": true,
+    "start_mission_id": 0,
+    "end_mission_id": 1000
+  },
+  {
+    "index": 2,
+    "unknown": false,
+    "terran_systems": true,
+    "vossk_systems": false,
+    "nivelian_systems": true,
+    "midorian_systems": false,
+    "start_mission_id": 0,
+    "end_mission_id": 1000
+  }
+]
