@@ -1,6 +1,6 @@
 use byteorder::{BigEndian, LittleEndian};
 use gof2edit::data::{
-    Agent, Item, LangString, SavePreview, Ship, ShipPosition, Station, System, Wanted,
+    Agent, Item, LangString, NewsItem, SavePreview, Ship, ShipPosition, Station, System, Wanted,
 };
 use std::io::Cursor;
 use std::ops::Not;
@@ -8,6 +8,7 @@ use std::ops::Not;
 const AGENTS_JSON: &str = include_str!("data/agents.json");
 const ITEMS_JSON: &str = include_str!("data/items.json");
 const LANG_JSON: &str = include_str!("data/lang.json");
+const NEWS_ITEMS_JSON: &str = include_str!("data/ticker.json");
 const SAVE_PREVIEW_JSON: &str = include_str!("data/gof2_save_game_preview_0.json");
 const SHIPS_JSON: &str = include_str!("data/ships.json");
 const SHIP_POSITIONS_JSON: &str = include_str!("data/ship_positions.json");
@@ -64,6 +65,23 @@ fn convert_lang_bin_to_json() {
         .expect("failed to unpack lang strings from BIN");
 
     assert!(lang_strings.is_empty().not())
+}
+
+#[test]
+fn convert_news_items_bin_to_json() {
+    let news_items = serde_json::from_str::<Vec<NewsItem>>(NEWS_ITEMS_JSON)
+        .expect("failed to parse news item test JSON");
+
+    let mut buffer = Cursor::new(vec![0u8]);
+
+    gof2edit::write_object_list::<NewsItem, BigEndian>(&mut buffer, news_items)
+        .expect("failed to repack news items to BIN");
+    buffer.set_position(0);
+
+    let news_items = gof2edit::read_object_list::<NewsItem, BigEndian>(&mut buffer)
+        .expect("failed to unpack news items from BIN");
+
+    assert!(news_items.is_empty().not())
 }
 
 #[test]
