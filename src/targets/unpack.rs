@@ -10,6 +10,8 @@ pub enum UnpackTarget {
     Items,
     /// *.lang
     Lang,
+    /// ticker.bin
+    NewsItems,
     /// gof2_save_game_preview_*
     SavePreview,
     /// ships.bin
@@ -30,6 +32,7 @@ impl Display for UnpackTarget {
             Self::Agents => write!(f, "agents"),
             Self::Items => write!(f, "items"),
             Self::Lang => write!(f, "lang strings"),
+            Self::NewsItems => write!(f, "news items"),
             Self::SavePreview => write!(f, "save preview"),
             Self::Ships => write!(f, "ships"),
             Self::ShipPositions => write!(f, "ship positions"),
