@@ -13,6 +13,7 @@ This tool is capable of unpacking and repacking the following game files:
 * [Items (items.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/items.md)
 * [Most Wanted (wanted.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/wanted.md)
 * [Names (names_*.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/names.md)
+* [News Items (ticker.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/ticker.md)
 * [Ships (ships.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/ships.md)
 * [Ship Weapon/Engine Positions (weapons*.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/weapons.md)
 * [Stations (stations.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/stations.md)
