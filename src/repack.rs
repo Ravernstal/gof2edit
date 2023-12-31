@@ -1,6 +1,7 @@
 use crate::targets::repack::RepackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::write::BinWrite;
+use gof2edit::data::save::Save;
 use gof2edit::data::{
     Agent, Item, LangString, NewsItem, SavePreview, Ship, ShipPosition, Station, System, Wanted,
 };
@@ -41,6 +42,9 @@ pub fn json_to_bin(
         }
         RepackTarget::NewsItems => {
             serialise_objects::<NewsItem, BigEndian>(&mut source, &mut destination)?
+        }
+        RepackTarget::Save => {
+            serialise_object::<Save, LittleEndian>(&mut source, &mut destination)?
         }
         RepackTarget::SavePreview => {
             serialise_object::<SavePreview, LittleEndian>(&mut source, &mut destination)?

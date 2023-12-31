@@ -1,6 +1,7 @@
 use crate::targets::unpack::UnpackTarget;
 use byteorder::{BigEndian, ByteOrder, LittleEndian};
 use gof2edit::bin_io::read::BinRead;
+use gof2edit::data::save::Save;
 use gof2edit::data::{
     Agent, Item, LangString, NewsItem, SavePreview, Ship, ShipPosition, Station, System, Wanted,
 };
@@ -43,6 +44,9 @@ pub fn bin_to_json(
         }
         UnpackTarget::NewsItems => {
             deserialise_objects_indexed::<NewsItem, BigEndian>(&mut source, &mut destination)?
+        }
+        UnpackTarget::Save => {
+            deserialise_object::<Save, LittleEndian>(&mut source, &mut destination)?
         }
         UnpackTarget::SavePreview => {
             deserialise_object::<SavePreview, LittleEndian>(&mut source, &mut destination)?
