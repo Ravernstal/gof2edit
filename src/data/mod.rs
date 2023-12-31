@@ -22,6 +22,7 @@ mod item;
 mod lang_string;
 mod news_item;
 mod position;
+pub mod save;
 mod save_preview;
 mod security_level;
 mod ship;
