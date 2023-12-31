@@ -7,14 +7,14 @@ use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NewsItem {
-    index: u32,
-    unknown: bool,
-    terran_systems: bool,
-    vossk_systems: bool,
-    nivelian_systems: bool,
-    midorian_systems: bool,
-    start_mission_id: u32,
-    end_mission_id: u32,
+    pub index: u32,
+    pub unknown: bool,
+    pub terran_systems: bool,
+    pub vossk_systems: bool,
+    pub nivelian_systems: bool,
+    pub midorian_systems: bool,
+    pub start_mission_id: u32,
+    pub end_mission_id: u32,
 }
 
 impl Index for NewsItem {
