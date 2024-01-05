@@ -4,8 +4,7 @@ use crate::targets::patch::PatchTarget;
 use gof2edit::data::{Station, System};
 use serde::de::DeserializeOwned;
 use std::fs::{File, OpenOptions};
-use std::io;
-use std::io::{ErrorKind, Read, Seek, SeekFrom, Write};
+use std::io::{Read, Seek, SeekFrom, Write};
 use std::ops::Not;
 use std::path::Path;
 
@@ -15,7 +14,7 @@ pub fn patch(
     target: PatchTarget,
     binary: BinaryVersion,
     silent: bool,
-) -> io::Result<()> {
+) -> gof2edit::Result<()> {
     let json_filepath = json_filepath.as_ref();
     let binary_filepath = binary_filepath.as_ref();
 
@@ -51,12 +50,9 @@ fn patch_objects<T: DeserializeOwned, D: Write + Seek>(
     source: &mut impl Read,
     destination: &mut D,
     address_list_modifiers: &[(u64, &WriteValueFn)],
-) -> io::Result<usize> {
+) -> gof2edit::Result<usize> {
     let objects: Vec<T> = serde_json::from_reader(source)?;
-    let count = objects
-        .len()
-        .try_into()
-        .map_err(|_| ErrorKind::InvalidData)?;
+    let count = objects.len().try_into()?;
 
     patch_address_list_modifiers(destination, address_list_modifiers, count)?;
 
@@ -67,7 +63,7 @@ fn patch_address_list_modifiers<T: Write + Seek>(
     destination: &mut T,
     address_modifiers: &[(u64, &WriteValueFn)],
     byte: u8,
-) -> io::Result<()> {
+) -> gof2edit::Result<()> {
     address_modifiers
         .iter()
         .try_for_each(|&(address, function)| {

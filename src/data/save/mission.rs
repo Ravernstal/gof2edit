@@ -2,10 +2,10 @@ use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::BinWrite;
 use crate::data::save::agent::SaveAgent;
 use crate::data::save::image_parts::ImageParts;
+use crate::result::Result;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -31,7 +31,7 @@ pub struct SaveMission {
 }
 
 impl BinRead for Option<SaveMission> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let mission_type = source.read_i32::<O>()?;
 
         if mission_type == -1 {
@@ -62,7 +62,7 @@ impl BinRead for Option<SaveMission> {
 }
 
 impl BinWrite for Option<SaveMission> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }

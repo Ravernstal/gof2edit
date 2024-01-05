@@ -1,8 +1,8 @@
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::BinWrite;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -11,7 +11,7 @@ pub struct ImageParts {
 }
 
 impl BinRead for Option<ImageParts> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()?;
 
         if count == -1 {
@@ -31,7 +31,7 @@ impl BinRead for Option<ImageParts> {
 }
 
 impl BinWrite for Option<ImageParts> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }

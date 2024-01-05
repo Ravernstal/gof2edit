@@ -1,5 +1,6 @@
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::{BinWrite, BinWriter};
+use crate::result::Result;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
@@ -18,7 +19,7 @@ pub struct SavePreview {
 }
 
 impl BinRead for SavePreview {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> std::io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         Ok(Self {
             play_time_ms: source.read_u64::<O>()?,
             credits: source.read_u32::<O>()?,
@@ -33,7 +34,7 @@ impl BinRead for SavePreview {
 }
 
 impl BinWrite for SavePreview {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> std::io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_u64::<O>(self.play_time_ms)?;
         destination.write_u32::<O>(self.credits)?;
         destination.write_bin::<O>(&WideString::new(self.station_name.clone()))?;
@@ -41,6 +42,8 @@ impl BinWrite for SavePreview {
         destination.write_u32::<O>(self.campaign_mission)?;
         destination.write_u32::<O>(self.level)?;
         destination.write_f32::<O>(self.difficulty)?;
-        destination.write_u32::<O>(self.ship_index)
+        destination.write_u32::<O>(self.ship_index)?;
+
+        Ok(())
     }
 }

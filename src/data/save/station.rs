@@ -3,9 +3,9 @@ use crate::bin_io::write::BinWrite;
 use crate::data::save::agent::SaveAgent;
 use crate::data::save::inventory_item::SaveInventoryItem;
 use crate::data::save::ship::SaveShip;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -18,7 +18,7 @@ pub struct SaveStation {
 }
 
 impl BinRead for Vec<Option<SaveStation>> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()? + 1;
 
         (0..count).map(|_| source.read_bin::<O>()).collect()
@@ -26,13 +26,13 @@ impl BinRead for Vec<Option<SaveStation>> {
 }
 
 impl BinWrite for Vec<Option<SaveStation>> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }
 
 impl BinRead for Option<SaveStation> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let index = source.read_i32::<O>()?;
 
         if index == -1 {
@@ -50,7 +50,7 @@ impl BinRead for Option<SaveStation> {
 }
 
 impl BinWrite for Option<SaveStation> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }

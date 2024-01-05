@@ -3,9 +3,11 @@ use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::position::Position;
 use crate::data::Engine;
 use crate::index::Index;
+use crate::result::Result;
+use crate::Error;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io::{Error, ErrorKind, Read, Write};
+use std::io::{Read, Write};
 
 const PRIMARY_WEAPON_CODE: u16 = 0;
 const SECONDARY_WEAPON_CODE: u16 = 1;
@@ -35,7 +37,7 @@ impl Index for ShipPosition {
 }
 
 impl BinRead for ShipPosition {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> std::io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let ship_index = source.read_u16::<O>()?;
         let position_count = source.read_u16::<O>()?;
 
@@ -50,7 +52,7 @@ impl BinRead for ShipPosition {
                 1 => secondary_weapons.push(source.read_bin::<O>()?),
                 2 => turrets.push(source.read_bin::<O>()?),
                 3 => engines.push(source.read_bin::<O>()?),
-                _ => return Err(Error::from(ErrorKind::InvalidData)),
+                code => return Err(Error::ShipPositionCode(code)),
             }
         }
 
@@ -65,7 +67,7 @@ impl BinRead for ShipPosition {
 }
 
 impl BinWrite for ShipPosition {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> std::io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_u16::<O>(self.ship_index)?;
 
         let position_count = self.primary_weapons.len()
@@ -73,9 +75,7 @@ impl BinWrite for ShipPosition {
             + self.turrets.len()
             + self.engines.len();
 
-        let position_count = position_count
-            .try_into()
-            .map_err(|_| ErrorKind::InvalidData)?;
+        let position_count = position_count.try_into()?;
 
         destination.write_u16::<O>(position_count)?;
 

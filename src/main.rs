@@ -2,7 +2,6 @@ use crate::arguments::Arguments;
 use crate::command::Command;
 use clap::Parser;
 use std::ffi::OsStr;
-use std::io;
 use std::path::{Path, PathBuf};
 
 mod arguments;
@@ -22,7 +21,7 @@ fn main() {
     }
 }
 
-fn execute_command(command: &Command, silent: bool) -> io::Result<()> {
+fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
     match command {
         Command::Unpack {
             target,

@@ -11,6 +11,7 @@ use crate::data::save::station::SaveStation;
 use crate::data::save::unknown_structure_1::UnknownStructure1;
 use crate::data::save::unknown_structure_2::UnknownStructure2;
 use crate::data::save::wanted::SaveWanted;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io;
@@ -170,7 +171,7 @@ pub struct Save {
 }
 
 impl BinRead for Save {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         Ok(Self {
             visited_stations: source.read_bin::<O>()?,
             credits: source.read_i32::<O>()?,
@@ -329,7 +330,7 @@ impl BinRead for Save {
 }
 
 impl BinWrite for Save {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.visited_stations)?;
         destination.write_i32::<O>(self.credits)?;
         destination.write_i32::<O>(self.rating)?;
@@ -343,7 +344,9 @@ impl BinWrite for Save {
         destination.write_i32::<O>(self.current_campaign_mission)?;
         destination.write_bin::<O>(&self.freelance_mission)?;
         destination.write_bin::<O>(&self.campaign_mission)?;
-        destination.write_all(&self.hash)
+        destination.write_all(&self.hash)?;
+
+        Ok(())
     }
 }
 

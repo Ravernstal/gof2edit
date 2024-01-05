@@ -1,9 +1,9 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::ByteOrder;
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -23,7 +23,7 @@ impl Index for LangString {
 }
 
 impl BinRead for LangString {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let string = source.read_bin::<O>()?;
 
         Ok(Self { index: 0, string })
@@ -31,7 +31,7 @@ impl BinRead for LangString {
 }
 
 impl BinWrite for LangString {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.string)
     }
 }

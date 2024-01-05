@@ -1,9 +1,10 @@
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::BinWrite;
+use crate::error::Error;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
-use std::io::{Error, ErrorKind, Read, Write};
+use std::io::{Read, Write};
 
 const INDEX_CODE: u32 = 0;
 const TYPE_CODE: u32 = 1;
@@ -120,7 +121,7 @@ pub enum Attribute {
 impl TryFrom<u32> for Attribute {
     type Error = Error;
 
-    fn try_from(value: u32) -> io::Result<Self> {
+    fn try_from(value: u32) -> Result<Self> {
         match value {
             INDEX_CODE => Ok(Self::Index),
             TYPE_CODE => Ok(Self::Type),
@@ -175,7 +176,7 @@ impl TryFrom<u32> for Attribute {
             SPECTRAL_FILTER_SHOW_ON_RADAR_CODE => Ok(Self::SpectralFilterShowOnRadar),
             SHIELD_INJECTOR_CONSUMPTION_CODE => Ok(Self::ShieldInjectorConsumption),
             VOSSK_ITEM_CODE => Ok(Self::VosskItem),
-            _ => Err(Error::new(ErrorKind::InvalidData, "invalid attribute")),
+            _ => Err(Error::AttributeParse(value)),
         }
     }
 }
@@ -241,13 +242,15 @@ impl From<Attribute> for u32 {
 }
 
 impl BinRead for Attribute {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         source.read_u32::<O>()?.try_into()
     }
 }
 
 impl BinWrite for Attribute {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
-        destination.write_u32::<O>((*self).into())
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
+        destination.write_u32::<O>((*self).into())?;
+
+        Ok(())
     }
 }

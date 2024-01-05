@@ -1,9 +1,9 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -26,7 +26,7 @@ impl Index for Station {
 }
 
 impl BinRead for Station {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let name = source.read_bin::<O>()?;
         let index = source.read_u32::<O>()?;
         let system_index = source.read_u32::<O>()?;
@@ -44,11 +44,13 @@ impl BinRead for Station {
 }
 
 impl BinWrite for Station {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.name)?;
         destination.write_u32::<O>(self.index)?;
         destination.write_u32::<O>(self.system_index)?;
         destination.write_u32::<O>(self.tech_level)?;
-        destination.write_u32::<O>(self.texture_index)
+        destination.write_u32::<O>(self.texture_index)?;
+
+        Ok(())
     }
 }

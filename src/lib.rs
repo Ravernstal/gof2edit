@@ -1,8 +1,10 @@
+pub use crate::error::Error;
+pub use crate::result::Result;
+
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::index::Index;
 use byteorder::ByteOrder;
-use std::io;
 use std::io::{Read, Write};
 
 pub mod bin_io;
@@ -10,11 +12,14 @@ pub mod data;
 pub mod index;
 pub mod wide_string;
 
-pub fn read_object<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> io::Result<T> {
+mod error;
+mod result;
+
+pub fn read_object<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> Result<T> {
     T::read_bin::<O>(source)
 }
 
-pub fn read_object_list<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> io::Result<Vec<T>> {
+pub fn read_object_list<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> Result<Vec<T>> {
     let mut objects = vec![];
 
     while let Ok(object) = T::read_bin::<O>(source) {
@@ -26,7 +31,7 @@ pub fn read_object_list<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> io:
 
 pub fn read_object_list_indexed<T: BinRead + Index, O: ByteOrder>(
     source: &mut impl Read,
-) -> io::Result<Vec<T>> {
+) -> Result<Vec<T>> {
     let mut objects = vec![];
     let mut index = 0;
 
@@ -42,14 +47,14 @@ pub fn read_object_list_indexed<T: BinRead + Index, O: ByteOrder>(
 pub fn write_object<T: BinWrite, O: ByteOrder>(
     destination: &mut impl Write,
     object: &T,
-) -> io::Result<()> {
+) -> Result<()> {
     destination.write_bin::<O>(object)
 }
 
 pub fn write_object_list<T: BinWrite + Index, O: ByteOrder>(
     destination: &mut impl Write,
     mut objects: Vec<T>,
-) -> io::Result<usize> {
+) -> Result<usize> {
     objects.sort_unstable_by_key(|object| object.index());
 
     objects
