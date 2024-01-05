@@ -18,7 +18,6 @@ use std::io;
 use std::io::{Read, Write};
 
 mod agent;
-mod agent_mission;
 mod blueprint;
 mod image_parts;
 mod inventory_item;
