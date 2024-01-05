@@ -1,10 +1,10 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::save::agent_mission::SaveAgentMission;
 use crate::data::save::image_parts::ImageParts;
 use crate::result::Result;
 use crate::wide_string::WideString;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
@@ -49,7 +49,11 @@ impl BinRead for Vec<SaveAgent> {
 
 impl BinWrite for Vec<SaveAgent> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        let length = self.len().try_into()?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter()
+            .try_for_each(|agent| destination.write_bin::<O>(agent))
     }
 }
 
@@ -69,7 +73,12 @@ impl BinRead for Option<SaveAgent> {
 
 impl BinWrite for Option<SaveAgent> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        match self {
+            Some(agent) => write_agent::<O>(destination, agent)?,
+            None => destination.write_i32::<O>(-1)?,
+        }
+
+        Ok(())
     }
 }
 
@@ -81,7 +90,7 @@ impl BinRead for SaveAgent {
 
 impl BinWrite for SaveAgent {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        write_agent::<O>(destination, self)
     }
 }
 
@@ -125,4 +134,41 @@ fn read_agent<O: ByteOrder>(source: &mut impl Read) -> Result<SaveAgent> {
         unknown_string_2: WideString::read_bin::<O>(source)?.get(),
         mission: source.read_bin::<O>()?,
     })
+}
+
+fn write_agent<O: ByteOrder>(destination: &mut impl Write, agent: &SaveAgent) -> Result<()> {
+    destination.write_i32::<O>(agent.costs)?;
+    destination.write_i32::<O>(agent.sell_system_index)?;
+    destination.write_i32::<O>(agent.sell_blueprint_index)?;
+    destination.write_i32::<O>(agent.event)?;
+    destination.write_i32::<O>(agent.index)?;
+    destination.write_i32::<O>(agent.offer)?;
+    destination.write_i32::<O>(agent.race)?;
+    destination.write_i32::<O>(agent.sell_item_index)?;
+    destination.write_i32::<O>(agent.sell_item_price)?;
+    destination.write_i32::<O>(agent.sell_item_quantity)?;
+    destination.write_i32::<O>(agent.station_index)?;
+    destination.write_i32::<O>(agent.system_index)?;
+    destination.write_i32::<O>(agent.wingman_friends_count)?;
+    destination.write_u8(agent.male.into())?;
+    destination.write_u8(agent.has_reward.into())?;
+    destination.write_u8(agent.has_accepted_offer.into())?;
+    destination.write_u8(agent.unknown_bool_1.into())?;
+    destination.write_u8(agent.unknown_bool_2.into())?;
+    destination.write_bin::<O>(&agent.image)?;
+
+    if agent.index > 0x12 {
+        // TODO: Fix potential crash
+        destination.write_i32::<O>(agent.sell_mod_index.unwrap())?;
+    }
+
+    destination.write_bin::<O>(&WideString::new(agent.mission_string.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.name.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.station_name.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.system_name.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.unknown_string_1.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.unknown_string_2.clone()))?;
+    destination.write_bin::<O>(&agent.mission)?;
+
+    Ok(())
 }

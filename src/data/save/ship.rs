@@ -1,7 +1,7 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::result::Result;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
@@ -21,7 +21,11 @@ impl BinRead for Vec<SaveShip> {
 
 impl BinWrite for Vec<SaveShip> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        let length = self.len().try_into()?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter()
+            .try_for_each(|ship| destination.write_bin::<O>(ship))
     }
 }
 
@@ -36,6 +40,9 @@ impl BinRead for SaveShip {
 
 impl BinWrite for SaveShip {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        destination.write_i32::<O>(self.index)?;
+        destination.write_i32::<O>(self.race)?;
+
+        Ok(())
     }
 }

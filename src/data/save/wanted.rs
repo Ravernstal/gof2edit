@@ -1,8 +1,8 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::result::Result;
 use crate::wide_string::WideString;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
@@ -40,7 +40,11 @@ impl BinRead for Vec<SaveWanted> {
 
 impl BinWrite for Vec<SaveWanted> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        let length = self.len().try_into()?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter()
+            .try_for_each(|wanted| destination.write_bin::<O>(wanted))
     }
 }
 
@@ -79,6 +83,29 @@ impl BinRead for SaveWanted {
 
 impl BinWrite for SaveWanted {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        destination.write_u8(self.active.into())?;
+        destination.write_u8(self.terminated.into())?;
+        destination.write_i32::<O>(self.current_location)?;
+        destination.write_i32::<O>(self.travels_to)?;
+        destination.write_i32::<O>(self.last_seen)?;
+        destination.write_bin::<O>(&WideString::new(self.name.clone()))?;
+        destination.write_i32::<O>(self.index)?;
+        destination.write_i32::<O>(self.board)?;
+        destination.write_i32::<O>(self.race)?;
+        destination.write_u8(self.male.into())?;
+        destination.write_i32::<O>(self.ship)?;
+        destination.write_i32::<O>(self.weapon)?;
+        destination.write_i32::<O>(self.hitpoints)?;
+        destination.write_i32::<O>(self.loot)?;
+        destination.write_i32::<O>(self.loot_amount)?;
+        destination.write_i32::<O>(self.reward)?;
+        destination.write_i32::<O>(self.required_bounties)?;
+        destination.write_i32::<O>(self.required_mission)?;
+        destination.write_i32::<O>(self.wingmen)?;
+        self.image_parts
+            .iter()
+            .try_for_each(|part| destination.write_i32::<O>(*part))?;
+
+        Ok(())
     }
 }

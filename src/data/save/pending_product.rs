@@ -1,8 +1,8 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::result::Result;
 use crate::wide_string::WideString;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
@@ -24,7 +24,11 @@ impl BinRead for Vec<SavePendingProduct> {
 
 impl BinWrite for Vec<SavePendingProduct> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        let length = self.len().try_into()?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter()
+            .try_for_each(|product| destination.write_bin::<O>(product))
     }
 }
 
@@ -41,6 +45,9 @@ impl BinRead for SavePendingProduct {
 
 impl BinWrite for SavePendingProduct {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        destination.write_i32::<O>(self.unknown_int_1)?;
+        destination.write_i32::<O>(self.unknown_int_2)?;
+        destination.write_i32::<O>(self.station_index)?;
+        destination.write_bin::<O>(&WideString::new(self.station_name.clone()))
     }
 }

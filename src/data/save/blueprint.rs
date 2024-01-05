@@ -1,9 +1,9 @@
 use crate::bin_io::read::BinRead;
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::error::Error;
 use crate::result::Result;
 use crate::wide_string::WideString;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io;
 use std::io::{Read, Write};
@@ -32,7 +32,11 @@ impl BinRead for Vec<SaveBlueprint> {
 
 impl BinWrite for Vec<SaveBlueprint> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        let length = self.len().try_into()?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter()
+            .try_for_each(|blueprint| write_blueprint::<O>(destination, blueprint))
     }
 }
 
@@ -54,4 +58,19 @@ fn read_blueprint<O: ByteOrder>(source: &mut impl Read, index: i32) -> Result<Sa
         station_index: source.read_i32::<O>()?,
         station_name: WideString::read_bin::<O>(source)?.get(),
     })
+}
+
+fn write_blueprint<O: ByteOrder>(
+    destination: &mut impl Write,
+    blueprint: &SaveBlueprint,
+) -> Result<()> {
+    blueprint
+        .ingredient_counts
+        .iter()
+        .try_for_each(|count| destination.write_i32::<O>(*count))?;
+    destination.write_i32::<O>(blueprint.unknown_int_1)?;
+    destination.write_u8(blueprint.unlocked.into())?;
+    destination.write_i32::<O>(blueprint.unknown_int_2)?;
+    destination.write_i32::<O>(blueprint.station_index)?;
+    destination.write_bin::<O>(&WideString::new(blueprint.station_name.clone()))
 }

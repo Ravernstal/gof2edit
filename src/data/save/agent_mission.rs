@@ -1,9 +1,9 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::save::image_parts::ImageParts;
 use crate::result::Result;
 use crate::wide_string::WideString;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
@@ -62,6 +62,32 @@ impl BinRead for Option<SaveAgentMission> {
 
 impl BinWrite for Option<SaveAgentMission> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        match self {
+            Some(mission) => {
+                destination.write_i32::<O>(1)?;
+                destination.write_i32::<O>(mission.mission_type)?;
+                destination.write_bin::<O>(&WideString::new(mission.client_name.clone()))?;
+                destination.write_bin::<O>(&WideString::new(mission.target_name.clone()))?;
+                destination
+                    .write_bin::<O>(&WideString::new(mission.target_station_name.clone()))?;
+                destination.write_bin::<O>(&WideString::new(mission.target_system_name.clone()))?;
+                destination.write_u8(mission.campaign_mission.into())?;
+                destination.write_bin::<O>(&mission.client_image)?;
+                destination.write_i32::<O>(mission.client_race)?;
+                destination.write_i32::<O>(mission.costs)?;
+                destination.write_i32::<O>(mission.bonus)?;
+                destination.write_i32::<O>(mission.reward)?;
+                destination.write_i32::<O>(mission.target_station_index)?;
+                destination.write_i32::<O>(mission.difficulty)?;
+                destination.write_i32::<O>(mission.production_good_index)?;
+                destination.write_i32::<O>(mission.production_good_amount)?;
+                destination.write_i32::<O>(mission.status_value)?;
+                destination.write_u8(mission.visible.into())?;
+                destination.write_i32::<O>(mission.agent)?
+            }
+            None => destination.write_i32::<O>(-1)?,
+        }
+
+        Ok(())
     }
 }

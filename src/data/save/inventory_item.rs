@@ -29,7 +29,8 @@ impl BinWrite for Vec<Option<SaveInventoryItem>> {
         let length = self.len().try_into()?;
         destination.write_u32::<O>(length)?;
 
-        self.iter().try_for_each(|x| destination.write_bin::<O>(x))
+        self.iter()
+            .try_for_each(|item| destination.write_bin::<O>(item))
     }
 }
 
@@ -43,7 +44,11 @@ impl BinRead for Vec<SaveInventoryItem> {
 
 impl BinWrite for Vec<SaveInventoryItem> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        let length = self.len().try_into()?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter()
+            .try_for_each(|item| destination.write_bin::<O>(item))
     }
 }
 
