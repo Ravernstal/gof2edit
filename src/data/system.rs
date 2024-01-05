@@ -3,9 +3,9 @@ use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::faction::Faction;
 use crate::data::security_level::SecurityLevel;
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -35,7 +35,7 @@ impl Index for System {
 }
 
 impl BinRead for System {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let name = source.read_bin::<O>()?;
         let security_level = source.read_bin::<O>()?;
         let starts_unlocked = source.read_u32::<O>()? != 0;
@@ -73,7 +73,7 @@ impl BinRead for System {
 }
 
 impl BinWrite for System {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.name)?;
         destination.write_bin::<O>(&self.security_level)?;
         destination.write_u32::<O>(self.starts_unlocked.into())?;

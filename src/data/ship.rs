@@ -1,9 +1,9 @@
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::BinWrite;
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -30,7 +30,7 @@ impl Index for Ship {
 }
 
 impl BinRead for Ship {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         Ok(Self {
             index: source.read_u32::<O>()?,
             armour: source.read_u32::<O>()?,
@@ -46,7 +46,7 @@ impl BinRead for Ship {
 }
 
 impl BinWrite for Ship {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_u32::<O>(self.index)?;
         destination.write_u32::<O>(self.armour)?;
         destination.write_u32::<O>(self.cargo_capacity)?;
@@ -55,6 +55,8 @@ impl BinWrite for Ship {
         destination.write_u32::<O>(self.secondary_weapon_count)?;
         destination.write_u32::<O>(self.turret_count)?;
         destination.write_u32::<O>(self.equipment_slot_count)?;
-        destination.write_u32::<O>(self.handling)
+        destination.write_u32::<O>(self.handling)?;
+
+        Ok(())
     }
 }

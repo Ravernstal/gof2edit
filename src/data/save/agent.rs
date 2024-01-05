@@ -2,10 +2,10 @@ use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::BinWrite;
 use crate::data::save::agent_mission::SaveAgentMission;
 use crate::data::save::image_parts::ImageParts;
+use crate::result::Result;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -40,7 +40,7 @@ pub struct SaveAgent {
 }
 
 impl BinRead for Vec<SaveAgent> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()?;
 
         (0..count).map(|_| source.read_bin::<O>()).collect()
@@ -48,13 +48,13 @@ impl BinRead for Vec<SaveAgent> {
 }
 
 impl BinWrite for Vec<SaveAgent> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }
 
 impl BinRead for Option<SaveAgent> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()?;
 
         if count == -1 {
@@ -68,24 +68,24 @@ impl BinRead for Option<SaveAgent> {
 }
 
 impl BinWrite for Option<SaveAgent> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }
 
 impl BinRead for SaveAgent {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         read_agent::<O>(source)
     }
 }
 
 impl BinWrite for SaveAgent {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }
 
-fn read_agent<O: ByteOrder>(source: &mut impl Read) -> io::Result<SaveAgent> {
+fn read_agent<O: ByteOrder>(source: &mut impl Read) -> Result<SaveAgent> {
     let costs = source.read_i32::<O>()?;
     let sell_system_index = source.read_i32::<O>()?;
     let sell_blueprint_index = source.read_i32::<O>()?;

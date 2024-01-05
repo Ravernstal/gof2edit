@@ -2,6 +2,7 @@ use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::Faction;
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
@@ -32,7 +33,7 @@ impl Index for Agent {
 }
 
 impl BinRead for Agent {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> std::io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         Ok(Self {
             name: source.read_bin::<O>()?,
             index: source.read_u32::<O>()?,
@@ -50,7 +51,7 @@ impl BinRead for Agent {
 }
 
 impl BinWrite for Agent {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> std::io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.name)?;
         destination.write_u32::<O>(self.index)?;
         destination.write_u32::<O>(self.station_id)?;
@@ -61,6 +62,8 @@ impl BinWrite for Agent {
         destination.write_i32::<O>(self.sell_blueprint_id)?;
         destination.write_i32::<O>(self.sell_mod_id)?;
         destination.write_i32::<O>(self.sell_price)?;
-        destination.write_bin::<O>(&self.image_parts)
+        destination.write_bin::<O>(&self.image_parts)?;
+
+        Ok(())
     }
 }

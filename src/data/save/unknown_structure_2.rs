@@ -3,9 +3,9 @@ use crate::bin_io::write::BinWrite;
 use crate::data::save::inventory_item::SaveInventoryItem;
 use crate::data::save::ship::SaveShip;
 use crate::data::save::ship_equipment::SaveShipEquipment;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -16,7 +16,7 @@ pub struct UnknownStructure2 {
 }
 
 impl BinRead for Option<UnknownStructure2> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()?;
 
         if count == 0 {
@@ -32,7 +32,7 @@ impl BinRead for Option<UnknownStructure2> {
 }
 
 impl BinWrite for Option<UnknownStructure2> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }

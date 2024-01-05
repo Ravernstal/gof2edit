@@ -1,6 +1,7 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::Position;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
@@ -12,7 +13,7 @@ pub struct Engine {
 }
 
 impl BinRead for Engine {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> std::io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         Ok(Self {
             position: source.read_bin::<O>()?,
             intensity: (
@@ -25,10 +26,12 @@ impl BinRead for Engine {
 }
 
 impl BinWrite for Engine {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> std::io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.position)?;
         destination.write_f32::<O>(self.intensity.0)?;
         destination.write_f32::<O>(self.intensity.1)?;
-        destination.write_f32::<O>(self.intensity.2)
+        destination.write_f32::<O>(self.intensity.2)?;
+
+        Ok(())
     }
 }

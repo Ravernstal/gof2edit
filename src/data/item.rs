@@ -1,12 +1,13 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::attribute::Attribute;
+use crate::error::Error;
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use std::io;
-use std::io::{Error, ErrorKind, Read, Write};
+use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Item {
@@ -27,7 +28,7 @@ impl Index for Item {
 }
 
 impl BinRead for Item {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let blueprint_item_ids: Vec<_> = source.read_bin::<O>()?;
         let blueprint_item_counts: Vec<_> = source.read_bin::<O>()?;
 
@@ -43,10 +44,7 @@ impl BinRead for Item {
         let attribute_data_size = source.read_u32::<O>()?;
 
         if (attribute_data_size % 2 != 0) || (attribute_data_size == 0) {
-            return Err(Error::new(
-                ErrorKind::InvalidData,
-                "invalid attribute format",
-            ));
+            return Err(Error::AttributeFormat);
         }
 
         let attribute_pair_count = attribute_data_size / 2;
@@ -70,7 +68,7 @@ impl BinRead for Item {
             };
         }
 
-        let index = index.try_into().map_err(|_| ErrorKind::InvalidData)?;
+        let index = index.try_into()?;
 
         Ok(Self {
             index,
@@ -82,7 +80,7 @@ impl BinRead for Item {
 }
 
 impl BinWrite for Item {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         let blueprint_item_ids = self
             .blueprint_ingredients
             .keys()
@@ -99,12 +97,10 @@ impl BinWrite for Item {
 
         let attribute_data_size =
             (self.attributes.len() * 2) + (self.unknown_attributes.len() * 2) + 2;
-        let attribute_data_size = attribute_data_size
-            .try_into()
-            .map_err(|_| ErrorKind::InvalidData)?;
+        let attribute_data_size = attribute_data_size.try_into()?;
         destination.write_u32::<O>(attribute_data_size)?;
 
-        let index = self.index.try_into().map_err(|_| ErrorKind::InvalidData)?;
+        let index = self.index.try_into()?;
         destination.write_u32::<O>(0)?;
         destination.write_i32::<O>(index)?;
 

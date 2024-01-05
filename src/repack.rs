@@ -8,7 +8,6 @@ use gof2edit::data::{
 use gof2edit::index::Index;
 use serde::de::DeserializeOwned;
 use std::fs::File;
-use std::io;
 use std::io::{Read, Write};
 use std::ops::Not;
 use std::path::Path;
@@ -18,7 +17,7 @@ pub fn json_to_bin(
     output_filepath: impl AsRef<Path>,
     target: RepackTarget,
     silent: bool,
-) -> io::Result<()> {
+) -> gof2edit::Result<()> {
     let input_filepath = input_filepath.as_ref();
     let output_filepath = output_filepath.as_ref();
 
@@ -77,7 +76,7 @@ pub fn json_to_bin(
 fn serialise_object<T: BinWrite + DeserializeOwned, O: ByteOrder>(
     source: &mut impl Read,
     destination: &mut impl Write,
-) -> io::Result<usize> {
+) -> gof2edit::Result<usize> {
     let object = serde_json::from_reader(source)?;
 
     gof2edit::write_object::<T, O>(destination, &object)?;
@@ -88,7 +87,7 @@ fn serialise_object<T: BinWrite + DeserializeOwned, O: ByteOrder>(
 fn serialise_objects<T: BinWrite + DeserializeOwned + Index, O: ByteOrder>(
     source: &mut impl Read,
     destination: &mut impl Write,
-) -> io::Result<usize> {
+) -> gof2edit::Result<usize> {
     let objects = serde_json::from_reader(source)?;
 
     let count = gof2edit::write_object_list::<T, O>(destination, objects)?;

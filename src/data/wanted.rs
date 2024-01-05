@@ -2,6 +2,7 @@ use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::Faction;
 use crate::index::Index;
+use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
@@ -36,7 +37,7 @@ impl Index for Wanted {
 }
 
 impl BinRead for Wanted {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> std::io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let name = source.read_bin::<O>()?;
 
         Ok(Self {
@@ -60,7 +61,7 @@ impl BinRead for Wanted {
 }
 
 impl BinWrite for Wanted {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> std::io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         destination.write_bin::<O>(&self.name)?;
         destination.write_u32::<O>(self.index)?;
         destination.write_bin::<O>(&self.board)?;

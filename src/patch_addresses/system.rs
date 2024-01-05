@@ -1,7 +1,6 @@
 use crate::patch_addresses::binary_version::BinaryVersion;
 use crate::patch_addresses::{write_value, WriteValueFn};
 use byteorder::{LittleEndian, WriteBytesExt};
-use std::io;
 use std::io::Write;
 
 pub fn addresses(binary: BinaryVersion) -> &'static [(u64, &'static WriteValueFn)] {
@@ -33,12 +32,16 @@ fn ios_addresses() -> &'static [(u64, &'static WriteValueFn)] {
     ]
 }
 
-pub fn write_transmute1(destination: &mut dyn Write, value: u8) -> io::Result<()> {
+pub fn write_transmute1(destination: &mut dyn Write, value: u8) -> gof2edit::Result<()> {
     let value = u16::from(value) * 32;
-    destination.write_u16::<LittleEndian>(value)
+    destination
+        .write_u16::<LittleEndian>(value)
+        .map_err(|error| error.into())
 }
 
-pub fn write_transmute2(destination: &mut dyn Write, value: u8) -> io::Result<()> {
+pub fn write_transmute2(destination: &mut dyn Write, value: u8) -> gof2edit::Result<()> {
     let value = (u16::from(value) * 4) + 2;
-    destination.write_u16::<LittleEndian>(value)
+    destination
+        .write_u16::<LittleEndian>(value)
+        .map_err(|error| error.into())
 }

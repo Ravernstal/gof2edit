@@ -1,9 +1,9 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::BinWrite;
+use crate::result::Result;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt};
 use serde::{Deserialize, Serialize};
-use std::io;
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -15,7 +15,7 @@ pub struct SavePendingProduct {
 }
 
 impl BinRead for Vec<SavePendingProduct> {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()?;
 
         (0..count).map(|_| source.read_bin::<O>()).collect()
@@ -23,13 +23,13 @@ impl BinRead for Vec<SavePendingProduct> {
 }
 
 impl BinWrite for Vec<SavePendingProduct> {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }
 
 impl BinRead for SavePendingProduct {
-    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         Ok(Self {
             unknown_int_1: source.read_i32::<O>()?,
             unknown_int_2: source.read_i32::<O>()?,
@@ -40,7 +40,7 @@ impl BinRead for SavePendingProduct {
 }
 
 impl BinWrite for SavePendingProduct {
-    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         todo!()
     }
 }
