@@ -1,6 +1,6 @@
 [package]
 name = "gof2edit"
-version = "0.7.0"
+version = "0.8.0"
 authors = ["Ravernstal"]
 edition = "2021"
 license = "AGPL-3.0-only"
