@@ -1,7 +1,7 @@
 [![Tests](https://github.com/Ravernstal/gof2edit/actions/workflows/ci.yml/badge.svg)](https://github.com/Ravernstal/gof2edit/actions/workflows/ci.yml)
 
 # gof2edit
-Galaxy on Fire 2 tool to unpack and repack BIN files, as well as patch binaries.
+Galaxy on Fire 2 CLI tool to unpack and repack BIN files and save files, as well as patch binaries.
 
 ## Unpacking/Repacking
 
@@ -11,8 +11,8 @@ This tool is capable of unpacking and repacking the following game files:
 
 * [Agents (agents.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/agents.md)
 * [Items (items.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/items.md)
+* [Language Strings (*.lang)](https://github.com/Ravernstal/gof2-bin-info/blob/master/lang.md)
 * [Most Wanted (wanted.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/wanted.md)
-* [Names (names_*.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/names.md)
 * [News Items (ticker.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/ticker.md)
 * [Ships (ships.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/ships.md)
 * [Ship Weapon/Engine Positions (weapons*.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/weapons.md)
@@ -21,7 +21,8 @@ This tool is capable of unpacking and repacking the following game files:
 
 ### Save Files
 
-* [Save Game Preview (gof2_save_game_preview_*.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/save-preview.md)
+* Save Game (gof2_save_game_*) (Android Only)
+* [Save Game Preview (gof2_save_game_preview_*)](https://github.com/Ravernstal/gof2-bin-info/blob/master/save-preview.md)
 
 ## Patching
 
