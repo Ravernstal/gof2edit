@@ -12,7 +12,7 @@ pub enum UnpackTarget {
     Lang,
     /// ticker.bin
     NewsItems,
-    /// gof2_save_game_*
+    /// gof2_save_game_* (ANDROID ONLY)
     Save,
     /// gof2_save_game_preview_*
     SavePreview,

@@ -45,6 +45,7 @@ pub fn bin_to_json(
             deserialise_objects_indexed::<NewsItem, BigEndian>(&mut source, &mut destination)?
         }
         UnpackTarget::Save => {
+            println!("Warning: Save game unpacking currently only works for Android saves");
             deserialise_object::<Save, LittleEndian>(&mut source, &mut destination)?
         }
         UnpackTarget::SavePreview => {
