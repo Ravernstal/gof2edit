@@ -43,6 +43,7 @@ pub fn json_to_bin(
             serialise_objects::<NewsItem, BigEndian>(&mut source, &mut destination)?
         }
         RepackTarget::Save => {
+            println!("Warning: Save game repacking currently only works for Android saves");
             serialise_object::<Save, LittleEndian>(&mut source, &mut destination)?
         }
         RepackTarget::SavePreview => {
