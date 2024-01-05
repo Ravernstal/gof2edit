@@ -25,7 +25,11 @@ impl BinRead for Vec<SavePendingProduct> {
 impl BinWrite for Vec<SavePendingProduct> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         let length = self.len().try_into()?;
-        destination.write_u32::<O>(length)?;
+        if length == 0 {
+            destination.write_i32::<O>(-1)?;
+        } else {
+            destination.write_u32::<O>(length)?;
+        }
 
         self.iter()
             .try_for_each(|product| destination.write_bin::<O>(product))
