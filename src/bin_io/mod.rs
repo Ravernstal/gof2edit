@@ -1,5 +1,5 @@
-use crate::bin_io::read::BinRead;
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::read::{BinRead, BinReader};
+use crate::bin_io::write::{BinWrite, BinWriter};
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use std::io;
 use std::io::{ErrorKind, Read, Write};
@@ -28,6 +28,42 @@ impl BinWrite for String {
     }
 }
 
+impl BinRead for Vec<Vec<i32>> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+        let length = source.read_u32::<O>()?;
+        let length = length.try_into().map_err(|_| ErrorKind::InvalidData)?;
+
+        (0..length)
+            .map(|_| source.read_bin::<O>())
+            .collect::<io::Result<Vec<_>>>()
+    }
+}
+
+impl BinWrite for Vec<Vec<i32>> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+        let length = self.len().try_into().map_err(|_| ErrorKind::InvalidData)?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter().try_for_each(|x| destination.write_bin::<O>(x))
+    }
+}
+
+impl BinRead for Vec<bool> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+        let bytes = Vec::<u8>::read_bin::<O>(source)?;
+
+        Ok(bytes.into_iter().map(|x| x != 0).collect())
+    }
+}
+
+impl BinWrite for Vec<bool> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+        let bytes = self.iter().map(|x| u8::from(*x)).collect::<Vec<_>>();
+
+        destination.write_bin::<O>(&bytes)
+    }
+}
+
 impl BinRead for Vec<u8> {
     fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
         let length = source.read_u32::<O>()?;
@@ -45,6 +81,26 @@ impl BinWrite for Vec<u8> {
         destination.write_u32::<O>(length)?;
 
         self.iter().try_for_each(|x| destination.write_u8(*x))
+    }
+}
+
+impl BinRead for Vec<i32> {
+    fn read_bin<O: ByteOrder>(source: &mut impl Read) -> io::Result<Self> {
+        let length = source.read_u32::<O>()?;
+        let length = length.try_into().map_err(|_| ErrorKind::InvalidData)?;
+
+        (0..length)
+            .map(|_| source.read_i32::<O>())
+            .collect::<io::Result<Vec<_>>>()
+    }
+}
+
+impl BinWrite for Vec<i32> {
+    fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> io::Result<()> {
+        let length = self.len().try_into().map_err(|_| ErrorKind::InvalidData)?;
+        destination.write_u32::<O>(length)?;
+
+        self.iter().try_for_each(|x| destination.write_i32::<O>(*x))
     }
 }
 
