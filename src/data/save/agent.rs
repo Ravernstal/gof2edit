@@ -1,14 +1,14 @@
 use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
-use crate::data::save::agent_mission::SaveAgentMission;
 use crate::data::save::image_parts::ImageParts;
+use crate::data::save::mission::SaveMission;
 use crate::result::Result;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SaveAgent {
     pub costs: i32,
     pub sell_system_index: i32,
@@ -36,7 +36,7 @@ pub struct SaveAgent {
     pub system_name: String,
     pub unknown_string_1: String,
     pub unknown_string_2: String,
-    pub mission: Option<SaveAgentMission>,
+    pub mission: Option<Box<SaveMission>>,
 }
 
 impl BinRead for Vec<SaveAgent> {
@@ -132,7 +132,15 @@ fn read_agent<O: ByteOrder>(source: &mut impl Read) -> Result<SaveAgent> {
         system_name: WideString::read_bin::<O>(source)?.get(),
         unknown_string_1: WideString::read_bin::<O>(source)?.get(),
         unknown_string_2: WideString::read_bin::<O>(source)?.get(),
-        mission: source.read_bin::<O>()?,
+        mission: {
+            if source.read_i32::<O>()? == -1 {
+                None
+            } else {
+                let mission = Option::<SaveMission>::read_bin::<O>(source)?;
+
+                mission.map(Box::new)
+            }
+        },
     })
 }
 
@@ -168,7 +176,15 @@ fn write_agent<O: ByteOrder>(destination: &mut impl Write, agent: &SaveAgent) ->
     destination.write_bin::<O>(&WideString::new(agent.system_name.clone()))?;
     destination.write_bin::<O>(&WideString::new(agent.unknown_string_1.clone()))?;
     destination.write_bin::<O>(&WideString::new(agent.unknown_string_2.clone()))?;
-    destination.write_bin::<O>(&agent.mission)?;
+
+    match &agent.mission {
+        Some(mission) => {
+            let mission = *mission.clone();
+            destination.write_i32::<O>(1)?;
+            destination.write_bin::<O>(&Some(mission))?
+        }
+        None => Option::<SaveMission>::write_bin::<O>(&None, destination)?,
+    }
 
     Ok(())
 }
