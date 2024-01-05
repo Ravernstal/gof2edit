@@ -18,7 +18,7 @@ pub enum UnpackTarget {
     SavePreview,
     /// ships.bin
     Ships,
-    /// weapons_*.bin
+    /// weapons*.bin
     ShipPositions,
     /// stations.bin
     Stations,
