@@ -1,8 +1,8 @@
 use crate::bin_io::read::{BinRead, BinReader};
-use crate::bin_io::write::BinWrite;
+use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::result::Result;
 use crate::wide_string::WideString;
-use byteorder::{ByteOrder, ReadBytesExt};
+use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
@@ -41,6 +41,23 @@ impl BinRead for Option<UnknownStructure1> {
 
 impl BinWrite for Option<UnknownStructure1> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        todo!()
+        match self {
+            Some(unknown) => {
+                destination.write_i32::<O>(unknown.unknown_string_list_1.len().try_into()?)?;
+                unknown
+                    .unknown_string_list_1
+                    .iter()
+                    .try_for_each(|string| {
+                        destination.write_bin::<O>(&WideString::new(string.clone()))
+                    })?;
+
+                destination.write_i32::<O>(unknown.unknown_int_1)?;
+                destination.write_i32::<O>(unknown.unknown_int_2)?;
+                destination.write_bin::<O>(&unknown.unknown_int_list_1)?
+            }
+            None => destination.write_i32::<O>(-1)?,
+        }
+
+        Ok(())
     }
 }
