@@ -14,6 +14,7 @@ use crate::data::save::wanted::SaveWanted;
 use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::io;
 use std::io::{Read, Write};
 
@@ -29,6 +30,12 @@ mod station;
 mod unknown_structure_1;
 mod unknown_structure_2;
 mod wanted;
+
+const BINARY_HASH_CONSTANT: &[u8] = &[
+    0x23, 0x2b, 0xc2, 0xa7, 0x52, 0x30, 0x4c, 0x4c, 0x33, 0x72, 0x28, 0x30, 0x61, 0x53, 0x74, 0x65,
+    0x72, 0x26, 0x5f, 0x25, 0x3d, 0x24, 0x2b, 0x23, 0x00,
+];
+const INJECTED_HASH_CONSTANT: &[u8] = b"9506fe987e36474d";
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Save {
@@ -317,159 +324,20 @@ impl BinRead for Save {
             unknown_bool_54: source.read_u8()? != 0,
             unknown_bool_55: source.read_u8()? != 0,
             unknown_bool_56: source.read_u8()? != 0,
-            hash: {
-                let remaining_bytes = read_remaining(source)?;
-
-                println!("{} bytes remaining", remaining_bytes.len());
-
-                remaining_bytes
-            },
+            hash: read_remaining(source)?,
         })
     }
 }
 
 impl BinWrite for Save {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
-        destination.write_bin::<O>(&self.visited_stations)?;
-        destination.write_i32::<O>(self.credits)?;
-        destination.write_i32::<O>(self.rating)?;
-        destination.write_i64::<O>(self.play_time_ms)?;
-        destination.write_i32::<O>(self.kills)?;
-        destination.write_i32::<O>(self.mission_count)?;
-        destination.write_i32::<O>(self.level)?;
-        destination.write_i32::<O>(self.last_xp)?;
-        destination.write_i32::<O>(self.goods_produced)?;
-        destination.write_i32::<O>(self.stations_visited)?;
-        destination.write_i32::<O>(self.current_campaign_mission)?;
-        destination.write_bin::<O>(&self.freelance_mission)?;
-        destination.write_bin::<O>(&self.campaign_mission)?;
+        let mut bytes = vec![];
+        write_save::<O>(&mut bytes, self)?;
 
-        destination.write_i32::<O>(self.jumpgates_used)?;
-        destination.write_i32::<O>(self.captured_crates)?;
-        destination.write_i32::<O>(self.bought_equipment)?;
-        destination.write_i32::<O>(self.pirate_kills)?;
-        destination.write_i32::<O>(self.unknown_int_1)?;
-        destination.write_i32::<O>(self.unknown_int_2)?;
-        destination.write_i32::<O>(self.unknown_int_3)?;
-        destination.write_i32::<O>(self.unknown_int_4)?;
-        destination.write_bin::<O>(&self.unknown_bool_list_1)?;
-        destination.write_bin::<O>(&self.unknown_bool_list_2)?;
-        destination.write_i32::<O>(self.unknown_int_5)?;
-        destination.write_i32::<O>(self.unknown_int_6)?;
-        destination.write_i32::<O>(self.unknown_int_7)?;
-        destination.write_i32::<O>(self.unknown_int_8)?;
-        destination.write_bin::<O>(&self.unknown_bool_list_3)?;
-        destination.write_i32::<O>(self.unknown_int_9)?;
-        destination.write_bin::<O>(&self.unknown_bool_list_4)?;
-        destination.write_i32::<O>(self.unknown_int_10)?;
-        destination.write_i64::<O>(self.unknown_long_int_1)?;
-        destination.write_i32::<O>(self.unknown_int_11)?;
-        destination.write_i32::<O>(self.unknown_int_12)?;
-        destination.write_i32::<O>(self.unknown_int_13)?;
-        destination.write_i32::<O>(self.unknown_int_14)?;
-        destination.write_i32::<O>(self.unknown_int_15)?;
-        destination.write_i32::<O>(self.unknown_int_16)?;
-        destination.write_i32::<O>(self.unknown_int_17)?;
-        destination.write_i32::<O>(self.unknown_int_18)?;
-        destination.write_i32::<O>(self.unknown_int_19)?;
-        destination.write_i32::<O>(self.unknown_int_20)?;
-        destination.write_bin::<O>(&self.unknown_int_list_1)?;
-        destination.write_bin::<O>(&self.ship)?;
-        destination.write_bin::<O>(&self.ship_equipment)?;
-        destination.write_bin::<O>(&self.ship_cargo)?;
-        destination.write_bin::<O>(&self.station_stack)?;
-        destination.write_bin::<O>(&self.standings)?;
-        destination.write_bin::<O>(&self.blueprints)?;
-        destination.write_bin::<O>(&self.pending_products)?;
-        destination.write_bin::<O>(&self.unknown_structure_1)?;
-        destination.write_i32::<O>(self.unknown_int_21)?;
-        destination.write_bin::<O>(&self.unknown_bool_list_5)?;
-        destination.write_bin::<O>(&self.unknown_int_list_2)?;
-        destination.write_bin::<O>(&self.unknown_int_list_3)?;
-        destination.write_bin::<O>(&self.unknown_int_list_4)?;
-        destination.write_bin::<O>(&self.unknown_int_list_5)?;
-        destination.write_bin::<O>(&self.unknown_bool_list_6)?;
-        destination.write_bin::<O>(&self.agents)?;
-        destination.write_u8(self.unknown_bool_1.into())?;
-        destination.write_u8(self.unknown_bool_2.into())?;
-        destination.write_u8(self.unknown_bool_3.into())?;
-        destination.write_u8(self.unknown_bool_4.into())?;
-        destination.write_u8(self.unknown_bool_5.into())?;
-        destination.write_u8(self.unknown_bool_6.into())?;
-        destination.write_u8(self.unknown_bool_7.into())?;
-        destination.write_u8(self.unknown_bool_8.into())?;
-        destination.write_u8(self.unknown_bool_9.into())?;
-        destination.write_u8(self.unknown_bool_10.into())?;
-        destination.write_u8(self.unknown_bool_11.into())?;
-        destination.write_u8(self.unknown_bool_12.into())?;
-        destination.write_u8(self.unknown_bool_13.into())?;
-        destination.write_u8(self.unknown_bool_14.into())?;
-        destination.write_u8(self.unknown_bool_15.into())?;
-        destination.write_u8(self.unknown_bool_16.into())?;
-        destination.write_u8(self.unknown_bool_17.into())?;
-        destination.write_u8(self.unknown_bool_18.into())?;
-        destination.write_u8(self.unknown_bool_19.into())?;
-        destination.write_u8(self.unknown_bool_20.into())?;
-        destination.write_u8(self.unknown_bool_21.into())?;
-        destination.write_u8(self.unknown_bool_22.into())?;
-        destination.write_u8(self.unknown_bool_23.into())?;
-        destination.write_u8(self.unknown_bool_24.into())?;
-        destination.write_u8(self.unknown_bool_25.into())?;
-        destination.write_u8(self.unknown_bool_26.into())?;
-        destination.write_u8(self.unknown_bool_27.into())?;
-        destination.write_u8(self.unknown_bool_28.into())?;
-        destination.write_u8(self.unknown_bool_29.into())?;
-        destination.write_f32::<O>(self.unknown_float_1)?;
-        destination.write_i64::<O>(self.unknown_long_int_2)?;
-        destination.write_u8(self.unknown_bool_30.into())?;
-        destination.write_u8(self.unknown_bool_31.into())?;
-        destination.write_bin::<O>(&self.unknown_structure_2)?;
-        destination.write_bin::<O>(&self.unknown_int_list_6)?;
-        destination.write_i32::<O>(self.unknown_int_22)?;
-        destination.write_u8(self.unknown_bool_32.into())?;
-        destination.write_i32::<O>(self.unknown_int_23)?;
-        destination.write_u8(self.unknown_bool_33.into())?;
-        destination.write_bin::<O>(&self.station_items)?;
-        destination.write_bin::<O>(&self.station_ships)?;
-        destination.write_u8(self.unknown_bool_34.into())?;
-        destination.write_u8(self.unknown_bool_35.into())?;
-        destination.write_u8(self.unknown_bool_36.into())?;
-        destination.write_bin::<O>(&self.unknown_bool_list_7)?;
-        destination.write_i32::<O>(self.unknown_constant)?;
-        destination.write_bin::<O>(&self.unknown_int_list_7)?;
-        destination.write_bin::<O>(&self.unknown_int_list_8)?;
-        destination.write_bin::<O>(&self.unknown_int_list_list_1)?;
-        self.unknown_structure_3
-            .iter()
-            .try_for_each(|unknown| destination.write_bin::<O>(unknown))?;
-        destination.write_bin::<O>(&self.most_wanted)?;
-        self.collected_bounties
-            .iter()
-            .try_for_each(|bounties| destination.write_i32::<O>(*bounties))?;
-        destination.write_u8(self.unknown_bool_37.into())?;
-        destination.write_i32::<O>(self.unknown_int_24)?;
-        destination.write_u8(self.unknown_bool_38.into())?;
-        destination.write_u8(self.unknown_bool_39.into())?;
-        destination.write_u8(self.unknown_bool_40.into())?;
-        destination.write_u8(self.unknown_bool_41.into())?;
-        destination.write_u8(self.unknown_bool_42.into())?;
-        destination.write_u8(self.unknown_bool_43.into())?;
-        destination.write_u8(self.unknown_bool_44.into())?;
-        destination.write_u8(self.unknown_bool_45.into())?;
-        destination.write_bin::<O>(&self.unknown_bool_list_8)?;
-        destination.write_u8(self.unknown_bool_46.into())?;
-        destination.write_u8(self.unknown_bool_47.into())?;
-        destination.write_u8(self.unknown_bool_48.into())?;
-        destination.write_i32::<O>(self.unknown_int_25)?;
-        destination.write_u8(self.unknown_bool_49.into())?;
-        destination.write_u8(self.unknown_bool_50.into())?;
-        destination.write_u8(self.unknown_bool_51.into())?;
-        destination.write_u8(self.unknown_bool_52.into())?;
-        destination.write_u8(self.unknown_bool_53.into())?;
-        destination.write_u8(self.unknown_bool_54.into())?;
-        destination.write_u8(self.unknown_bool_55.into())?;
-        destination.write_u8(self.unknown_bool_56.into())?;
-        destination.write_all(&self.hash)?;
+        let hash = calculate_save_hash(&bytes);
+
+        destination.write_all(&bytes)?;
+        destination.write_all(&hash)?;
 
         Ok(())
     }
@@ -480,4 +348,156 @@ fn read_remaining(source: &mut impl Read) -> io::Result<Vec<u8>> {
     source.read_to_end(&mut buffer)?;
 
     Ok(buffer)
+}
+
+fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result<()> {
+    destination.write_bin::<O>(&save.visited_stations)?;
+    destination.write_i32::<O>(save.credits)?;
+    destination.write_i32::<O>(save.rating)?;
+    destination.write_i64::<O>(save.play_time_ms)?;
+    destination.write_i32::<O>(save.kills)?;
+    destination.write_i32::<O>(save.mission_count)?;
+    destination.write_i32::<O>(save.level)?;
+    destination.write_i32::<O>(save.last_xp)?;
+    destination.write_i32::<O>(save.goods_produced)?;
+    destination.write_i32::<O>(save.stations_visited)?;
+    destination.write_i32::<O>(save.current_campaign_mission)?;
+    destination.write_bin::<O>(&save.freelance_mission)?;
+    destination.write_bin::<O>(&save.campaign_mission)?;
+    destination.write_i32::<O>(save.jumpgates_used)?;
+    destination.write_i32::<O>(save.captured_crates)?;
+    destination.write_i32::<O>(save.bought_equipment)?;
+    destination.write_i32::<O>(save.pirate_kills)?;
+    destination.write_i32::<O>(save.unknown_int_1)?;
+    destination.write_i32::<O>(save.unknown_int_2)?;
+    destination.write_i32::<O>(save.unknown_int_3)?;
+    destination.write_i32::<O>(save.unknown_int_4)?;
+    destination.write_bin::<O>(&save.unknown_bool_list_1)?;
+    destination.write_bin::<O>(&save.unknown_bool_list_2)?;
+    destination.write_i32::<O>(save.unknown_int_5)?;
+    destination.write_i32::<O>(save.unknown_int_6)?;
+    destination.write_i32::<O>(save.unknown_int_7)?;
+    destination.write_i32::<O>(save.unknown_int_8)?;
+    destination.write_bin::<O>(&save.unknown_bool_list_3)?;
+    destination.write_i32::<O>(save.unknown_int_9)?;
+    destination.write_bin::<O>(&save.unknown_bool_list_4)?;
+    destination.write_i32::<O>(save.unknown_int_10)?;
+    destination.write_i64::<O>(save.unknown_long_int_1)?;
+    destination.write_i32::<O>(save.unknown_int_11)?;
+    destination.write_i32::<O>(save.unknown_int_12)?;
+    destination.write_i32::<O>(save.unknown_int_13)?;
+    destination.write_i32::<O>(save.unknown_int_14)?;
+    destination.write_i32::<O>(save.unknown_int_15)?;
+    destination.write_i32::<O>(save.unknown_int_16)?;
+    destination.write_i32::<O>(save.unknown_int_17)?;
+    destination.write_i32::<O>(save.unknown_int_18)?;
+    destination.write_i32::<O>(save.unknown_int_19)?;
+    destination.write_i32::<O>(save.unknown_int_20)?;
+    destination.write_bin::<O>(&save.unknown_int_list_1)?;
+    destination.write_bin::<O>(&save.ship)?;
+    destination.write_bin::<O>(&save.ship_equipment)?;
+    destination.write_bin::<O>(&save.ship_cargo)?;
+    destination.write_bin::<O>(&save.station_stack)?;
+    destination.write_bin::<O>(&save.standings)?;
+    destination.write_bin::<O>(&save.blueprints)?;
+    destination.write_bin::<O>(&save.pending_products)?;
+    destination.write_bin::<O>(&save.unknown_structure_1)?;
+    destination.write_i32::<O>(save.unknown_int_21)?;
+    destination.write_bin::<O>(&save.unknown_bool_list_5)?;
+    destination.write_bin::<O>(&save.unknown_int_list_2)?;
+    destination.write_bin::<O>(&save.unknown_int_list_3)?;
+    destination.write_bin::<O>(&save.unknown_int_list_4)?;
+    destination.write_bin::<O>(&save.unknown_int_list_5)?;
+    destination.write_bin::<O>(&save.unknown_bool_list_6)?;
+    destination.write_bin::<O>(&save.agents)?;
+    destination.write_u8(save.unknown_bool_1.into())?;
+    destination.write_u8(save.unknown_bool_2.into())?;
+    destination.write_u8(save.unknown_bool_3.into())?;
+    destination.write_u8(save.unknown_bool_4.into())?;
+    destination.write_u8(save.unknown_bool_5.into())?;
+    destination.write_u8(save.unknown_bool_6.into())?;
+    destination.write_u8(save.unknown_bool_7.into())?;
+    destination.write_u8(save.unknown_bool_8.into())?;
+    destination.write_u8(save.unknown_bool_9.into())?;
+    destination.write_u8(save.unknown_bool_10.into())?;
+    destination.write_u8(save.unknown_bool_11.into())?;
+    destination.write_u8(save.unknown_bool_12.into())?;
+    destination.write_u8(save.unknown_bool_13.into())?;
+    destination.write_u8(save.unknown_bool_14.into())?;
+    destination.write_u8(save.unknown_bool_15.into())?;
+    destination.write_u8(save.unknown_bool_16.into())?;
+    destination.write_u8(save.unknown_bool_17.into())?;
+    destination.write_u8(save.unknown_bool_18.into())?;
+    destination.write_u8(save.unknown_bool_19.into())?;
+    destination.write_u8(save.unknown_bool_20.into())?;
+    destination.write_u8(save.unknown_bool_21.into())?;
+    destination.write_u8(save.unknown_bool_22.into())?;
+    destination.write_u8(save.unknown_bool_23.into())?;
+    destination.write_u8(save.unknown_bool_24.into())?;
+    destination.write_u8(save.unknown_bool_25.into())?;
+    destination.write_u8(save.unknown_bool_26.into())?;
+    destination.write_u8(save.unknown_bool_27.into())?;
+    destination.write_u8(save.unknown_bool_28.into())?;
+    destination.write_u8(save.unknown_bool_29.into())?;
+    destination.write_f32::<O>(save.unknown_float_1)?;
+    destination.write_i64::<O>(save.unknown_long_int_2)?;
+    destination.write_u8(save.unknown_bool_30.into())?;
+    destination.write_u8(save.unknown_bool_31.into())?;
+    destination.write_bin::<O>(&save.unknown_structure_2)?;
+    destination.write_bin::<O>(&save.unknown_int_list_6)?;
+    destination.write_i32::<O>(save.unknown_int_22)?;
+    destination.write_u8(save.unknown_bool_32.into())?;
+    destination.write_i32::<O>(save.unknown_int_23)?;
+    destination.write_u8(save.unknown_bool_33.into())?;
+    destination.write_bin::<O>(&save.station_items)?;
+    destination.write_bin::<O>(&save.station_ships)?;
+    destination.write_u8(save.unknown_bool_34.into())?;
+    destination.write_u8(save.unknown_bool_35.into())?;
+    destination.write_u8(save.unknown_bool_36.into())?;
+    destination.write_bin::<O>(&save.unknown_bool_list_7)?;
+    destination.write_i32::<O>(save.unknown_constant)?;
+    destination.write_bin::<O>(&save.unknown_int_list_7)?;
+    destination.write_bin::<O>(&save.unknown_int_list_8)?;
+    destination.write_bin::<O>(&save.unknown_int_list_list_1)?;
+    save.unknown_structure_3
+        .iter()
+        .try_for_each(|unknown| destination.write_bin::<O>(unknown))?;
+    destination.write_bin::<O>(&save.most_wanted)?;
+    save.collected_bounties
+        .iter()
+        .try_for_each(|bounties| destination.write_i32::<O>(*bounties))?;
+    destination.write_u8(save.unknown_bool_37.into())?;
+    destination.write_i32::<O>(save.unknown_int_24)?;
+    destination.write_u8(save.unknown_bool_38.into())?;
+    destination.write_u8(save.unknown_bool_39.into())?;
+    destination.write_u8(save.unknown_bool_40.into())?;
+    destination.write_u8(save.unknown_bool_41.into())?;
+    destination.write_u8(save.unknown_bool_42.into())?;
+    destination.write_u8(save.unknown_bool_43.into())?;
+    destination.write_u8(save.unknown_bool_44.into())?;
+    destination.write_u8(save.unknown_bool_45.into())?;
+    destination.write_bin::<O>(&save.unknown_bool_list_8)?;
+    destination.write_u8(save.unknown_bool_46.into())?;
+    destination.write_u8(save.unknown_bool_47.into())?;
+    destination.write_u8(save.unknown_bool_48.into())?;
+    destination.write_i32::<O>(save.unknown_int_25)?;
+    destination.write_u8(save.unknown_bool_49.into())?;
+    destination.write_u8(save.unknown_bool_50.into())?;
+    destination.write_u8(save.unknown_bool_51.into())?;
+    destination.write_u8(save.unknown_bool_52.into())?;
+    destination.write_u8(save.unknown_bool_53.into())?;
+    destination.write_u8(save.unknown_bool_54.into())?;
+    destination.write_u8(save.unknown_bool_55.into())?;
+    destination.write_u8(save.unknown_bool_56.into())?;
+
+    Ok(())
+}
+
+fn calculate_save_hash(save_bytes: impl AsRef<[u8]>) -> Vec<u8> {
+    let mut hasher = Sha256::new();
+    hasher.update(save_bytes);
+    hasher.update(BINARY_HASH_CONSTANT);
+    hasher.update(INJECTED_HASH_CONSTANT);
+
+    hasher.finalize().to_vec()
 }
