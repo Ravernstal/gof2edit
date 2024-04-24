@@ -1,4 +1,4 @@
-use crate::patch_addresses::binary_version::BinaryVersion;
+use crate::binary_version::BinaryVersion;
 use crate::patch_addresses::{station, system, WriteValueFn};
 use crate::targets::patch::PatchTarget;
 use gof2edit::data::{Station, System};

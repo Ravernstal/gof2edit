@@ -1,4 +1,4 @@
-use crate::patch_addresses::binary_version::BinaryVersion;
+use crate::binary_version::BinaryVersion;
 use crate::patch_addresses::{write_value, WriteValueFn};
 use byteorder::{LittleEndian, WriteBytesExt};
 use std::io::Write;

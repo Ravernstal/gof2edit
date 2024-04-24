@@ -1,4 +1,4 @@
-use crate::patch_addresses::binary_version::BinaryVersion;
+use crate::binary_version::BinaryVersion;
 use crate::targets::patch::PatchTarget;
 use crate::targets::repack::RepackTarget;
 use crate::targets::unpack::UnpackTarget;
