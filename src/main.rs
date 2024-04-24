@@ -4,6 +4,7 @@ use clap::Parser;
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 
+mod apply_patch;
 mod arguments;
 mod binary_patch;
 mod binary_version;
@@ -39,13 +40,17 @@ fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
             let output_filepath = output_filepath(input_filepath, "bin");
             repack::json_to_bin(input_filepath, output_filepath, *target, silent)
         }
-
         Command::Patch {
             target,
             json_filepath,
             binary_filepath,
             binary,
         } => patch::patch(json_filepath, binary_filepath, *target, *binary, silent),
+        Command::ApplyPatch {
+            patch_filepath,
+            binary_filepath,
+            binary,
+        } => apply_patch::patch(patch_filepath, binary_filepath, *binary, silent),
     }
 }
 
