@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 #[derive(Deserialize, Serialize)]
 pub struct BinaryPatch {
-    name: String,
-    description: String,
-    addresses: HashMap<BinaryVersion, HashMap<usize, u8>>,
+    pub name: String,
+    pub description: String,
+    pub addresses: HashMap<BinaryVersion, HashMap<u64, u8>>,
 }
