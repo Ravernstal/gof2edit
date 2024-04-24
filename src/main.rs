@@ -5,6 +5,8 @@ use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 
 mod arguments;
+mod binary_patch;
+mod binary_version;
 mod command;
 mod patch;
 mod patch_addresses;
