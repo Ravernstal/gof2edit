@@ -5,12 +5,12 @@ use std::io::Write;
 
 pub fn addresses(binary: BinaryVersion) -> &'static [(u64, &'static WriteValueFn)] {
     match binary {
-        BinaryVersion::AndroidKiritoJpk => android_kirito_jpk_addresses(),
+        BinaryVersion::Android => android_addresses(),
         BinaryVersion::Ios => ios_addresses(),
     }
 }
 
-fn android_kirito_jpk_addresses() -> &'static [(u64, &'static WriteValueFn)] {
+fn android_addresses() -> &'static [(u64, &'static WriteValueFn)] {
     &[
         (0xA5DB2, &write_value::default),  // Status::Status
         (0xA5DDA, &write_value::default),  // Status::Status

@@ -21,7 +21,7 @@ pub enum Command {
         /// JSON file to repack
         input_filepath: PathBuf,
     },
-    /// Patch binary with JSON files
+    /// Patch new objects into binary with JSON file
     Patch {
         /// Type of JSON file
         target: PatchTarget,
@@ -30,7 +30,7 @@ pub enum Command {
         /// Binary file to patch
         binary_filepath: PathBuf,
         /// Binary version to patch
-        #[clap(short, long, value_enum, default_value_t = BinaryVersion::AndroidKiritoJpk)]
+        #[clap(short, long, value_enum, default_value_t = BinaryVersion::Android)]
         binary: BinaryVersion,
     },
 }
