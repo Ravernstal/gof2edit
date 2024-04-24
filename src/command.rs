@@ -33,4 +33,14 @@ pub enum Command {
         #[clap(short, long, value_enum, default_value_t = BinaryVersion::Android)]
         binary: BinaryVersion,
     },
+    /// Apply a patch to binary
+    ApplyPatch {
+        /// JSON file used to patch
+        patch_filepath: PathBuf,
+        /// Binary file to patch
+        binary_filepath: PathBuf,
+        /// Binary version to patch
+        #[clap(short, long, value_enum, default_value_t = BinaryVersion::Android)]
+        binary: BinaryVersion,
+    },
 }
