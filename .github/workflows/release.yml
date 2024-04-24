@@ -31,6 +31,7 @@ jobs:
         with:
           bin: gof2edit
           archive: $bin-$tag-$target
+          include: patches
           tar: unix
           zip: windows
           token: ${{ secrets.GITHUB_TOKEN }}
