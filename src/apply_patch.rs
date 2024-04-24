@@ -36,7 +36,7 @@ pub fn patch(
 
     if silent.not() {
         println!(
-            "Applied patch \"{}\" into \"{}\"",
+            "Applied patch \"{}\" to \"{}\"",
             patch.name,
             binary_filepath.display()
         );
