@@ -16,26 +16,30 @@ pub enum Error {
     SecurityLevelParse(u32),
     BlueprintIngredientListIndex(usize),
     ShipPositionCode(u16),
+    PatchNotAvailableForBinaryVersion,
 }
 
 impl Display for Error {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
-            Error::Io(error) => write!(f, "{error}"),
-            Error::IntConversion(error) => write!(f, "{error}"),
-            Error::JsonParse(error) => write!(f, "{error}"),
-            Error::Utf8Parse(error) => write!(f, "{error}"),
-            Error::Utf16Parse(error) => write!(f, "{error}"),
-            Error::AttributeFormat => write!(f, "invalid attribute format"),
-            Error::AttributeParse(value) => write!(f, "failed to parse attribute value {value}"),
-            Error::FactionParse(value) => write!(f, "failed to parse faction value {value}"),
-            Error::SecurityLevelParse(value) => {
+            Self::Io(error) => write!(f, "{error}"),
+            Self::IntConversion(error) => write!(f, "{error}"),
+            Self::JsonParse(error) => write!(f, "{error}"),
+            Self::Utf8Parse(error) => write!(f, "{error}"),
+            Self::Utf16Parse(error) => write!(f, "{error}"),
+            Self::AttributeFormat => write!(f, "invalid attribute format"),
+            Self::AttributeParse(value) => write!(f, "failed to parse attribute value {value}"),
+            Self::FactionParse(value) => write!(f, "failed to parse faction value {value}"),
+            Self::SecurityLevelParse(value) => {
                 write!(f, "failed to parse security level value {value}")
             }
-            Error::BlueprintIngredientListIndex(index) => {
+            Self::BlueprintIngredientListIndex(index) => {
                 write!(f, "blueprint ingredient list index {index} out of bounds")
             }
-            Error::ShipPositionCode(code) => write!(f, "invalid ship position code {code}"),
+            Self::ShipPositionCode(code) => write!(f, "invalid ship position code {code}"),
+            Self::PatchNotAvailableForBinaryVersion => {
+                write!(f, "patch cannot be applied to this binary version")
+            }
         }
     }
 }
