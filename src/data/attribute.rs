@@ -49,7 +49,9 @@ const WEAPON_MOD_DAMAGE_EFFECT_CODE: u32 = 40;
 const EMERGENCY_SYSTEM_EFFECT_CODE: u32 = 41;
 const TIME_EXTENDER_EFFECT_CODE: u32 = 42;
 const TIME_EXTENDER_LOADING_SPEED_CODE: u32 = 43;
+const PLASMA_COLLECTOR_SPEED_CODE: u32 = 49;
 const PLASMA_COLLECTOR_MAGNITUDE_CODE: u32 = 50;
+const PLASMA_COLLECTOR_RANGE_CODE: u32 = 51;
 const GAMMA_SHIELD_CAPACITY_CODE: u32 = 52;
 const REPAIR_BEAM_RANGE_CODE: u32 = 53;
 const REPAIR_BEAM_EFFECT_CODE: u32 = 54;
@@ -59,6 +61,7 @@ const SPECTRAL_FILTER_SHOW_INFO_CODE: u32 = 57;
 const SPECTRAL_FILTER_SHOW_ON_RADAR_CODE: u32 = 58;
 const SHIELD_INJECTOR_CONSUMPTION_CODE: u32 = 59;
 const VOSSK_ITEM_CODE: u32 = 60;
+const STATION_CODE: u32 = 61;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -106,7 +109,9 @@ pub enum Attribute {
     EmergencySystemEffect,
     TimeExtenderEffect,
     TimeExtenderLoadingSpeed,
+    PlasmaCollectorSpeed,
     PlasmaCollectorMagnitude,
+    PlasmaCollectorRange,
     GammaShieldCapacity,
     RepairBeamRange,
     RepairBeamEffect,
@@ -116,6 +121,7 @@ pub enum Attribute {
     SpectralFilterShowOnRadar,
     ShieldInjectorConsumption,
     VosskItem,
+    Station,
 }
 
 impl TryFrom<u32> for Attribute {
@@ -166,7 +172,9 @@ impl TryFrom<u32> for Attribute {
             EMERGENCY_SYSTEM_EFFECT_CODE => Ok(Self::EmergencySystemEffect),
             TIME_EXTENDER_EFFECT_CODE => Ok(Self::TimeExtenderEffect),
             TIME_EXTENDER_LOADING_SPEED_CODE => Ok(Self::TimeExtenderLoadingSpeed),
+            PLASMA_COLLECTOR_SPEED_CODE => Ok(Self::PlasmaCollectorSpeed),
             PLASMA_COLLECTOR_MAGNITUDE_CODE => Ok(Self::PlasmaCollectorMagnitude),
+            PLASMA_COLLECTOR_RANGE_CODE => Ok(Self::PlasmaCollectorRange),
             GAMMA_SHIELD_CAPACITY_CODE => Ok(Self::GammaShieldCapacity),
             REPAIR_BEAM_RANGE_CODE => Ok(Self::RepairBeamRange),
             REPAIR_BEAM_EFFECT_CODE => Ok(Self::RepairBeamEffect),
@@ -176,6 +184,7 @@ impl TryFrom<u32> for Attribute {
             SPECTRAL_FILTER_SHOW_ON_RADAR_CODE => Ok(Self::SpectralFilterShowOnRadar),
             SHIELD_INJECTOR_CONSUMPTION_CODE => Ok(Self::ShieldInjectorConsumption),
             VOSSK_ITEM_CODE => Ok(Self::VosskItem),
+            STATION_CODE => Ok(Self::Station),
             _ => Err(Error::AttributeParse(value)),
         }
     }
@@ -227,7 +236,9 @@ impl From<Attribute> for u32 {
             Attribute::EmergencySystemEffect => EMERGENCY_SYSTEM_EFFECT_CODE,
             Attribute::TimeExtenderEffect => TIME_EXTENDER_EFFECT_CODE,
             Attribute::TimeExtenderLoadingSpeed => TIME_EXTENDER_LOADING_SPEED_CODE,
+            Attribute::PlasmaCollectorSpeed => PLASMA_COLLECTOR_SPEED_CODE,
             Attribute::PlasmaCollectorMagnitude => PLASMA_COLLECTOR_MAGNITUDE_CODE,
+            Attribute::PlasmaCollectorRange => PLASMA_COLLECTOR_RANGE_CODE,
             Attribute::GammaShieldCapacity => GAMMA_SHIELD_CAPACITY_CODE,
             Attribute::RepairBeamRange => REPAIR_BEAM_RANGE_CODE,
             Attribute::RepairBeamEffect => REPAIR_BEAM_EFFECT_CODE,
@@ -237,6 +248,7 @@ impl From<Attribute> for u32 {
             Attribute::SpectralFilterShowOnRadar => SPECTRAL_FILTER_SHOW_ON_RADAR_CODE,
             Attribute::ShieldInjectorConsumption => SHIELD_INJECTOR_CONSUMPTION_CODE,
             Attribute::VosskItem => VOSSK_ITEM_CODE,
+            Attribute::Station => STATION_CODE,
         }
     }
 }
