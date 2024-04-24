@@ -1,0 +1,13 @@
+{
+  "name": "Enable Bloom",
+  "author": "Ravernstal",
+  "description": "Enables bloom whilst flying in space. Disables it in stations to prevent a bug where ship previews are invisible.",
+  "addresses": {
+    "Android": {
+      "529858": 5,
+      "1668880": 0,
+      "1668882": 1,
+      "1688904": 0
+    }
+  }
+}
