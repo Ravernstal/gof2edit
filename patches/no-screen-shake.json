@@ -1,0 +1,17 @@
+{
+    "name": "No screen shake",
+    "author": "rootfs",
+    "description": "Removes the shake effect when boosting.",
+    "addresses": {
+      "Android": {
+        "1537904": 112,
+        "1537905": 71
+      },
+      "iOS" : {
+        "4296292768": 192,
+        "4296292769": 3,
+        "4296292770": 95,
+        "4296292771": 214
+      }
+    }
+  }
