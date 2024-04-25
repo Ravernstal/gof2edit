@@ -26,13 +26,20 @@ This tool is capable of unpacking and repacking the following game files:
 
 ## Patching
 
-In order to add new entries into these files, sometimes binary modification is necessary.
+### New Objects
+
+In order to add new entries into these files, binary modification is necessary.
 `gof2edit` can patch the game binary for the following files:
 
 * [Stations (stations.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/stations.md)
 * [Systems (systems.bin)](https://github.com/Ravernstal/gof2-bin-info/blob/master/systems.md)
 
-This functionality is currently only available for the iOS binary as well as [KiritoJPK's Full HD Android mod](https://github.com/KiritoJPK/Galaxy-on-Fire-2-FULL-HD-Android).
+This functionality is currently only fully available for the Android binary, and experimentally for the iOS binary.
+
+### Binary Patches
+
+`gof2edit` can also apply arbitrary patches to binaries.
+See the [patches](patches) folder for examples.
 
 ## Example Commands
 * `gof2edit unpack systems systems.bin` - Unpacks the systems in JSON format into `systems.json`
