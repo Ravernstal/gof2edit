@@ -49,7 +49,7 @@ pub fn generate(
     patch.addresses.insert(binary, addresses);
 
     let output_filepath = PATCH_FILEPATH;
-    let destination = File::create(&output_filepath)?;
+    let destination = File::create(output_filepath)?;
 
     serde_json::to_writer_pretty(destination, &patch)?;
 
