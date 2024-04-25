@@ -1,0 +1,14 @@
+{
+  "name": "Rings Everywhere",
+  "author": "Ravernstal",
+  "description": "Gives planetary rings to all planets.",
+  "addresses": {
+    "Android": {
+      "692126": 79,
+      "692127": 234,
+      "692128": 17,
+      "692129": 0,
+      "692136": 1
+    }
+  }
+}
