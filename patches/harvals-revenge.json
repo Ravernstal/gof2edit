@@ -1,0 +1,11 @@
+{
+  "name": "Harval's Revenge",
+  "author": "Ravernstal",
+  "description": "Enables the supernova effect in all systems.",
+  "addresses": {
+    "Android": {
+      "692262": 1,
+      "692276": 1
+    }
+  }
+}
