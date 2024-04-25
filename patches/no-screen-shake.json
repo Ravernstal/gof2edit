@@ -4,9 +4,9 @@
     "description": "Removes the shake effect when boosting.",
     "addresses": {
       "Android": {
-        "1537904": 52,
-        "1537905": 87,
-        "1536906": 43
+        "1537904": 28,
+        "1537905": 74,
+        "1536906": 3
       },
       "iOS" : {
         "4296292768": 32,
