@@ -33,6 +33,16 @@ pub enum Command {
         #[clap(short, long, value_enum, default_value_t = BinaryVersion::Android)]
         binary: BinaryVersion,
     },
+    /// Generate a binary patch by comparing two binaries
+    GeneratePatch {
+        /// Unmodified binary file
+        binary1_filepath: PathBuf,
+        /// Modified binary file
+        binary2_filepath: PathBuf,
+        /// Binary version to generate
+        #[clap(short, long, value_enum, default_value_t = BinaryVersion::Android)]
+        binary: BinaryVersion,
+    },
     /// Apply a patch to binary
     ApplyPatch {
         /// JSON file used to patch

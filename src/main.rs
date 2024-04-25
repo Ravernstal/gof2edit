@@ -9,6 +9,7 @@ mod arguments;
 mod binary_patch;
 mod binary_version;
 mod command;
+mod generate_patch;
 mod patch;
 mod patch_addresses;
 mod repack;
@@ -46,6 +47,11 @@ fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
             binary_filepath,
             binary,
         } => patch::patch(json_filepath, binary_filepath, *target, *binary, silent),
+        Command::GeneratePatch {
+            binary1_filepath,
+            binary2_filepath,
+            binary,
+        } => generate_patch::generate(binary1_filepath, binary2_filepath, *binary, silent),
         Command::ApplyPatch {
             patch_filepath,
             binary_filepath,

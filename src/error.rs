@@ -16,6 +16,7 @@ pub enum Error {
     SecurityLevelParse(u32),
     BlueprintIngredientListIndex(usize),
     ShipPositionCode(u16),
+    BinarySizesDiffer,
     PatchNotAvailableForBinaryVersion,
 }
 
@@ -37,6 +38,7 @@ impl Display for Error {
                 write!(f, "blueprint ingredient list index {index} out of bounds")
             }
             Self::ShipPositionCode(code) => write!(f, "invalid ship position code {code}"),
+            Self::BinarySizesDiffer => write!(f, "binary sizes differ"),
             Self::PatchNotAvailableForBinaryVersion => {
                 write!(f, "patch cannot be applied to this binary version")
             }
