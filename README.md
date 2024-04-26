@@ -1,7 +1,10 @@
 [![Tests](https://github.com/Ravernstal/gof2edit/actions/workflows/ci.yml/badge.svg)](https://github.com/Ravernstal/gof2edit/actions/workflows/ci.yml)
 
 # gof2edit
+
 Galaxy on Fire 2 CLI tool to unpack and repack BIN files and save files, as well as patch binaries.
+
+[Download the latest version here.](https://github.com/Ravernstal/gof2edit/releases/latest)
 
 ## Unpacking/Repacking
 
