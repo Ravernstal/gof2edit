@@ -4,8 +4,8 @@
   "description": "Enables the supernova effect in all systems.",
   "addresses": {
     "Android": {
-      "692262": 1,
-      "692276": 1
+      "0xa9026": "0x1",
+      "0xa9034": "0x1"
     }
   }
 }

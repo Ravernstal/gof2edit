@@ -4,11 +4,11 @@
   "description": "Gives planetary rings to all planets.",
   "addresses": {
     "Android": {
-      "692126": 79,
-      "692127": 234,
-      "692128": 17,
-      "692129": 0,
-      "692136": 1
+      "0xa8f9e": "0x4f",
+      "0xa8f9f": "0xea",
+      "0xa8fa0": "0x11",
+      "0xa8fa1": "0x0",
+      "0xa8fa8": "0x1"
     }
   }
 }

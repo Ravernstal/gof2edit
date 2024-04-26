@@ -4,10 +4,10 @@
   "description": "Enables bloom whilst flying in space. Disables it in stations to prevent a bug where ship previews are invisible.",
   "addresses": {
     "Android": {
-      "529858": 5,
-      "1668880": 0,
-      "1668882": 1,
-      "1688904": 0
+      "0x815c2": "0x5",
+      "0x197710": "0x0",
+      "0x197712": "0x1",
+      "0x19c548": "0x0"
     }
   }
 }
