@@ -45,6 +45,7 @@ See the [patches](patches) folder for examples.
 * `gof2edit unpack systems systems.bin` - Unpacks the systems in JSON format into `systems.json`
 * `gof2edit repack systems systems.json` - Repacks the systems from `systems.json` into `systems.bin`
 * `gof2edit patch systems systems.json libgof2hdaa.so` - Patches the game using `systems.json`
+* `gof2edit generate-patch libgof2hdaa.so.orig libgof2hdaa.so` - Generates a binary patch named `patch.json` by comparing `libgof2hdaa.so` to `libgof2hdaa.so.orig`
 * `gof2edit apply-patch patches/enable-bloom.json libgof2hdaa.so` - Applies the "Enable Bloom" patch to the Android binary
 
 Execute `gof2edit --help` to get a list of commands, and `gof2edit <command> --help` for more information.
