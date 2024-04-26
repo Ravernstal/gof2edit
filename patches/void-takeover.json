@@ -4,8 +4,8 @@
   "description": "Enables the Void background for all systems, and spawns Void fighters and crystals. Unfortunately you cannot dock at stations.",
   "addresses": {
     "Android": {
-      "682004": 120,
-      "682005": 0
+      "0xa6814": "0x78",
+      "0xa6815": "0x0"
     }
   }
 }
