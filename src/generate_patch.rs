@@ -1,4 +1,4 @@
-use crate::binary_patch::BinaryPatch;
+use crate::binary_patch::{Address, BinaryPatch, Value};
 use crate::binary_version::BinaryVersion;
 use gof2edit::Error;
 use std::collections::BTreeMap;
@@ -42,7 +42,7 @@ pub fn generate(
         let value2 = value2?;
 
         if value1 != value2 {
-            addresses.insert(address, value2);
+            addresses.insert(Address::new(address), Value::new(value2));
         }
     }
 
