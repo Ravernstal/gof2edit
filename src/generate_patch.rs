@@ -3,7 +3,7 @@ use crate::binary_version::BinaryVersion;
 use gof2edit::Error;
 use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::Read;
+use std::io::{BufReader, Read};
 use std::ops::Not;
 use std::path::Path;
 
@@ -32,6 +32,9 @@ pub fn generate(
             binary2_filepath.display()
         );
     }
+
+    let binary1 = BufReader::new(binary1);
+    let binary2 = BufReader::new(binary2);
 
     let mut patch = BinaryPatch::default();
     let mut addresses = BTreeMap::new();
