@@ -1,0 +1,10 @@
+{
+  "name": "1024x Speed",
+  "author": "Ravernstal",
+  "description": "Sets the player speed to 1024 times normal.",
+  "addresses": {
+    "Android": {
+      "0x95898": "0x8a"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "2x Speed",
+  "author": "Ravernstal",
+  "description": "Sets the player speed to two times normal.",
+  "addresses": {
+    "Android": {
+      "0x95898": "0x81"
+    }
+  }
+}
