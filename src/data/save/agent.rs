@@ -74,7 +74,10 @@ impl BinRead for Option<SaveAgent> {
 impl BinWrite for Option<SaveAgent> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         match self {
-            Some(agent) => write_agent::<O>(destination, agent)?,
+            Some(agent) => {
+                destination.write_i32::<O>(1)?;
+                write_agent::<O>(destination, agent)?
+            }
             None => destination.write_i32::<O>(-1)?,
         }
 
