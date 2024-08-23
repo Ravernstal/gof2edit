@@ -178,6 +178,8 @@ pub struct Save {
 
 impl BinRead for Save {
     fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
+        let station_stack_count;
+
         Ok(Self {
             visited_stations: source.read_bin::<O>()?,
             credits: source.read_i32::<O>()?,
@@ -225,7 +227,13 @@ impl BinRead for Save {
             ship: source.read_bin::<O>()?,
             ship_equipment: source.read_bin::<O>()?,
             ship_cargo: source.read_bin::<O>()?,
-            station_stack: source.read_bin::<O>()?,
+            station_stack: {
+                let station_stack: Vec<Option<SaveStation>> = source.read_bin::<O>()?;
+
+                station_stack_count = station_stack.iter().filter(|s| s.is_some()).count();
+
+                station_stack
+            },
             standings: source.read_bin::<O>()?,
             blueprints: source.read_bin::<O>()?,
             pending_products: source.read_bin::<O>()?,
@@ -287,13 +295,9 @@ impl BinRead for Save {
             unknown_int_list_7: source.read_bin::<O>()?,
             unknown_int_list_8: source.read_bin::<O>()?,
             unknown_int_list_list_1: source.read_bin::<O>()?,
-            unknown_structure_3: vec![
-                // TODO: Potentially dodgy. Possibly based on station stack count
-                source.read_bin::<O>()?,
-                source.read_bin::<O>()?,
-                source.read_bin::<O>()?,
-                source.read_bin::<O>()?,
-            ],
+            unknown_structure_3: (0..station_stack_count)
+                .map(|_| source.read_bin::<O>())
+                .collect::<Result<_>>()?,
             most_wanted: source.read_bin::<O>()?,
             collected_bounties: vec![
                 source.read_i32::<O>()?,
