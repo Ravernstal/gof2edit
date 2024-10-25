@@ -4,6 +4,7 @@ use crate::data::save::agent::SaveAgent;
 use crate::data::save::blueprint::SaveBlueprint;
 use crate::data::save::inventory_item::SaveInventoryItem;
 use crate::data::save::kaamo_status::KaamoStatus;
+use crate::data::save::medal::Medal;
 use crate::data::save::mission::SaveMission;
 use crate::data::save::pending_product::SavePendingProduct;
 use crate::data::save::ship::SaveShip;
@@ -24,6 +25,7 @@ mod blueprint;
 mod image_parts;
 mod inventory_item;
 mod kaamo_status;
+mod medal;
 mod mission;
 mod pending_product;
 mod ship;
@@ -83,7 +85,7 @@ pub struct Save {
     pub unknown_int_18: i32,
     pub unknown_int_19: i32,
     pub unknown_int_20: i32,
-    pub medals: Vec<i32>,
+    pub medals: Vec<Medal>,
     pub ship: SaveShip,
     pub ship_equipment: Vec<Option<SaveShipEquipment>>,
     pub ship_cargo: Vec<SaveInventoryItem>,
