@@ -146,7 +146,7 @@ pub struct Save {
     pub unknown_bool_34: bool,
     pub unknown_bool_35: bool,
     pub unknown_bool_36: bool,
-    pub unknown_bool_list_7: Vec<bool>,
+    pub items_obtained: Vec<bool>,
     pub unknown_constant: i32,
     pub unknown_int_list_7: Vec<i32>,
     pub unknown_int_list_8: Vec<i32>,
@@ -294,7 +294,7 @@ impl BinRead for Save {
             unknown_bool_34: source.read_u8()? != 0,
             unknown_bool_35: source.read_u8()? != 0,
             unknown_bool_36: source.read_u8()? != 0,
-            unknown_bool_list_7: source.read_bin::<O>()?,
+            items_obtained: source.read_bin::<O>()?,
             unknown_constant: source.read_i32::<O>()?,
             unknown_int_list_7: source.read_bin::<O>()?,
             unknown_int_list_8: source.read_bin::<O>()?,
@@ -462,7 +462,7 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_u8(save.unknown_bool_34.into())?;
     destination.write_u8(save.unknown_bool_35.into())?;
     destination.write_u8(save.unknown_bool_36.into())?;
-    destination.write_bin::<O>(&save.unknown_bool_list_7)?;
+    destination.write_bin::<O>(&save.items_obtained)?;
     destination.write_i32::<O>(save.unknown_constant)?;
     destination.write_bin::<O>(&save.unknown_int_list_7)?;
     destination.write_bin::<O>(&save.unknown_int_list_8)?;
