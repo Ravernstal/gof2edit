@@ -64,9 +64,9 @@ pub struct Save {
     pub wormhole_system_index: i32,
     pub last_docked_station: i32,
     pub wormhole_relocate_counter: i32,
-    pub unknown_bool_list_1: Vec<bool>,
-    pub unknown_bool_list_2: Vec<bool>,
-    pub unknown_int_5: i32,
+    pub ore_types_mined: Vec<bool>,
+    pub core_types_mined: Vec<bool>,
+    pub courier_goods_transported: i32,
     pub ores_mined: i32,
     pub cores_mined: i32,
     pub booze_purchased: i32,
@@ -74,17 +74,17 @@ pub struct Save {
     pub space_junk_destroyed: i32,
     pub visited_systems: Vec<bool>,
     pub passengers_carried: i32,
-    pub unknown_long_int_1: i64,
+    pub invisibility_time: i64,
     pub bombs_detonated: i32,
     pub alien_remains_collected: i32,
     pub people_spoken_to: i32,
     pub wingmen_hired: i32,
     pub asteroids_destroyed: i32,
-    pub unknown_int_16: i32,
-    pub unknown_int_17: i32,
+    pub max_free_cargo_space: i32,
+    pub missions_rejected: i32,
     pub unknown_int_18: i32,
-    pub unknown_int_19: i32,
-    pub unknown_int_20: i32,
+    pub missions_accepted_without_asking_about_difficulty: i32,
+    pub missions_accepted_without_asking_about_location: i32,
     pub medals: Vec<Medal>,
     pub ship: SaveShip,
     pub ship_equipment: Vec<Option<SaveShipEquipment>>,
@@ -100,7 +100,7 @@ pub struct Save {
     pub unknown_int_list_3: Vec<i32>,
     pub unknown_int_list_4: Vec<i32>,
     pub unknown_int_list_5: Vec<i32>,
-    pub unknown_bool_list_6: Vec<bool>,
+    pub pirate_outposts_destroyed: Vec<bool>,
     pub agents: Vec<SaveAgent>,
     pub unknown_bool_1: bool,
     pub unknown_bool_2: bool,
@@ -206,9 +206,9 @@ impl BinRead for Save {
             wormhole_system_index: source.read_i32::<O>()?,
             last_docked_station: source.read_i32::<O>()?,
             wormhole_relocate_counter: source.read_i32::<O>()?,
-            unknown_bool_list_1: source.read_bin::<O>()?,
-            unknown_bool_list_2: source.read_bin::<O>()?,
-            unknown_int_5: source.read_i32::<O>()?,
+            ore_types_mined: source.read_bin::<O>()?,
+            core_types_mined: source.read_bin::<O>()?,
+            courier_goods_transported: source.read_i32::<O>()?,
             ores_mined: source.read_i32::<O>()?,
             cores_mined: source.read_i32::<O>()?,
             booze_purchased: source.read_i32::<O>()?,
@@ -216,17 +216,17 @@ impl BinRead for Save {
             space_junk_destroyed: source.read_i32::<O>()?,
             visited_systems: source.read_bin::<O>()?,
             passengers_carried: source.read_i32::<O>()?,
-            unknown_long_int_1: source.read_i64::<O>()?,
+            invisibility_time: source.read_i64::<O>()?,
             bombs_detonated: source.read_i32::<O>()?,
             alien_remains_collected: source.read_i32::<O>()?,
             people_spoken_to: source.read_i32::<O>()?,
             wingmen_hired: source.read_i32::<O>()?,
             asteroids_destroyed: source.read_i32::<O>()?,
-            unknown_int_16: source.read_i32::<O>()?,
-            unknown_int_17: source.read_i32::<O>()?,
+            max_free_cargo_space: source.read_i32::<O>()?,
+            missions_rejected: source.read_i32::<O>()?,
             unknown_int_18: source.read_i32::<O>()?,
-            unknown_int_19: source.read_i32::<O>()?,
-            unknown_int_20: source.read_i32::<O>()?,
+            missions_accepted_without_asking_about_difficulty: source.read_i32::<O>()?,
+            missions_accepted_without_asking_about_location: source.read_i32::<O>()?,
             medals: source.read_bin::<O>()?,
             ship: source.read_bin::<O>()?,
             ship_equipment: source.read_bin::<O>()?,
@@ -248,7 +248,7 @@ impl BinRead for Save {
             unknown_int_list_3: source.read_bin::<O>()?,
             unknown_int_list_4: source.read_bin::<O>()?,
             unknown_int_list_5: source.read_bin::<O>()?,
-            unknown_bool_list_6: source.read_bin::<O>()?,
+            pirate_outposts_destroyed: source.read_bin::<O>()?,
             agents: source.read_bin::<O>()?,
             unknown_bool_1: source.read_u8()? != 0,
             unknown_bool_2: source.read_u8()? != 0,
@@ -380,9 +380,9 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_i32::<O>(save.wormhole_system_index)?;
     destination.write_i32::<O>(save.last_docked_station)?;
     destination.write_i32::<O>(save.wormhole_relocate_counter)?;
-    destination.write_bin::<O>(&save.unknown_bool_list_1)?;
-    destination.write_bin::<O>(&save.unknown_bool_list_2)?;
-    destination.write_i32::<O>(save.unknown_int_5)?;
+    destination.write_bin::<O>(&save.ore_types_mined)?;
+    destination.write_bin::<O>(&save.core_types_mined)?;
+    destination.write_i32::<O>(save.courier_goods_transported)?;
     destination.write_i32::<O>(save.ores_mined)?;
     destination.write_i32::<O>(save.cores_mined)?;
     destination.write_i32::<O>(save.booze_purchased)?;
@@ -390,17 +390,17 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_i32::<O>(save.space_junk_destroyed)?;
     destination.write_bin::<O>(&save.visited_systems)?;
     destination.write_i32::<O>(save.passengers_carried)?;
-    destination.write_i64::<O>(save.unknown_long_int_1)?;
+    destination.write_i64::<O>(save.invisibility_time)?;
     destination.write_i32::<O>(save.bombs_detonated)?;
     destination.write_i32::<O>(save.alien_remains_collected)?;
     destination.write_i32::<O>(save.people_spoken_to)?;
     destination.write_i32::<O>(save.wingmen_hired)?;
     destination.write_i32::<O>(save.asteroids_destroyed)?;
-    destination.write_i32::<O>(save.unknown_int_16)?;
-    destination.write_i32::<O>(save.unknown_int_17)?;
+    destination.write_i32::<O>(save.max_free_cargo_space)?;
+    destination.write_i32::<O>(save.missions_rejected)?;
     destination.write_i32::<O>(save.unknown_int_18)?;
-    destination.write_i32::<O>(save.unknown_int_19)?;
-    destination.write_i32::<O>(save.unknown_int_20)?;
+    destination.write_i32::<O>(save.missions_accepted_without_asking_about_difficulty)?;
+    destination.write_i32::<O>(save.missions_accepted_without_asking_about_location)?;
     destination.write_bin::<O>(&save.medals)?;
     destination.write_bin::<O>(&save.ship)?;
     destination.write_bin::<O>(&save.ship_equipment)?;
@@ -416,7 +416,7 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_bin::<O>(&save.unknown_int_list_3)?;
     destination.write_bin::<O>(&save.unknown_int_list_4)?;
     destination.write_bin::<O>(&save.unknown_int_list_5)?;
-    destination.write_bin::<O>(&save.unknown_bool_list_6)?;
+    destination.write_bin::<O>(&save.pirate_outposts_destroyed)?;
     destination.write_bin::<O>(&save.agents)?;
     destination.write_u8(save.unknown_bool_1.into())?;
     destination.write_u8(save.unknown_bool_2.into())?;

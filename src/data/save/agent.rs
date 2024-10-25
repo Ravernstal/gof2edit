@@ -35,8 +35,8 @@ pub struct SaveAgent {
     pub name: String,
     pub station_name: String,
     pub system_name: String,
-    pub unknown_string_1: String,
-    pub unknown_string_2: String,
+    pub wingman_friend_1: String,
+    pub wingman_friend_2: String,
     pub mission: Option<Box<SaveMission>>,
 }
 
@@ -134,8 +134,8 @@ fn read_agent<O: ByteOrder>(source: &mut impl Read) -> Result<SaveAgent> {
         name: WideString::read_bin::<O>(source)?.get(),
         station_name: WideString::read_bin::<O>(source)?.get(),
         system_name: WideString::read_bin::<O>(source)?.get(),
-        unknown_string_1: WideString::read_bin::<O>(source)?.get(),
-        unknown_string_2: WideString::read_bin::<O>(source)?.get(),
+        wingman_friend_1: WideString::read_bin::<O>(source)?.get(),
+        wingman_friend_2: WideString::read_bin::<O>(source)?.get(),
         mission: {
             if source.read_i32::<O>()? == -1 {
                 None
@@ -178,8 +178,8 @@ fn write_agent<O: ByteOrder>(destination: &mut impl Write, agent: &SaveAgent) ->
     destination.write_bin::<O>(&WideString::new(agent.name.clone()))?;
     destination.write_bin::<O>(&WideString::new(agent.station_name.clone()))?;
     destination.write_bin::<O>(&WideString::new(agent.system_name.clone()))?;
-    destination.write_bin::<O>(&WideString::new(agent.unknown_string_1.clone()))?;
-    destination.write_bin::<O>(&WideString::new(agent.unknown_string_2.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.wingman_friend_1.clone()))?;
+    destination.write_bin::<O>(&WideString::new(agent.wingman_friend_2.clone()))?;
 
     match &agent.mission {
         Some(mission) => {
