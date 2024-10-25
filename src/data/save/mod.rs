@@ -58,30 +58,30 @@ pub struct Save {
     pub pirate_kills: i32,
     pub unknown_int_1: i32,
     pub unknown_int_2: i32,
-    pub unknown_int_3: i32,
+    pub last_docked_station: i32,
     pub unknown_int_4: i32,
     pub unknown_bool_list_1: Vec<bool>,
     pub unknown_bool_list_2: Vec<bool>,
     pub unknown_int_5: i32,
-    pub unknown_int_6: i32,
-    pub unknown_int_7: i32,
-    pub unknown_int_8: i32,
-    pub unknown_bool_list_3: Vec<bool>,
-    pub unknown_int_9: i32,
-    pub unknown_bool_list_4: Vec<bool>,
-    pub unknown_int_10: i32,
+    pub ores_mined: i32,
+    pub cores_mined: i32,
+    pub booze_purchased: i32,
+    pub booze_types_obtained: Vec<bool>,
+    pub space_junk_destroyed: i32,
+    pub visited_systems: Vec<bool>,
+    pub passengers_carried: i32,
     pub unknown_long_int_1: i64,
-    pub unknown_int_11: i32,
-    pub unknown_int_12: i32,
-    pub unknown_int_13: i32,
-    pub unknown_int_14: i32,
-    pub unknown_int_15: i32,
+    pub bombs_detonated: i32,
+    pub alien_remains_collected: i32,
+    pub people_spoken_to: i32,
+    pub wingmen_hired: i32,
+    pub asteroids_destroyed: i32,
     pub unknown_int_16: i32,
     pub unknown_int_17: i32,
     pub unknown_int_18: i32,
     pub unknown_int_19: i32,
     pub unknown_int_20: i32,
-    pub unknown_int_list_1: Vec<i32>,
+    pub medals: Vec<i32>,
     pub ship: SaveShip,
     pub ship_equipment: Vec<Option<SaveShipEquipment>>,
     pub ship_cargo: Vec<SaveInventoryItem>,
@@ -90,8 +90,8 @@ pub struct Save {
     pub blueprints: Vec<SaveBlueprint>,
     pub pending_products: Vec<SavePendingProduct>,
     pub unknown_structure_1: Option<UnknownStructure1>,
-    pub unknown_int_21: i32,
-    pub unknown_bool_list_5: Vec<bool>,
+    pub passengers: i32,
+    pub system_visibilities: Vec<bool>,
     pub unknown_int_list_2: Vec<i32>,
     pub unknown_int_list_3: Vec<i32>,
     pub unknown_int_list_4: Vec<i32>,
@@ -200,30 +200,30 @@ impl BinRead for Save {
             pirate_kills: source.read_i32::<O>()?,
             unknown_int_1: source.read_i32::<O>()?,
             unknown_int_2: source.read_i32::<O>()?,
-            unknown_int_3: source.read_i32::<O>()?,
+            last_docked_station: source.read_i32::<O>()?,
             unknown_int_4: source.read_i32::<O>()?,
             unknown_bool_list_1: source.read_bin::<O>()?,
             unknown_bool_list_2: source.read_bin::<O>()?,
             unknown_int_5: source.read_i32::<O>()?,
-            unknown_int_6: source.read_i32::<O>()?,
-            unknown_int_7: source.read_i32::<O>()?,
-            unknown_int_8: source.read_i32::<O>()?,
-            unknown_bool_list_3: source.read_bin::<O>()?,
-            unknown_int_9: source.read_i32::<O>()?,
-            unknown_bool_list_4: source.read_bin::<O>()?,
-            unknown_int_10: source.read_i32::<O>()?,
+            ores_mined: source.read_i32::<O>()?,
+            cores_mined: source.read_i32::<O>()?,
+            booze_purchased: source.read_i32::<O>()?,
+            booze_types_obtained: source.read_bin::<O>()?,
+            space_junk_destroyed: source.read_i32::<O>()?,
+            visited_systems: source.read_bin::<O>()?,
+            passengers_carried: source.read_i32::<O>()?,
             unknown_long_int_1: source.read_i64::<O>()?,
-            unknown_int_11: source.read_i32::<O>()?,
-            unknown_int_12: source.read_i32::<O>()?,
-            unknown_int_13: source.read_i32::<O>()?,
-            unknown_int_14: source.read_i32::<O>()?,
-            unknown_int_15: source.read_i32::<O>()?,
+            bombs_detonated: source.read_i32::<O>()?,
+            alien_remains_collected: source.read_i32::<O>()?,
+            people_spoken_to: source.read_i32::<O>()?,
+            wingmen_hired: source.read_i32::<O>()?,
+            asteroids_destroyed: source.read_i32::<O>()?,
             unknown_int_16: source.read_i32::<O>()?,
             unknown_int_17: source.read_i32::<O>()?,
             unknown_int_18: source.read_i32::<O>()?,
             unknown_int_19: source.read_i32::<O>()?,
             unknown_int_20: source.read_i32::<O>()?,
-            unknown_int_list_1: source.read_bin::<O>()?,
+            medals: source.read_bin::<O>()?,
             ship: source.read_bin::<O>()?,
             ship_equipment: source.read_bin::<O>()?,
             ship_cargo: source.read_bin::<O>()?,
@@ -238,8 +238,8 @@ impl BinRead for Save {
             blueprints: source.read_bin::<O>()?,
             pending_products: source.read_bin::<O>()?,
             unknown_structure_1: source.read_bin::<O>()?,
-            unknown_int_21: source.read_i32::<O>()?,
-            unknown_bool_list_5: source.read_bin::<O>()?,
+            passengers: source.read_i32::<O>()?,
+            system_visibilities: source.read_bin::<O>()?,
             unknown_int_list_2: source.read_bin::<O>()?,
             unknown_int_list_3: source.read_bin::<O>()?,
             unknown_int_list_4: source.read_bin::<O>()?,
@@ -374,30 +374,30 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_i32::<O>(save.pirate_kills)?;
     destination.write_i32::<O>(save.unknown_int_1)?;
     destination.write_i32::<O>(save.unknown_int_2)?;
-    destination.write_i32::<O>(save.unknown_int_3)?;
+    destination.write_i32::<O>(save.last_docked_station)?;
     destination.write_i32::<O>(save.unknown_int_4)?;
     destination.write_bin::<O>(&save.unknown_bool_list_1)?;
     destination.write_bin::<O>(&save.unknown_bool_list_2)?;
     destination.write_i32::<O>(save.unknown_int_5)?;
-    destination.write_i32::<O>(save.unknown_int_6)?;
-    destination.write_i32::<O>(save.unknown_int_7)?;
-    destination.write_i32::<O>(save.unknown_int_8)?;
-    destination.write_bin::<O>(&save.unknown_bool_list_3)?;
-    destination.write_i32::<O>(save.unknown_int_9)?;
-    destination.write_bin::<O>(&save.unknown_bool_list_4)?;
-    destination.write_i32::<O>(save.unknown_int_10)?;
+    destination.write_i32::<O>(save.ores_mined)?;
+    destination.write_i32::<O>(save.cores_mined)?;
+    destination.write_i32::<O>(save.booze_purchased)?;
+    destination.write_bin::<O>(&save.booze_types_obtained)?;
+    destination.write_i32::<O>(save.space_junk_destroyed)?;
+    destination.write_bin::<O>(&save.visited_systems)?;
+    destination.write_i32::<O>(save.passengers_carried)?;
     destination.write_i64::<O>(save.unknown_long_int_1)?;
-    destination.write_i32::<O>(save.unknown_int_11)?;
-    destination.write_i32::<O>(save.unknown_int_12)?;
-    destination.write_i32::<O>(save.unknown_int_13)?;
-    destination.write_i32::<O>(save.unknown_int_14)?;
-    destination.write_i32::<O>(save.unknown_int_15)?;
+    destination.write_i32::<O>(save.bombs_detonated)?;
+    destination.write_i32::<O>(save.alien_remains_collected)?;
+    destination.write_i32::<O>(save.people_spoken_to)?;
+    destination.write_i32::<O>(save.wingmen_hired)?;
+    destination.write_i32::<O>(save.asteroids_destroyed)?;
     destination.write_i32::<O>(save.unknown_int_16)?;
     destination.write_i32::<O>(save.unknown_int_17)?;
     destination.write_i32::<O>(save.unknown_int_18)?;
     destination.write_i32::<O>(save.unknown_int_19)?;
     destination.write_i32::<O>(save.unknown_int_20)?;
-    destination.write_bin::<O>(&save.unknown_int_list_1)?;
+    destination.write_bin::<O>(&save.medals)?;
     destination.write_bin::<O>(&save.ship)?;
     destination.write_bin::<O>(&save.ship_equipment)?;
     destination.write_bin::<O>(&save.ship_cargo)?;
@@ -406,8 +406,8 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_bin::<O>(&save.blueprints)?;
     destination.write_bin::<O>(&save.pending_products)?;
     destination.write_bin::<O>(&save.unknown_structure_1)?;
-    destination.write_i32::<O>(save.unknown_int_21)?;
-    destination.write_bin::<O>(&save.unknown_bool_list_5)?;
+    destination.write_i32::<O>(save.passengers)?;
+    destination.write_bin::<O>(&save.system_visibilities)?;
     destination.write_bin::<O>(&save.unknown_int_list_2)?;
     destination.write_bin::<O>(&save.unknown_int_list_3)?;
     destination.write_bin::<O>(&save.unknown_int_list_4)?;

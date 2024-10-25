@@ -24,7 +24,7 @@ pub struct SaveBlueprint {
     pub ingredient_counts: Vec<i32>,
     pub unknown_int_1: i32,
     pub unlocked: bool,
-    pub unknown_int_2: i32,
+    pub times_completed: i32,
     pub station_index: i32,
     pub station_name: String,
 }
@@ -61,7 +61,7 @@ fn read_blueprint<O: ByteOrder>(source: &mut impl Read, index: i32) -> Result<Sa
         ingredient_counts,
         unknown_int_1: source.read_i32::<O>()?,
         unlocked: source.read_u8()? != 0,
-        unknown_int_2: source.read_i32::<O>()?,
+        times_completed: source.read_i32::<O>()?,
         station_index: source.read_i32::<O>()?,
         station_name: WideString::read_bin::<O>(source)?.get(),
     })
@@ -77,7 +77,7 @@ fn write_blueprint<O: ByteOrder>(
         .try_for_each(|count| destination.write_i32::<O>(*count))?;
     destination.write_i32::<O>(blueprint.unknown_int_1)?;
     destination.write_u8(blueprint.unlocked.into())?;
-    destination.write_i32::<O>(blueprint.unknown_int_2)?;
+    destination.write_i32::<O>(blueprint.times_completed)?;
     destination.write_i32::<O>(blueprint.station_index)?;
     destination.write_bin::<O>(&WideString::new(blueprint.station_name.clone()))
 }
