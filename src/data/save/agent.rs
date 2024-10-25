@@ -2,6 +2,7 @@ use crate::bin_io::read::{BinRead, BinReader};
 use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::save::image_parts::ImageParts;
 use crate::data::save::mission::SaveMission;
+use crate::data::Faction;
 use crate::result::Result;
 use crate::wide_string::WideString;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
@@ -16,7 +17,7 @@ pub struct SaveAgent {
     pub event: i32,
     pub index: i32,
     pub offer: i32,
-    pub race: i32,
+    pub race: Faction,
     pub sell_item_index: i32,
     pub sell_item_price: i32,
     pub sell_item_quantity: i32,
@@ -111,7 +112,7 @@ fn read_agent<O: ByteOrder>(source: &mut impl Read) -> Result<SaveAgent> {
         event,
         index,
         offer: source.read_i32::<O>()?,
-        race: source.read_i32::<O>()?,
+        race: source.read_bin::<O>()?,
         sell_item_index: source.read_i32::<O>()?,
         sell_item_price: source.read_i32::<O>()?,
         sell_item_quantity: source.read_i32::<O>()?,
@@ -154,7 +155,7 @@ fn write_agent<O: ByteOrder>(destination: &mut impl Write, agent: &SaveAgent) ->
     destination.write_i32::<O>(agent.event)?;
     destination.write_i32::<O>(agent.index)?;
     destination.write_i32::<O>(agent.offer)?;
-    destination.write_i32::<O>(agent.race)?;
+    destination.write_bin::<O>(&agent.race)?;
     destination.write_i32::<O>(agent.sell_item_index)?;
     destination.write_i32::<O>(agent.sell_item_price)?;
     destination.write_i32::<O>(agent.sell_item_quantity)?;
