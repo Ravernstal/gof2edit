@@ -10,9 +10,9 @@ use crate::data::save::pending_product::SavePendingProduct;
 use crate::data::save::ship::SaveShip;
 use crate::data::save::ship_equipment::SaveShipEquipment;
 use crate::data::save::station::SaveStation;
-use crate::data::save::unknown_structure_1::UnknownStructure1;
 use crate::data::save::unknown_structure_2::UnknownStructure2;
 use crate::data::save::wanted::SaveWanted;
+use crate::data::save::wingmen::Wingmen;
 use crate::result::Result;
 use byteorder::{ByteOrder, ReadBytesExt, WriteBytesExt};
 use serde::{Deserialize, Serialize};
@@ -31,9 +31,9 @@ mod pending_product;
 mod ship;
 mod ship_equipment;
 mod station;
-mod unknown_structure_1;
 mod unknown_structure_2;
 mod wanted;
+mod wingmen;
 
 const BINARY_HASH_CONSTANT: &[u8] = &[
     0x23, 0x2b, 0xc2, 0xa7, 0x52, 0x30, 0x4c, 0x4c, 0x33, 0x72, 0x28, 0x30, 0x61, 0x53, 0x74, 0x65,
@@ -93,7 +93,7 @@ pub struct Save {
     pub standings: Vec<i32>,
     pub blueprints: Vec<SaveBlueprint>,
     pub pending_products: Vec<SavePendingProduct>,
-    pub unknown_structure_1: Option<UnknownStructure1>,
+    pub wingmen: Option<Wingmen>,
     pub passengers: i32,
     pub system_visibilities: Vec<bool>,
     pub unknown_int_list_2: Vec<i32>,
@@ -241,7 +241,7 @@ impl BinRead for Save {
             standings: source.read_bin::<O>()?,
             blueprints: source.read_bin::<O>()?,
             pending_products: source.read_bin::<O>()?,
-            unknown_structure_1: source.read_bin::<O>()?,
+            wingmen: source.read_bin::<O>()?,
             passengers: source.read_i32::<O>()?,
             system_visibilities: source.read_bin::<O>()?,
             unknown_int_list_2: source.read_bin::<O>()?,
@@ -409,7 +409,7 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_bin::<O>(&save.standings)?;
     destination.write_bin::<O>(&save.blueprints)?;
     destination.write_bin::<O>(&save.pending_products)?;
-    destination.write_bin::<O>(&save.unknown_structure_1)?;
+    destination.write_bin::<O>(&save.wingmen)?;
     destination.write_i32::<O>(save.passengers)?;
     destination.write_bin::<O>(&save.system_visibilities)?;
     destination.write_bin::<O>(&save.unknown_int_list_2)?;
