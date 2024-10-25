@@ -60,10 +60,10 @@ pub struct Save {
     pub captured_crates: i32,
     pub bought_equipment: i32,
     pub pirate_kills: i32,
-    pub unknown_int_1: i32,
-    pub unknown_int_2: i32,
+    pub wormhole_station_index: i32,
+    pub wormhole_system_index: i32,
     pub last_docked_station: i32,
-    pub unknown_int_4: i32,
+    pub wormhole_relocate_counter: i32,
     pub unknown_bool_list_1: Vec<bool>,
     pub unknown_bool_list_2: Vec<bool>,
     pub unknown_int_5: i32,
@@ -202,10 +202,10 @@ impl BinRead for Save {
             captured_crates: source.read_i32::<O>()?,
             bought_equipment: source.read_i32::<O>()?,
             pirate_kills: source.read_i32::<O>()?,
-            unknown_int_1: source.read_i32::<O>()?,
-            unknown_int_2: source.read_i32::<O>()?,
+            wormhole_station_index: source.read_i32::<O>()?,
+            wormhole_system_index: source.read_i32::<O>()?,
             last_docked_station: source.read_i32::<O>()?,
-            unknown_int_4: source.read_i32::<O>()?,
+            wormhole_relocate_counter: source.read_i32::<O>()?,
             unknown_bool_list_1: source.read_bin::<O>()?,
             unknown_bool_list_2: source.read_bin::<O>()?,
             unknown_int_5: source.read_i32::<O>()?,
@@ -376,10 +376,10 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_i32::<O>(save.captured_crates)?;
     destination.write_i32::<O>(save.bought_equipment)?;
     destination.write_i32::<O>(save.pirate_kills)?;
-    destination.write_i32::<O>(save.unknown_int_1)?;
-    destination.write_i32::<O>(save.unknown_int_2)?;
+    destination.write_i32::<O>(save.wormhole_station_index)?;
+    destination.write_i32::<O>(save.wormhole_system_index)?;
     destination.write_i32::<O>(save.last_docked_station)?;
-    destination.write_i32::<O>(save.unknown_int_4)?;
+    destination.write_i32::<O>(save.wormhole_relocate_counter)?;
     destination.write_bin::<O>(&save.unknown_bool_list_1)?;
     destination.write_bin::<O>(&save.unknown_bool_list_2)?;
     destination.write_i32::<O>(save.unknown_int_5)?;
