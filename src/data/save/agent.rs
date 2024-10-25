@@ -27,8 +27,8 @@ pub struct SaveAgent {
     pub male: bool,
     pub has_reward: bool,
     pub has_accepted_offer: bool,
-    pub unknown_bool_1: bool,
-    pub unknown_bool_2: bool,
+    pub asked_about_difficulty: bool,
+    pub asked_about_location: bool,
     pub image: Option<ImageParts>,
     pub sell_mod_index: Option<i32>,
     pub mission_string: String,
@@ -122,8 +122,8 @@ fn read_agent<O: ByteOrder>(source: &mut impl Read) -> Result<SaveAgent> {
         male: source.read_u8()? != 0,
         has_reward: source.read_u8()? != 0,
         has_accepted_offer: source.read_u8()? != 0,
-        unknown_bool_1: source.read_u8()? != 0,
-        unknown_bool_2: source.read_u8()? != 0,
+        asked_about_difficulty: source.read_u8()? != 0,
+        asked_about_location: source.read_u8()? != 0,
         image: source.read_bin::<O>()?,
         sell_mod_index: if index > 0x12 {
             Some(source.read_i32::<O>()?)
@@ -165,8 +165,8 @@ fn write_agent<O: ByteOrder>(destination: &mut impl Write, agent: &SaveAgent) ->
     destination.write_u8(agent.male.into())?;
     destination.write_u8(agent.has_reward.into())?;
     destination.write_u8(agent.has_accepted_offer.into())?;
-    destination.write_u8(agent.unknown_bool_1.into())?;
-    destination.write_u8(agent.unknown_bool_2.into())?;
+    destination.write_u8(agent.asked_about_difficulty.into())?;
+    destination.write_u8(agent.asked_about_location.into())?;
     destination.write_bin::<O>(&agent.image)?;
 
     if agent.index > 0x12 {
