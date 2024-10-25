@@ -3,6 +3,7 @@ use crate::bin_io::write::{BinWrite, BinWriter};
 use crate::data::save::agent::SaveAgent;
 use crate::data::save::blueprint::SaveBlueprint;
 use crate::data::save::inventory_item::SaveInventoryItem;
+use crate::data::save::kaamo_status::KaamoStatus;
 use crate::data::save::mission::SaveMission;
 use crate::data::save::pending_product::SavePendingProduct;
 use crate::data::save::ship::SaveShip;
@@ -22,6 +23,7 @@ mod agent;
 mod blueprint;
 mod image_parts;
 mod inventory_item;
+mod kaamo_status;
 mod mission;
 mod pending_product;
 mod ship;
@@ -135,7 +137,7 @@ pub struct Save {
     pub unknown_int_list_6: Vec<i32>,
     pub unknown_int_22: i32,
     pub unknown_bool_32: bool,
-    pub unknown_int_23: i32,
+    pub kaamo_status: KaamoStatus,
     pub unknown_bool_33: bool,
     pub station_items: Vec<SaveInventoryItem>,
     pub station_ships: Vec<SaveShip>,
@@ -283,7 +285,7 @@ impl BinRead for Save {
             unknown_int_list_6: source.read_bin::<O>()?,
             unknown_int_22: source.read_i32::<O>()?,
             unknown_bool_32: source.read_u8()? != 0,
-            unknown_int_23: source.read_i32::<O>()?,
+            kaamo_status: source.read_bin::<O>()?,
             unknown_bool_33: source.read_u8()? != 0,
             station_items: source.read_bin::<O>()?,
             station_ships: source.read_bin::<O>()?,
@@ -451,7 +453,7 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_bin::<O>(&save.unknown_int_list_6)?;
     destination.write_i32::<O>(save.unknown_int_22)?;
     destination.write_u8(save.unknown_bool_32.into())?;
-    destination.write_i32::<O>(save.unknown_int_23)?;
+    destination.write_bin::<O>(&save.kaamo_status)?;
     destination.write_u8(save.unknown_bool_33.into())?;
     destination.write_bin::<O>(&save.station_items)?;
     destination.write_bin::<O>(&save.station_ships)?;

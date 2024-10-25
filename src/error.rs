@@ -13,6 +13,7 @@ pub enum Error {
     AttributeFormat,
     AttributeParse(u32),
     FactionParse(u32),
+    KaamoStatusParse(u32),
     SecurityLevelParse(u32),
     BlueprintIngredientListIndex(usize),
     ShipPositionCode(u16),
@@ -31,6 +32,9 @@ impl Display for Error {
             Self::AttributeFormat => write!(f, "invalid attribute format"),
             Self::AttributeParse(value) => write!(f, "failed to parse attribute value {value}"),
             Self::FactionParse(value) => write!(f, "failed to parse faction value {value}"),
+            Self::KaamoStatusParse(value) => {
+                write!(f, "failed to parse Kaamo status value {value}")
+            }
             Self::SecurityLevelParse(value) => {
                 write!(f, "failed to parse security level value {value}")
             }
