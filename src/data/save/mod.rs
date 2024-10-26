@@ -8,9 +8,9 @@ use crate::data::save::medal::Medal;
 use crate::data::save::mission::SaveMission;
 use crate::data::save::pending_product::SavePendingProduct;
 use crate::data::save::ship::SaveShip;
+use crate::data::save::ship_backup::ShipBackup;
 use crate::data::save::ship_equipment::SaveShipEquipment;
 use crate::data::save::station::SaveStation;
-use crate::data::save::unknown_structure_2::UnknownStructure2;
 use crate::data::save::wanted::SaveWanted;
 use crate::data::save::wingmen::Wingmen;
 use crate::result::Result;
@@ -29,9 +29,9 @@ mod medal;
 mod mission;
 mod pending_product;
 mod ship;
+mod ship_backup;
 mod ship_equipment;
 mod station;
-mod unknown_structure_2;
 mod wanted;
 mod wingmen;
 
@@ -132,10 +132,10 @@ pub struct Save {
     pub unknown_bool_28: bool,
     pub unknown_bool_29: bool,
     pub unknown_float_1: f32,
-    pub unknown_long_int_2: i64,
+    pub campaign_mission_start_time_ms: i64,
     pub unknown_bool_30: bool,
     pub unknown_bool_31: bool,
-    pub unknown_structure_2: Option<UnknownStructure2>,
+    pub ship_backup: Option<ShipBackup>,
     pub unknown_int_list_6: Vec<i32>,
     pub unknown_int_22: i32,
     pub unknown_bool_32: bool,
@@ -280,10 +280,10 @@ impl BinRead for Save {
             unknown_bool_28: source.read_u8()? != 0,
             unknown_bool_29: source.read_u8()? != 0,
             unknown_float_1: source.read_f32::<O>()?,
-            unknown_long_int_2: source.read_i64::<O>()?,
+            campaign_mission_start_time_ms: source.read_i64::<O>()?,
             unknown_bool_30: source.read_u8()? != 0,
             unknown_bool_31: source.read_u8()? != 0,
-            unknown_structure_2: source.read_bin::<O>()?,
+            ship_backup: source.read_bin::<O>()?,
             unknown_int_list_6: source.read_bin::<O>()?,
             unknown_int_22: source.read_i32::<O>()?,
             unknown_bool_32: source.read_u8()? != 0,
@@ -448,10 +448,10 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_u8(save.unknown_bool_28.into())?;
     destination.write_u8(save.unknown_bool_29.into())?;
     destination.write_f32::<O>(save.unknown_float_1)?;
-    destination.write_i64::<O>(save.unknown_long_int_2)?;
+    destination.write_i64::<O>(save.campaign_mission_start_time_ms)?;
     destination.write_u8(save.unknown_bool_30.into())?;
     destination.write_u8(save.unknown_bool_31.into())?;
-    destination.write_bin::<O>(&save.unknown_structure_2)?;
+    destination.write_bin::<O>(&save.ship_backup)?;
     destination.write_bin::<O>(&save.unknown_int_list_6)?;
     destination.write_i32::<O>(save.unknown_int_22)?;
     destination.write_u8(save.unknown_bool_32.into())?;

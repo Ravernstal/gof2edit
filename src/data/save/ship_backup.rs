@@ -9,13 +9,13 @@ use serde::{Deserialize, Serialize};
 use std::io::{Read, Write};
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct UnknownStructure2 {
+pub struct ShipBackup {
     pub ship: SaveShip,
     pub ship_equipment: Vec<Option<SaveShipEquipment>>,
     pub ship_cargo: Vec<SaveInventoryItem>,
 }
 
-impl BinRead for Option<UnknownStructure2> {
+impl BinRead for Option<ShipBackup> {
     fn read_bin<O: ByteOrder>(source: &mut impl Read) -> Result<Self> {
         let count = source.read_i32::<O>()?;
 
@@ -23,7 +23,7 @@ impl BinRead for Option<UnknownStructure2> {
             return Ok(None);
         }
 
-        Ok(Some(UnknownStructure2 {
+        Ok(Some(ShipBackup {
             ship: source.read_bin::<O>()?,
             ship_equipment: source.read_bin::<O>()?,
             ship_cargo: source.read_bin::<O>()?,
@@ -31,7 +31,7 @@ impl BinRead for Option<UnknownStructure2> {
     }
 }
 
-impl BinWrite for Option<UnknownStructure2> {
+impl BinWrite for Option<ShipBackup> {
     fn write_bin<O: ByteOrder>(&self, destination: &mut impl Write) -> Result<()> {
         match self {
             Some(unknown) => {
