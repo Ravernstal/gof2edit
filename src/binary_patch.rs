@@ -1,7 +1,7 @@
 use crate::binary_version::BinaryVersion;
 use serde::{Deserialize, Serialize};
 use serde_hex::{CompactPfx, SerHex};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 const DEFAULT_NAME: &str = "<name>";
 const DEFAULT_AUTHOR: &str = "<author>";
@@ -14,14 +14,6 @@ pub struct Address(#[serde(with = "SerHex::<CompactPfx>")] u64);
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(transparent)]
 pub struct Value(#[serde(with = "SerHex::<CompactPfx>")] u8);
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct BinaryPatchOld {
-    pub name: String,
-    pub author: String,
-    pub description: String,
-    pub addresses: HashMap<BinaryVersion, BTreeMap<u64, u8>>,
-}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BinaryPatch {
