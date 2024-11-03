@@ -131,7 +131,7 @@ pub struct Save {
     pub unknown_bool_27: bool,
     pub unknown_bool_28: bool,
     pub unknown_bool_29: bool,
-    pub unknown_float_1: f32,
+    pub difficulty: f32,
     pub campaign_mission_start_time_ms: i64,
     pub unknown_bool_30: bool,
     pub unknown_bool_31: bool,
@@ -279,7 +279,7 @@ impl BinRead for Save {
             unknown_bool_27: source.read_u8()? != 0,
             unknown_bool_28: source.read_u8()? != 0,
             unknown_bool_29: source.read_u8()? != 0,
-            unknown_float_1: source.read_f32::<O>()?,
+            difficulty: source.read_f32::<O>()?,
             campaign_mission_start_time_ms: source.read_i64::<O>()?,
             unknown_bool_30: source.read_u8()? != 0,
             unknown_bool_31: source.read_u8()? != 0,
@@ -447,7 +447,7 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_u8(save.unknown_bool_27.into())?;
     destination.write_u8(save.unknown_bool_28.into())?;
     destination.write_u8(save.unknown_bool_29.into())?;
-    destination.write_f32::<O>(save.unknown_float_1)?;
+    destination.write_f32::<O>(save.difficulty)?;
     destination.write_i64::<O>(save.campaign_mission_start_time_ms)?;
     destination.write_u8(save.unknown_bool_30.into())?;
     destination.write_u8(save.unknown_bool_31.into())?;
