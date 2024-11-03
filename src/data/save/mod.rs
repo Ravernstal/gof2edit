@@ -96,10 +96,10 @@ pub struct Save {
     pub wingmen: Option<Wingmen>,
     pub passengers: i32,
     pub system_visibilities: Vec<bool>,
-    pub unknown_int_list_2: Vec<i32>,
-    pub unknown_int_list_3: Vec<i32>,
-    pub unknown_int_list_4: Vec<i32>,
-    pub unknown_int_list_5: Vec<i32>,
+    pub highest_item_prices: Vec<i32>,
+    pub lowest_item_prices: Vec<i32>,
+    pub highest_item_price_systems: Vec<i32>,
+    pub lowest_item_price_systems: Vec<i32>,
     pub pirate_outposts_destroyed: Vec<bool>,
     pub agents: Vec<SaveAgent>,
     pub unknown_bool_1: bool,
@@ -244,10 +244,10 @@ impl BinRead for Save {
             wingmen: source.read_bin::<O>()?,
             passengers: source.read_i32::<O>()?,
             system_visibilities: source.read_bin::<O>()?,
-            unknown_int_list_2: source.read_bin::<O>()?,
-            unknown_int_list_3: source.read_bin::<O>()?,
-            unknown_int_list_4: source.read_bin::<O>()?,
-            unknown_int_list_5: source.read_bin::<O>()?,
+            highest_item_prices: source.read_bin::<O>()?,
+            lowest_item_prices: source.read_bin::<O>()?,
+            highest_item_price_systems: source.read_bin::<O>()?,
+            lowest_item_price_systems: source.read_bin::<O>()?,
             pirate_outposts_destroyed: source.read_bin::<O>()?,
             agents: source.read_bin::<O>()?,
             unknown_bool_1: source.read_u8()? != 0,
@@ -412,10 +412,10 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_bin::<O>(&save.wingmen)?;
     destination.write_i32::<O>(save.passengers)?;
     destination.write_bin::<O>(&save.system_visibilities)?;
-    destination.write_bin::<O>(&save.unknown_int_list_2)?;
-    destination.write_bin::<O>(&save.unknown_int_list_3)?;
-    destination.write_bin::<O>(&save.unknown_int_list_4)?;
-    destination.write_bin::<O>(&save.unknown_int_list_5)?;
+    destination.write_bin::<O>(&save.highest_item_prices)?;
+    destination.write_bin::<O>(&save.lowest_item_prices)?;
+    destination.write_bin::<O>(&save.highest_item_price_systems)?;
+    destination.write_bin::<O>(&save.lowest_item_price_systems)?;
     destination.write_bin::<O>(&save.pirate_outposts_destroyed)?;
     destination.write_bin::<O>(&save.agents)?;
     destination.write_u8(save.unknown_bool_1.into())?;
