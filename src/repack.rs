@@ -19,10 +19,17 @@ pub fn json_to_bin(
     silent: bool,
 ) -> gof2edit::Result<()> {
     let input_filepath = input_filepath.as_ref();
-    let output_filepath = output_filepath.as_ref();
+    let mut output_filepath = output_filepath.as_ref().to_owned();
+
+    match target {
+        RepackTarget::Save | RepackTarget::SavePreview => {
+            output_filepath = output_filepath.with_extension("");
+        }
+        _ => {}
+    }
 
     let mut source = File::open(input_filepath)?;
-    let mut destination = File::create(output_filepath)?;
+    let mut destination = File::create(&output_filepath)?;
 
     if silent.not() {
         println!(

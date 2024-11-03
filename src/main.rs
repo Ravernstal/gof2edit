@@ -1,8 +1,6 @@
 use crate::arguments::Arguments;
 use crate::command::Command;
 use clap::Parser;
-use std::ffi::OsStr;
-use std::path::{Path, PathBuf};
 
 mod apply_patch;
 mod arguments;
@@ -31,14 +29,16 @@ fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
             target,
             input_filepath,
         } => {
-            let output_filepath = output_filepath(input_filepath, "json");
+            let output_filepath = input_filepath.with_extension("json");
+
             unpack::bin_to_json(input_filepath, output_filepath, *target, silent)
         }
         Command::Repack {
             target,
             input_filepath,
         } => {
-            let output_filepath = output_filepath(input_filepath, "bin");
+            let output_filepath = input_filepath.with_extension("bin");
+
             repack::json_to_bin(input_filepath, output_filepath, *target, silent)
         }
         Command::Patch {
@@ -58,12 +58,4 @@ fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
             binary,
         } => apply_patch::patch(patch_filepath, binary_filepath, *binary, silent),
     }
-}
-
-// TODO: Move to dedicated module
-fn output_filepath(filepath: impl AsRef<Path>, extension: impl AsRef<OsStr>) -> PathBuf {
-    let mut filepath = filepath.as_ref().to_owned();
-    filepath.set_extension(extension);
-
-    filepath
 }
