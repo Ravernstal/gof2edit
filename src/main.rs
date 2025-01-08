@@ -28,7 +28,12 @@ fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
         Command::Unpack {
             target,
             input_filepath,
+            economy,
         } => {
+            unsafe {
+                gof2edit::GAME_ECONOMY = *economy;
+            }
+
             let output_filepath = input_filepath.with_extension("json");
 
             unpack::bin_to_json(input_filepath, output_filepath, *target, silent)
@@ -36,7 +41,12 @@ fn execute_command(command: &Command, silent: bool) -> gof2edit::Result<()> {
         Command::Repack {
             target,
             input_filepath,
+            economy,
         } => {
+            unsafe {
+                gof2edit::GAME_ECONOMY = *economy;
+            }
+
             let output_filepath = input_filepath.with_extension("bin");
 
             repack::json_to_bin(input_filepath, output_filepath, *target, silent)

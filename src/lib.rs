@@ -3,17 +3,22 @@ pub use crate::result::Result;
 
 use crate::bin_io::read::BinRead;
 use crate::bin_io::write::{BinWrite, BinWriter};
+use crate::economy::Economy;
 use crate::index::Index;
 use byteorder::ByteOrder;
 use std::io::{Read, Write};
 
 pub mod bin_io;
 pub mod data;
+pub mod economy;
 pub mod index;
 pub mod wide_string;
 
 mod error;
 mod result;
+
+// TODO: This is horrendous
+pub static mut GAME_ECONOMY: Economy = Economy::Android;
 
 pub fn read_object<T: BinRead, O: ByteOrder>(source: &mut impl Read) -> Result<T> {
     T::read_bin::<O>(source)

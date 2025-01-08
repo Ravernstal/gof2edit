@@ -3,6 +3,7 @@ use crate::targets::patch::PatchTarget;
 use crate::targets::repack::RepackTarget;
 use crate::targets::unpack::UnpackTarget;
 use clap::Subcommand;
+use gof2edit::economy::Economy;
 use std::path::PathBuf;
 
 #[derive(Debug, Subcommand)]
@@ -13,6 +14,9 @@ pub enum Command {
         target: UnpackTarget,
         /// BIN file to unpack
         input_filepath: PathBuf,
+        /// The economy version of the game the BIN file is used in (only used for save file unpacking)
+        #[clap(long, value_enum, default_value_t = Economy::Android)]
+        economy: Economy,
     },
     /// Repack JSON files into BIN format
     Repack {
@@ -20,6 +24,9 @@ pub enum Command {
         target: RepackTarget,
         /// JSON file to repack
         input_filepath: PathBuf,
+        /// The economy version of the game the BIN file is used in (only used for save file repacking)
+        #[clap(long, value_enum, default_value_t = Economy::Android)]
+        economy: Economy,
     },
     /// Patch new objects into binary with JSON file
     Patch {
