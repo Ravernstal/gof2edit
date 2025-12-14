@@ -168,7 +168,7 @@ pub struct Save {
     pub unknown_bool_46: bool,
     pub unknown_bool_47: bool,
     pub unknown_bool_48: bool,
-    pub unknown_int_25: i32,
+    pub battleships_destroyed: i32,
     pub unknown_bool_49: bool,
     pub unknown_bool_50: bool,
     pub unknown_bool_51: bool,
@@ -323,7 +323,7 @@ impl BinRead for Save {
             unknown_bool_46: source.read_u8()? != 0,
             unknown_bool_47: source.read_u8()? != 0,
             unknown_bool_48: source.read_u8()? != 0,
-            unknown_int_25: source.read_i32::<O>()?,
+            battleships_destroyed: source.read_i32::<O>()?,
             unknown_bool_49: source.read_u8()? != 0,
             unknown_bool_50: source.read_u8()? != 0,
             unknown_bool_51: source.read_u8()? != 0,
@@ -488,7 +488,7 @@ fn write_save<O: ByteOrder>(destination: &mut impl Write, save: &Save) -> Result
     destination.write_u8(save.unknown_bool_46.into())?;
     destination.write_u8(save.unknown_bool_47.into())?;
     destination.write_u8(save.unknown_bool_48.into())?;
-    destination.write_i32::<O>(save.unknown_int_25)?;
+    destination.write_i32::<O>(save.battleships_destroyed)?;
     destination.write_u8(save.unknown_bool_49.into())?;
     destination.write_u8(save.unknown_bool_50.into())?;
     destination.write_u8(save.unknown_bool_51.into())?;
