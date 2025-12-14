@@ -2,7 +2,7 @@
 name = "gof2edit"
 version = "0.10.6"
 authors = ["Ravernstal"]
-edition = "2021"
+edition = "2024"
 license = "AGPL-3.0-only"
 repository = "https://github.com/Ravernstal/gof2edit"
 readme = "README.md"
