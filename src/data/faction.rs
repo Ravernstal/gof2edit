@@ -14,6 +14,8 @@ const OCTOPOD_CODE: u32 = 4;
 const CYBORG_CODE: u32 = 5;
 const BOBOLIAN_CODE: u32 = 6;
 const GREY_CODE: u32 = 7;
+const PIRATE_CODE: u32 = 8;
+const VOID_CODE: u32 = 9;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 pub enum Faction {
@@ -25,6 +27,8 @@ pub enum Faction {
     Cyborg,
     Bobolian,
     Grey,
+    Pirate,
+    Void,
 }
 
 impl BinRead for Faction {
@@ -38,6 +42,8 @@ impl BinRead for Faction {
             CYBORG_CODE => Ok(Self::Cyborg),
             BOBOLIAN_CODE => Ok(Self::Bobolian),
             GREY_CODE => Ok(Self::Grey),
+            PIRATE_CODE => Ok(Self::Pirate),
+            VOID_CODE => Ok(Self::Void),
             value => Err(Error::FactionParse(value)),
         }
     }
@@ -54,6 +60,8 @@ impl BinWrite for Faction {
             Self::Cyborg => CYBORG_CODE,
             Self::Bobolian => BOBOLIAN_CODE,
             Self::Grey => GREY_CODE,
+            Self::Pirate => PIRATE_CODE,
+            Self::Void => VOID_CODE,
         })?;
 
         Ok(())
